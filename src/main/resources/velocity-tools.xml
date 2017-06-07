@@ -1,0 +1,17 @@
+<toolbox>
+	<tool>
+		<key>config</key>
+		<scope>application</scope>
+		<class>com.yz.code.util.ConfigManager</class>
+	</tool>
+	<tool>
+		<key>StringUtil</key>
+		<scope>application</scope>
+		<class>com.yz.code.util.StringUtil</class>
+	</tool>
+	<tool>
+		<key>sql</key>
+		<scope>application</scope>
+		<class>com.yz.code.util.SqlUtil</class>
+	</tool>
+</toolbox>

@@ -1,0 +1,37 @@
+#set($exceptionClass=$name.getExceptionClassName($table))
+package ${config.getProperty("basePackage")}.biz.exception;
+
+import ${config.getProperty("basePackage")}.exception.BaseException;
+import ${config.getProperty("basePackage")}.resp.MmcResultCode;
+
+public class $exceptionClass extends BaseException{
+	private static final long serialVersionUID = 1L;
+	
+	private MmcResultCode mmcResultCode;
+
+    public $exceptionClass(String errorCode, String errorMsg, Throwable caused) {
+        super(errorCode, errorMsg, caused);
+    }
+
+    public $exceptionClass(String errorCode, String errorMsg) {
+        super(errorCode, errorMsg);
+    }
+
+    public $exceptionClass(MmcResultCode resultCode){
+        this(resultCode.getCode(),resultCode.getMessage());
+        this.mmcResultCode = resultCode;
+    }
+
+    public $exceptionClass(String errorCode, Throwable caused) {
+        super(errorCode, caused);
+    }
+
+	public MmcResultCode getMmcResultCode() {
+		return mmcResultCode;
+	}
+	
+//	public void setMmcResultCode(MmcResultCode MmcResultCode) {
+//		this.mmcResultCode = MmcResultCode;
+//	}
+
+}

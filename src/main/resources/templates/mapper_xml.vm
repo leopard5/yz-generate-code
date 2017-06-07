@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="$name.getFullMapperClassName($table)">
+	$mapperbasexml
+    <!--  -->
+	#if($table.hasDeleteColumn())
+	<update id="logicalDeleteByPrimaryKey">
+		UPDATE $table.tableName
+		SET
+    		update_time = #{updateTime,jdbcType=TIMESTAMP},
+    		update_user = #{updateUser,jdbcType=VARCHAR},
+			update_user_name = #{updateUserName,jdbcType=VARCHAR},
+            is_deleted=1
+	    $sql.getPrimaryWhere($table.columns)
+	</update>
+	#end
+
+	<select id="selectByPrimaryKeyForUpdate" resultMap="BaseResultMap" parameterType="$table.primaryColumn.fullJavaType">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM $table.tableName
+		$sql.getPrimaryWhere($table.columns)
+		FOR UPDATE
+	</select>
+	
+	<select id="query$table.modelName" resultMap="BaseResultMap" parameterType="$name.getFullMessageQueryClassName($table)">
+		SELECT
+		 <choose>
+          <when test="returnFields!=null">${esc.d}{returnFields}</when>
+          <otherwise>
+            <include refid="Base_Column_List" />
+          </otherwise>
+        </choose>
+		FROM $table.tableName
+		<where>
+		#foreach($column in $table.columns)
+			#if($column.isEqualWhere())
+        		#if($column.javaType=="String")
+    				<if test="${column.propertyName}!=null and ${column.propertyName}!=''">AND $column.columnName = #{${column.propertyName},jdbcType=${column.jdbcType}}</if>
+    			#else
+    				<if test="${column.propertyName}!=null">AND $column.columnName = #{${column.propertyName},jdbcType=${column.jdbcType}}</if>
+				#end
+			#end
+			#if($column.isLikeWhere())
+					 <if test="${column.propertyName}Like != null and ${column.propertyName}Like != '' ">AND ${column.columnName} LIKE concat(#{${column.propertyName}Like,jdbcType=VARCHAR},'%')</if>
+			#end
+			#if($column.isInWhere())
+					<if test="${column.propertyName}List != null and ${column.propertyName}List.size > 0">
+						 <foreach item="item" separator="," open="AND ${column.columnName} in (" close=")" collection="${column.propertyName}List">#{item,jdbcType=${column.jdbcType}}</foreach>
+					</if>
+            #end
+			#if($column.isRangeWhere())
+			      <if test="${column.propertyName}From != null"><![CDATA[AND ${column.columnName} >= #{${column.propertyName}From,jdbcType=${column.jdbcType}}]]></if>
+				  <if test="${column.propertyName}To != null"><![CDATA[AND ${column.columnName} <= #{${column.propertyName}To,jdbcType=${column.jdbcType}}]]></if>
+			#end
+		#end
+		</where>
+		<choose>
+			<when test="order!=null and orderBy!=null and order!='' and orderBy!=''">order by ${esc.d}{orderBy} ${esc.d}{order}</when>
+			<otherwise>order by id desc</otherwise>
+		</choose>
+	</select>
+	
+	#foreach($index in $table.indexes)
+	<select id="$sql.getIndexSelectName($index)" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM $table.tableName
+		$sql.getIndexWhere($index)
+	</select>
+	#end
+	
+</mapper>

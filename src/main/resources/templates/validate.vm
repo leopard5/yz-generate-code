@@ -1,0 +1,66 @@
+#set($modelClass=$name.getModelClassName($table))
+#set($modelVar=$name.getModelVarName($table))
+#set($validateClass=$name.getValidateClassName($table))
+
+package ${config.getProperty("basePackage")}.validate;
+
+import ${config.getProperty("basePackage")}.resp.MmcResult;
+import $name.getFullModelClassName($table);
+
+import static ${config.getProperty("basePackage")}.biz.util.ValidationUtil.*;
+
+/**
+ * @CopyRright (c)2008-2016: <上海红星美凯龙悦家互联网科技有限公司>
+ * @Project: <mmc>
+ * @Comments: <service层${comment}验证类>
+ * @JDK 1.7
+ * @Author: <yazhong.qi>
+ * @email : <yazhong.qi@163.com>
+ * @Create Date: <2016-12-20>
+ * @Modify Date: <2016-12-20>
+ * @Version: <1.0>
+ */
+public class $validateClass {
+
+	public static boolean validateForCreate($modelClass $modelVar, MmcResult<?> message) {
+		#foreach($column in $table.columns)
+		#if($column.isEditable())
+    		#if($column.isNotNull())
+        		#if($column.dataType == 12)
+        		if (isEmptyOrMoreThan(message, ${modelClass}.${column.columnName.toUpperCase()}, ${modelVar}.${column.getter}(), ${column.columnSize})) {
+        			return false;
+        		}	
+        		#else
+        				
+        		if (isNull(message,${modelClass}.${column.columnName.toUpperCase()}, ${modelVar}.${column.getter}())) {
+        			return false;
+        		}
+        		#end
+    		#else
+        		#if($column.dataType==12)
+        		
+        		if (isMoreThan(message, ${modelClass}.${column.columnName.toUpperCase()}, ${modelVar}.${column.getter}(), ${column.columnSize})) {
+        			return false;
+        		}	
+        		#end
+    		#end
+		#end
+		#end
+		return true;
+	}
+	
+	public static boolean validateForUpdate(${modelClass} ${modelVar}, MmcResult<?> message) {
+       #foreach($column in $table.columns)
+		#if($column.isPrimary())
+		if (isNull(message,${modelClass}.${column.columnName.toUpperCase()}, ${modelVar}.${column.getter}())) {
+			return false;
+		}
+		#elseif($column.dataType == 12)
+		if (isMoreThan(message, ${modelClass}.${column.columnName.toUpperCase()}, ${modelVar}.${column.getter}(), ${column.columnSize})) {
+			return false;
+		}	
+		#end
+	   #end
+		return true;
+    }
+}

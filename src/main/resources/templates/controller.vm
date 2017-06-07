@@ -1,0 +1,82 @@
+#set($modelClass=$name.getModelClassName($table))
+#set($modelVar=$name.getModelVarName($table))
+#set($bizClass=$name.getBizClassName($table))
+#set($bizVar=$name.getBizVarName($table))
+#set($primaryKeyVarName=$code.getVarName($table.primaryKey.memberColumns[0].propertyName))
+#set($primaryKeyParameter=$code.getParameters($table.primaryKey.memberColumns))
+#set($messageQueryClass=$name.getMessageQueryClassName($table))
+#set($messageQueryVar=$name.getMessageQueryVarName($table))
+#set($modelQueryClass=$name.getModelQueryClassName($table))
+#set($modelQueryVar=$name.getModelQueryVarName($table))
+#set($serviceVar=$name.getServiceVarName($table))
+package ${config.getProperty("basePackage")}.admin.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import ${name.getFullBizClassName($table)};
+import ${name.getFullModelClassName($table)};
+import ${name.getFullModelQueryClassName($table)};
+import ${config.getProperty("basePackage")}.model.Message;
+import ${config.getProperty("basePackage")}.model.QueryResult;
+
+@Controller
+@RequestMapping("${modelVar}")
+public class ${modelClass}Controller {
+
+	@Resource
+	private $bizClass $bizVar;
+
+	@RequestMapping(value = "index", method = RequestMethod.GET)
+	public ModelAndView index() {
+		Map<String, Object> modelMap = new HashMap<String, Object>();
+		return new ModelAndView("${modelVar}/index", modelMap);
+	}
+
+	@RequestMapping("query")
+	@ResponseBody
+	public QueryResult<${modelClass}> query(${modelQueryClass} ${modelQueryVar}) {
+		Message<QueryResult<${modelClass}>> resultMessage = ${bizVar}.query${modelClass}(${modelQueryVar});
+		return resultMessage.getData();
+	}
+
+	@RequestMapping("get")
+	@ResponseBody
+	public ${modelClass} get(int id) {
+		return ${bizVar}.get${modelClass}(id).getData();
+	}
+
+	@RequestMapping("getAll")
+	@ResponseBody
+	public List<${modelClass}> getAll() {
+		return ${bizVar}.getAll${modelClass}().getData();
+	}
+	
+	@RequestMapping(value = "save", method = RequestMethod.POST)
+	@ResponseBody
+	public Message<Integer> save(${modelClass} ${modelVar}) {
+		if (${modelVar}.getId() == null) {
+			${modelVar}.setCreateUserid("dolphin");
+			return ${bizVar}.create${modelClass}(${modelVar});
+		}
+		else {
+			${modelVar}.setUpdateUserid("dolphin");
+			return ${bizVar}.update${modelClass}(${modelVar});
+		}
+	}
+
+	@RequestMapping("delete")
+	@ResponseBody
+	public Message<Integer> delete(Integer id) {
+		return ${bizVar}.delete${modelClass}(id);
+	}
+}

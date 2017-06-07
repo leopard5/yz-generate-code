@@ -1,0 +1,155 @@
+#set($mapperClass=$name.getMapperClassName($table))
+#set($modelClass=$name.getModelClassName($table))
+#set($modelVar=$name.getModelVarName($table))
+#set($bizClass=$name.getBizClassName($table))
+#set($primaryKeyVarName=$code.getVarName($table.primaryKey.memberColumns[0].propertyName))
+#set($primaryKeyParameter=$code.getParameters($table.primaryKey.memberColumns))
+#set($messageQueryClass=$name.getMessageQueryClassName($table))
+#set($messageQueryVar=$name.getMessageQueryVarName($table))
+#set($modelQueryVar=$name.getModelQueryVarName($table))
+#set($mapperVarName=$name.getMapperVarName($table))
+#set($comment=$name.getTableComment($table))
+package ${config.getProperty("basePackage")}.biz;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import $name.getFullMapperClassName($table);
+import ${name.getFullMessageQueryClassName($table)};
+import ${config.getProperty("basePackage")}.resp.MmcResultCode;
+import ${config.getProperty("basePackage")}.resp.QueryResultInfo;
+import ${name.getFullModelClassName($table)};
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+
+/**
+ * @CopyRright (c)2008-2016: <上海红星美凯龙悦家互联网科技有限公司>
+ * @Project: <mmc>
+ * @Comments: <业务层${comment}管理类>
+ * @JDK 1.7
+ * @Author: <yazhong.qi>
+ * @email : <yazhong.qi@163.com>
+ * @Create Date: <2016-12-20>
+ * @Modify Date: <2016-12-20>
+ * @Version: <1.0>
+ */
+@Service("$name.getBizVarName($table)")
+public class $bizClass {
+	private final Logger logger = LoggerFactory.getLogger(${bizClass}.class);
+
+	@Resource
+	$mapperClass ${mapperVarName};
+	
+	/**
+	 * 
+	 * 删除${comment}
+	 * 
+	 * @author yazhong.qi
+	 * @version 1.0.0
+	 * @param id
+	 * @param updateUser
+	 * @param updateUserName
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
+	#if($table.hasDeleteColumn())
+	public Integer delete$modelClass($primaryKeyParameter, String updateUser, String updateUserName){
+		// TODO: Describe business logic and implement it
+		int result = ${mapperVarName}.logicalDeleteByPrimaryKey($primaryKeyVarName,updateUser,updateUserName, new Date());
+		return result;
+	}
+	#else
+	public Integer delete$modelClass($primaryKeyParameter){
+		// TODO: Describe business logic and implement it
+		int result = ${mapperVarName}.deleteByPrimaryKey($primaryKeyVarName);
+		return result;	
+	}
+	#end
+	
+	/**
+	 * 
+	 * 创建${comment}
+	 * 
+	 * @author yazhong.qi
+	 * @version 1.0.0
+	 * @param $modelVar
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
+    public ${table.primaryColumn.javaType} create$modelClass($modelClass $modelVar){
+		// TODO: Describe business logic and implement it
+		${mapperVarName}.insert( $modelVar );
+		return ${modelVar}.getId();
+	}
+	
+	/**
+	 * 
+	 * 更新${comment}
+	 * 
+	 * @author yazhong.qi
+	 * @version 1.0.0
+	 * @param $modelVar
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
+	public Integer update$modelClass($modelClass $modelVar){
+		Integer result = null;
+		$modelClass ${modelVar}Last = ${mapperVarName}.selectByPrimaryKeyForUpdate( ${modelVar}.${table.primaryColumn.getter}() );
+		if( ${modelVar}Last == null){
+			// TODO：这里请写清楚
+		}
+		// TODO: Describe business logic and implement it
+		result = ${mapperVarName}.updateByPrimaryKey( $modelVar );
+		return result;	
+	}
+	
+	/**
+	 * 
+	 * 根据ID获取${comment}信息
+	 * 
+	 * @author yazhong.qi
+	 * @version 1.0.0
+	 * @param id
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public $modelClass get$modelClass( $primaryKeyParameter ){
+		// TODO: Describe business logic and implement it
+		$modelClass $modelVar = ${mapperVarName}.selectByPrimaryKey( $primaryKeyVarName );
+		return $modelVar;
+	}
+
+	/**
+	 * 
+	 * 分页查询${comment}信息
+	 * 
+	 * @author yazhong.qi
+	 * @version 1.0.0
+	 * @param ${modelQueryVar}
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public QueryResultInfo<${modelClass}> query${modelClass}(${messageQueryClass} ${modelQueryVar}) {
+		QueryResultInfo<${modelClass}> queryResult = new QueryResultInfo<${modelClass}>();
+		// 使用分页插件PageHelper实现分页功能
+		PageHelper.startPage(${modelQueryVar}.getPageNo(), ${modelQueryVar}.getPageSize());
+		List<${modelClass}> ${modelVar}List = ${mapperVarName}.query${modelClass}(${modelQueryVar});
+		PageInfo<${modelClass}> pageInfo = new PageInfo<${modelClass}>(${modelVar}List);
+		queryResult.setPageNo(pageInfo.getPageNum());
+		queryResult.setPageSize(pageInfo.getPageSize());
+		queryResult.setTotalPages(pageInfo.getPages());
+		queryResult.setTotalRecords(pageInfo.getTotal());
+		queryResult.setRecords(${modelVar}List);
+		return queryResult;
+	}
+
+}

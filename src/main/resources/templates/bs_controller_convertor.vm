@@ -1,0 +1,75 @@
+#set($messageClass=$name.getMessageClassName($table))
+#set($messageVar=$name.getMessageVarName($table))
+#set($messageReqClass=$name.getMessageReqClassName($table))
+#set($messageReqVarName=$name.getMessageReqVarName($table))
+#set($controllVoClass=$name.getControllerVoClassName($table))
+#set($controllVoVar=$name.getControllerVoVar($table))
+#set($controllQueryVoClass=$name.getControllerQueryVoClassName($table))
+#set($controllQueryVoVar=$name.getControllerQueryVoVar($table))
+#set($modelClass=$name.getModelClassName($table))
+#set($modelVar=$name.getModelVarName($table))
+#set($messageQueryClass=$name.getMessageQueryClassName($table))
+#set($messageQueryVar=$name.getMessageQueryVarName($table))
+#set($modelQueryClass=$name.getModelQueryClassName($table))
+#set($modelQueryVar=$name.getModelQueryVarName($table))
+#set($comment=$name.getTableComment($table))
+package ${config.getProperty("basePackage")}.convertor;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.cglib.beans.BeanCopier;
+
+import $name.getFullMessageQueryClassName($table);
+import $name.getFullMessageReqClassName($table);
+import $name.getFullControllerQueryVoClassName($table);
+import $name.getFullControllerVoClassName($table);
+
+/**
+ * @CopyRright (c)2008-2016: <上海红星美凯龙悦家互联网科技有限公司>
+ * @Project: <mmc>
+ * @Comments: <web层${comment}转换类 将Valid的Vo类转换为Dubbo层的Req对象>
+ * @JDK 1.7
+ * @Author: <yazhong.qi>
+ * @email : <yazhong.qi@163.com>
+ * @Create Date: <2016-12-20>
+ * @Modify Date: <2016-12-20>
+ * @Version: <1.0>
+ */
+public abstract class ${name.getConvertorClassName($table)} {
+
+	private static final BeanCopier beanCopierFor${messageReqClass} = BeanCopier.create(${controllVoClass}.class, ${messageReqClass}.class, false);
+	private static final BeanCopier beanCopierFor${messageQueryClass} = BeanCopier.create(${controllQueryVoClass}.class, ${messageQueryClass}.class, false);
+
+	public static ${messageReqClass} to${messageReqClass}(${controllVoClass} ${controllVoVar})
+	{
+		if (${controllVoVar} == null) {
+			return null;
+		}
+		${messageReqClass} ${messageReqVarName} = new ${messageReqClass}();
+		beanCopierFor${messageReqClass}.copy(${controllVoVar}, ${messageReqVarName}, null);
+		return ${messageReqVarName};
+	}
+
+	public static List<${messageReqClass}> to${messageReqClass}List(List<${controllVoClass}> ${controllVoVar}List)
+	{
+		if (${controllVoVar}List == null || ${controllVoVar}List.isEmpty()) {
+			return null;
+		}
+		List<${messageReqClass}> ${messageReqVarName}List = new ArrayList<${messageReqClass}>(${controllVoVar}List.size());
+		for (${controllVoClass} ${controllVoVar} : ${controllVoVar}List) {
+			${messageReqVarName}List.add(to${messageReqClass}(${controllVoVar}));
+		}
+		return ${messageReqVarName}List;
+	}
+	
+	public static ${messageQueryClass} to${messageQueryClass}(${controllQueryVoClass} ${controllQueryVoVar})
+	{
+		if (${controllQueryVoVar}== null) {
+			return null;
+		}
+		${messageQueryClass} ${messageQueryVar} = new ${messageQueryClass}();
+		beanCopierFor${messageQueryClass}.copy(${controllQueryVoVar}, ${messageQueryVar}, null);
+		return ${messageQueryVar};
+	}
+}

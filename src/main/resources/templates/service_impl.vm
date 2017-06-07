@@ -1,0 +1,152 @@
+#set($validateClassName=$name.getValidateClassName($table))
+#set($messageClass=$name.getMessageClassName($table))
+#set($messageVar=$name.getMessageVarName($table))
+#set($messageReqClass=$name.getMessageReqClassName($table))
+#set($messageReqVarName=$name.getMessageReqVarName($table))
+#set($modelClass=$name.getModelClassName($table))
+#set($modelVar=$name.getModelVarName($table))
+#set($bizClass=$name.getBizClassName($table))
+#set($bizVar=$name.getBizVarName($table))
+#set($convertor=$name.getConvertorClassName($table))
+#set($primaryKeyVarName=$code.getVarName($table.primaryKey.memberColumns[0].propertyName))
+#set($primaryKeyParameter=$code.getParameters($table.primaryKey.memberColumns))
+#set($messageQueryClass=$name.getMessageQueryClassName($table))
+#set($messageQueryVar=$name.getMessageQueryVarName($table))
+#set($modelQueryClass=$name.getModelQueryClassName($table))
+#set($modelQueryVar=$name.getModelQueryVarName($table))
+#set($exceptionClass=$name.getExceptionClassName($table))
+#set($comment=$name.getTableComment($table))
+package ${config.getProperty("basePackage")}.service.impl;
+
+import static ${config.getProperty("basePackage")}.validate.${validateClassName}.validateForCreate;
+import static ${config.getProperty("basePackage")}.validate.${validateClassName}.validateForUpdate;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import ${name.getFullBizClassName($table)};
+import ${name.getFullConvertorClassName($table)};
+import ${name.getFullModelClassName($table)};
+import ${name.getFullMessageQueryClassName($table)};
+import ${name.getFullMessageReqClassName($table)};
+import ${name.getFullMessageClassName($table)};
+import ${config.getProperty("basePackage")}.resp.MmcResult;
+import ${config.getProperty("basePackage")}.resp.MmcResultCode;
+import ${config.getProperty("basePackage")}.resp.QueryResultInfo;
+import ${name.getFullServiceClassName($table)};
+
+/**
+ * @CopyRright (c)2008-2016: <上海红星美凯龙悦家互联网科技有限公司>
+ * @Project: <mmc>
+ * @Comments: <Dubbo Service ${comment}管理类>
+ * @JDK 1.7
+ * @Author: <yazhong.qi>
+ * @email : <yazhong.qi@163.com>
+ * @Create Date: <2016-12-20>
+ * @Modify Date: <2016-12-20>
+ * @Version: <1.0>
+ */
+@Service("$name.getServiceVarName($table)")
+public class $name.getServiceImplClassName($table) implements $name.getServiceClassName($table) {
+	private final Logger logger = LoggerFactory.getLogger(${name.getServiceImplClassName($table)}.class);
+
+	@Resource
+	private $bizClass $bizVar;
+	
+	/**
+	 * 
+	 * 删除${comment}
+	 * 
+	 * @Author: <yazhong.qi@163.com>
+	 * @Version: <1.0>
+	 * @param id
+	 * @param updateUser
+	 * @param updateUserName
+	 * @return
+	 */
+	@Override
+	public MmcResult<Integer> delete$modelClass($primaryKeyParameter #if($table.hasDeleteColumn()), String updateUser, String updateUserName #end){
+		MmcResult<Integer> result = MmcResult.newSuccess();
+		result.setDataMap(${bizVar}.delete$modelClass($primaryKeyVarName #if($table.hasDeleteColumn()), updateUser, updateUserName #end));
+		return result;
+	}
+	
+	/**
+	 * 
+	 * 创建${comment}
+	 * 
+	 * @Author: <yazhong.qi@163.com>
+	 * @Version: <1.0>
+	 * @param $messageReqVarName
+	 * @return
+	 */
+	@Override
+    public MmcResult<${table.primaryColumn.javaType}> create$modelClass($messageReqClass $messageReqVarName){
+		MmcResult<${table.primaryColumn.javaType}> result = MmcResult.newSuccess();
+		$modelClass $modelVar = ${convertor}.to${modelClass}($messageReqVarName);
+		if (!validateForCreate($modelVar, result)) {
+			return result;
+		}
+		result.setDataMap(${bizVar}.create$modelClass( $modelVar ));
+		return  result;
+	}
+	
+	/**
+	 * 
+	 * 更新${comment}
+	 * 
+	 * @Author: <yazhong.qi@163.com>
+	 * @Version: <1.0>
+	 * @param $messageReqVarName
+	 * @return
+	 */
+	@Override
+	public MmcResult<Integer> update$modelClass($messageReqClass $messageReqVarName){
+		MmcResult<Integer> result = MmcResult.newSuccess();
+    	$modelClass $modelVar = null;
+		$modelVar = ${convertor}.to${modelClass}($messageReqVarName);
+		if (!validateForUpdate($modelVar, result)) {
+			return result;
+		}
+		result.setDataMap(${bizVar}.update$modelClass( $modelVar ));
+		return result;
+	}
+	
+	/**
+	 * 
+	 * 根据ID获取${comment}信息
+	 * 
+	 * @Author: <yazhong.qi@163.com>
+	 * @Version: <1.0>
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public MmcResult<$messageClass> get$modelClass( $primaryKeyParameter ){
+		MmcResult<$messageClass> result  = MmcResult.newSuccess();
+		$modelClass $modelVar = ${bizVar}.get$modelClass( $primaryKeyVarName );
+		$messageClass $messageVar = ${convertor}.to${messageClass}($modelVar);
+		result.setDataMap($messageVar);
+		return result;
+	}
+
+	/**
+	 * 
+	 * 分页查询${comment}信息
+	 * 
+	 * @Author: <yazhong.qi@163.com>
+	 * @Version: <1.0>
+	 * @param ${modelQueryVar}
+	 * @return
+	 */
+	@Override
+	public MmcResult<QueryResultInfo<${messageClass}>> query${modelClass}($messageQueryClass $messageQueryVar) {
+		MmcResult<QueryResultInfo<${messageClass}>> result = MmcResult.newSuccess();
+		QueryResultInfo<${modelClass}> resultInfo = ${bizVar}.query${modelClass}(${messageQueryVar});
+		result.setDataMap(${convertor}.toQueryResultInfo(resultInfo));
+		return result;
+	}
+}

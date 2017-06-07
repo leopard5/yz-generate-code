@@ -1,0 +1,217 @@
+#set($modelClass=$name.getModelClassName($table))
+#set($modelVar=$name.getModelVarName($table))
+#set($primaryKeyVarName=$code.getVarName($table.primaryKey.memberColumns[0].propertyName))
+#set($primaryKeyParameter=$code.getParameters($table.primaryKey.memberColumns))
+#set($messageQueryClass=$name.getMessageQueryClassName($table))
+#set($messageQueryVar=$name.getMessageQueryVarName($table))
+#set($modelQueryClass=$name.getModelQueryClassName($table))
+#set($modelQueryVar=$name.getModelQueryVarName($table))
+#set($count=$table.columns.size())
+\#set($pageTitle="${table.comment}管理")
+<div class="box box-primary">
+ <div class="box-body">
+  <div class="bs-docs-section">
+   <form id="formSearch${modelClass}" class="form-inline" method="post">
+	 #foreach($column in $table.columns)
+        #if($column.javaType == "Byte" && $column.isInWhere())
+			
+         <div class="form-group">
+          <select name="${column.propertyName}" class="form-control" placeholder="${column.displayName}" >
+			<option value="">全部${column.displayName}</option>
+		  </select>
+         </div>
+        #elseif($column.isEqualWhere())
+			
+         <div class="form-group">
+          <input type="text" name="${column.propertyName}" class="form-control" placeholder="${column.displayName}" />
+         </div>
+        #end
+         #if($column.isRangeWhere())
+			
+         <div class="form-group">
+          <input type="text" name="${column.propertyName}From" class="form-control" placeholder="${column.displayName} - 开始" />
+          <input type="date" name="${column.propertyName}To" class="form-control" placeholder="${column.displayName} - 结束" />
+         </div>
+         #end
+     #end
+    <button type="button" id="btnSearch" data-loading-text="搜索中..." class="btn bg-blue" onclick="search${modelClass}()">搜索</button>
+   </form>
+  </div>
+  <div class="bs-docs-section" style="margin-top:10px;">
+   <div class="btn-group">
+    <button type="button" class="btn btn-default" data-toggle="modal" onclick="show${modelClass}Modal()">
+     <i class="fa fa-plus"></i>新增
+    </button>
+    <button type="button" class="btn btn-default" onclick="refreshDataTable('#table${modelClass}')">
+     <i class="fa fa-refresh"></i>刷新
+    </button>
+   </div>
+  </div>
+  <table id="table${modelClass}" class="table table-bordered table-hover">
+   <thead>
+    <tr>
+	 #foreach($column in $table.columns)
+     <th data-data="${column.propertyName}">${column.displayName}</th>
+     #end
+     <th data-data="id">功能</th>
+    </tr>
+   </thead>
+  </table>
+ </div>
+</div>
+<div class="modal" id="modal${modelClass}" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+ <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-content">
+   <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+     <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title" id="myModalLabel">${table.displayName}</h4>
+   </div>
+   <div class="modal-body">
+    <form id="form${modelClass}" class="form-horizontal">
+	#foreach($column in $table.columns)
+		
+	 <div class="form-group">
+      <label class="control-label col-sm-2">${column.displayName}</label>
+      <div class="col-sm-9">
+       <input type="text" class="form-control" name="${column.propertyName}"/>
+      </div>
+     </div>
+     #end
+    </form>
+   </div>
+   <div class="modal-footer">
+    <button type="button" id="btnSubmit${modelClass}" class="btn bg-yellow" onclick="submit${modelClass}()">创建</button>
+    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+   </div>
+  </div>
+ </div>
+</div>
+<script>
+	var table${modelClass};
+	var modal${modelClass};
+	var form${modelClass};
+	var form${modelClass}Validator;
+	var formSearch${modelClass};
+
+	$(function() {
+		
+		table${modelClass} = $("#table${modelClass}");
+		modal${modelClass} = $("#modal${modelClass}");
+		form${modelClass} = $("#form${modelClass}");
+		formSearch${modelClass} = $("#formSearch${modelClass}");
+		
+		var dataTable = table${modelClass}.DataTable({
+			serverSide : true,
+			ajax : {
+				url : '${rc.contextPath}/${modelVar}/query.htm',
+				type : "post",
+				data : queryParams${modelClass}
+			},
+			columnDefs : [
+					{
+						targets : [ 3, 5 ],
+						render : dateRender
+					},
+					{
+						targets : 6,
+						render : function(data, type, full, meta) {
+							return getDeleteButton(data) + "&nbsp;"
+									+ getEditButton(data);
+						}
+					} ]
+		});
+		dataTable.on('click', "button", dataTableButtonClick);
+		
+		form${modelClass}.bootstrapValidator({
+			message : "有错",
+			group : ".form-group div"
+		});
+		
+		form${modelClass}Validator = form${modelClass}.data("bootstrapValidator");
+		
+	});
+
+	function queryParams${modelClass}(d) {
+		var param = getQueryParams("#formSearch${modelClass}", d);
+		//日期处理
+		//param.updateTimeFrom = strDateToLong(param.updateTimeFrom);
+		return param;
+	}
+
+	function dataTableButtonClick(e) {
+		var $btn = getRowButton(e);
+		var ${modelVar} = getRowData("#table${modelClass}", $btn);
+		var action = $btn.attr("data-action");
+		switch (action) {
+		case "delete":
+			delete${modelClass}(${modelVar});
+			break;
+		case "edit":
+			show${modelClass}Modal(${modelVar});
+			break;
+		default:
+			break;
+		}
+	}
+
+	function delete${modelClass}(${modelVar}) {
+		confirm("你确认删除该${table.displayName}吗？", "删除${table.displayName}", function(r) {
+			$.post("$rc.contextPath/${modelVar}/delete.htm", {
+				'id' : ${modelVar}.id
+			}, function(res) {
+				if (res.status == 10000) {
+					alert("删除成功");
+					searchTask();
+				} else {
+					alert(res.message);
+				}
+			});
+		});
+	}
+
+	function search${modelClass}() {
+		var dataTable = table${modelClass}.DataTable();
+		submitSearch(dataTable);
+	}
+
+	function show${modelClass}Modal(${modelVar}) {
+		form${modelClass}.find("input").val("");
+		if (${modelVar} && ${modelVar} != null) {
+			form${modelClass}.fill(${modelVar});
+			modal${modelClass}.find(".modal-title").text("编辑${table.displayName}")
+		}
+		else{
+			modal${modelClass}.find(".modal-title").text("创建${table.displayName}")
+		}
+		modal${modelClass}.modal("show");
+		form${modelClass}Validator.resetForm();
+	}
+
+	function submit${modelClass}() {
+		form${modelClass}Validator.validate();
+		if (!form${modelClass}Validator.isValid()) {
+			return;
+		}
+		var ${modelVar} = form${modelClass}.serializeJson();
+
+		//日期处理
+		//${modelVar}.updateTime = strDateToLong(${modelVar}.updateTime);
+		
+		$.post("$rc.contextPath/${modelVar}/save.htm", 
+				${modelVar},
+				function(res) {
+					if (res.success) {
+						alert(modal${modelClass}.find(".modal-title").text()+"操作成功");
+						search${modelClass}();
+						modal${modelClass}.modal("hide");
+					} else {
+						alert(res.message);
+					}
+
+				}, 'json');
+	}
+</script>
+
+

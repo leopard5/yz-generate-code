@@ -1,0 +1,104 @@
+package ${config.getProperty("basePackage")}.service;
+#set($messageClass=$name.getMessageClassName($table))
+#set($messageReqClass=$name.getMessageReqClassName($table))
+#set($messageReqVarName=$name.getMessageReqVarName($table))
+#set($modelClass=$name.getModelClassName($table))
+#set($messageVarName=$name.getMessageVarName($table))
+#set($bizClass=$name.getBizClassName($table))
+#set($primaryKeyVarName=$code.getVarName($table.primaryKey.memberColumns[0].propertyName))
+#set($primaryKeyParameter=$code.getParameters($table.primaryKey.memberColumns))
+#set($messageQueryClass=$name.getMessageQueryClassName($table))
+#set($messageQueryVar=$name.getMessageQueryVarName($table))
+#set($modelQueryClass=$name.getModelQueryClassName($table))
+#set($modelQueryVar=$name.getModelQueryVarName($table))
+#set($comment=$name.getTableComment($table))
+
+import ${name.getFullMessageQueryClassName($table)};
+import ${name.getFullMessageReqClassName($table)};
+import ${name.getFullMessageClassName($table)};
+import ${config.getProperty("basePackage")}.resp.MmcResult;
+import ${config.getProperty("basePackage")}.resp.QueryResultInfo;
+
+/**
+ * @CopyRright (c)2008-2016: <上海红星美凯龙悦家互联网科技有限公司>
+ * @Project: <mmc>
+ * @Comments: <对外API ${comment}管理接口>
+ * @JDK 1.7
+ * @Author: <yazhong.qi>
+ * @email : <yazhong.qi@163.com>
+ * @Create Date: <2016-12-20>
+ * @Modify Date: <2016-12-20>
+ * @Version: <1.0>
+ */
+public interface ${name.getServiceClassName($table)} {
+
+	#if($table.hasDeleteColumn())
+/**
+	 * 
+	 * 删除${comment}
+	 * 
+	 * @author yazhong.qi
+	 * @version 1.0.0
+	 * @param id
+	 * @param updateUser
+	 * @param updateUserName
+	 * @return
+	 */
+MmcResult<Integer> delete$modelClass($primaryKeyParameter, String updateUser, String updateUserName);
+	#else
+	/**
+	 * 
+	 * 删除${comment}
+	 * 
+	 * @author yazhong.qi
+	 * @version 1.0.0
+	 * @param primaryKeyParameter
+	 * @return
+	 */
+MmcResult<Integer> delete$modelClass($primaryKeyParameter);
+	#end
+	
+	/**
+	 * 
+	 * 创建${comment}
+	 * 
+	 * @author yazhong.qi
+	 * @version 1.0.0
+	 * @param $messageReqVarName
+	 * @return
+	 */
+    MmcResult<${table.primaryColumn.javaType}> create$modelClass($messageReqClass $messageReqVarName);
+	
+	/**
+	 * 
+	 * 更新${comment}
+	 * 
+	 * @author yazhong.qi
+	 * @version 1.0.0
+	 * @param $messageVarName
+	 * @return
+	 */
+	MmcResult<Integer> update$modelClass($messageReqClass $messageReqVarName);
+	
+	/**
+	 * 
+	 * 根据ID获取${comment}信息
+	 * 
+	 * @author yazhong.qi
+	 * @version 1.0.0
+	 * @param id
+	 * @return
+	 */
+	MmcResult<$messageClass> get$modelClass( $primaryKeyParameter );
+
+	/**
+	 * 
+	 * 分页查询${comment}信息
+	 * 
+	 * @author yazhong.qi
+	 * @version 1.0.0
+	 * @param ${messageQueryVar}
+	 * @return
+	 */
+    MmcResult<QueryResultInfo<${messageClass}>> query${modelClass}($messageQueryClass $messageQueryVar);
+}

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration>
+	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d - %c -%-4r [%t] %-5p %x - %m%n" />
+		</layout>
+	</appender>
+	<appender name="FILE_DEBUG" class="org.apache.log4j.DailyRollingFileAppender">
+		<errorHandler class="org.apache.log4j.helpers.OnlyOnceErrorHandler" />
+		<param name="File" value="${catalina.base}/logs/data/data-debug.log" />
+		<param name="Append" value="true" />
+		<param name="Threshold" value="debug" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %-5p [%c] %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="FILE_ERROR" class="org.apache.log4j.DailyRollingFileAppender">
+		<errorHandler class="org.apache.log4j.helpers.OnlyOnceErrorHandler" />
+		<param name="File" value="${catalina.base}/logs/data/data-error.log" />
+		<param name="Append" value="true" />
+		<param name="Threshold" value="error" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %-5p [%c] %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="FILE_ALL" class="org.apache.log4j.DailyRollingFileAppender">
+		<errorHandler class="org.apache.log4j.helpers.OnlyOnceErrorHandler" />
+		<param name="File" value="${catalina.base}/logs/data/data.log" />
+		<param name="Append" value="true" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %-5p [%c] %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="SYSLOG4J" class="org.graylog2.syslog4j.impl.log4j.Syslog4jAppender">
+		<param name="Protocol" value="unix_syslog" />
+		<param name="Facility" value="user" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value=" %m" />
+		</layout>
+	</appender>
+
+	<category name="com.yz">
+		<priority value="debug" />
+		<appender-ref ref="CONSOLE" />
+	</category>
+
+	<root>
+		<priority value="ERROR" />
+      <appender-ref ref="CONSOLE" />
+<!-- 		<appender-ref ref="SYSLOG4J" /> -->
+		<appender-ref ref="FILE_ERROR" />
+		<appender-ref ref="FILE_ALL" />
+	</root>
+
+
+</log4j:configuration>  

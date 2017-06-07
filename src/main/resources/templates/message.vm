@@ -1,0 +1,38 @@
+#set($comment=$name.getTableComment($table))
+package ${config.getProperty("basePackage")}.resp;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.io.Serializable;
+
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
+@ApiModel("$comment")
+public class ${name.getMessageClassName($table)} implements Serializable {
+
+	/**   
+	 * @Fields serialVersionUID : 序列化版本号 
+	 */ 
+	private static final long serialVersionUID = 1L;
+
+	#foreach($column in $table.columns)
+		
+	/**
+	 * @Fields $column.propertyName : $column.remarks
+	 */
+	@ApiModelProperty("${column.remarks}")
+	private $column.javaType $column.propertyName;
+	#end
+	
+    #foreach($column in $table.columns)
+
+	public $column.javaType ${column.getter}(){
+		return $column.propertyName;
+	}
+	
+	public void ${column.setter}($column.javaType $column.propertyName){
+		this.$column.propertyName = $column.propertyName;
+	}
+    #end
+}

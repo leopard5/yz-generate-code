@@ -1,0 +1,30 @@
+#set($modelClass=$name.getModelClassName($table))
+#set($modelVar=$name.getModelVarName($table))
+#set($primaryKeyVarName=$code.getVarName($table.primaryKey.memberColumns[0].propertyName))
+#set($primaryKeyParameter=$code.getParameters($table.primaryKey.memberColumns))
+#set($messageQueryClass=$name.getMessageQueryClassName($table))
+#set($messageQueryVar=$name.getMessageQueryVarName($table))
+#set($modelQueryClass=$name.getModelQueryClassName($table))
+#set($modelQueryVar=$name.getModelQueryVarName($table))
+<div id="modal${modelClass}" 
+	class="easyui-dialog" 
+	title="My Dialog" 
+	style="width:400px;height:200px;" 
+	data-options="iconCls:'icon-save',modal:true,buttons:#dlg-buttons">
+	<form id="form${modelClass}" method="post" action="${rc.contextPath}/${modelVar}/save.html">
+		<div class="modal-body">
+    		#foreach($column in $table.columns)
+    		<div class="form-group col-lg-6 ">
+    			<label for="${column.propertyName}">${column.displayName}:</label>
+    			<div class="col-lg-8">
+    				<input type="text" name="${column.propertyName}" #if(!$column.isEditable()) readonly="readonly" #end />
+    			</div>
+            </div>
+    		#end
+		</div>
+    	<div class="dlg-buttons">
+    		<button type="button" id="btnSave${modelClass}" onclick="submit${modelClass}()" class="submit btn btn-primary">确认</button>
+    		<button type="button" id="backbtn" data-dismiss="modal" class="btn btn-info" >取消</button>
+    	</div>
+</form>
+</div>
