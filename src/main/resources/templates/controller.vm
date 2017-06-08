@@ -65,11 +65,11 @@ public class ${modelClass}Controller {
 	@ResponseBody
 	public Message<Integer> save(${modelClass} ${modelVar}) {
 		if (${modelVar}.getId() == null) {
-			${modelVar}.setCreateUserid("dolphin");
+			${modelVar}.setCreateUserid("system");
 			return ${bizVar}.create${modelClass}(${modelVar});
 		}
 		else {
-			${modelVar}.setUpdateUserid("dolphin");
+			${modelVar}.setUpdateUserid("system");
 			return ${bizVar}.update${modelClass}(${modelVar});
 		}
 	}

@@ -40,7 +40,7 @@ public class PrintReport {
 	public static void main(String[] args) {
 
 		try {
-			String sourceFileName = "C:\\Users\\dolphin\\test.jrxml";
+			String sourceFileName = "C:\\Users\\system\\test.jrxml";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("barcode", "1231231231");
 			JasperDesign jasperDesign = JRXmlLoader.load(sourceFileName);
