@@ -168,9 +168,7 @@ public class StringUtil {
 	 * @param str
 	 *            原包含小写数字的字符串
 	 * @return String
-	 * @author created by Henry, commented by qiyazhong
-	 * @since JDK 1.7
-	 * @date 2015年7月27日 上午9:52:53
+	 * @author yazhong.qi
 	 */
 	public static String numberUpper(String str) {
 		StringBuffer sb = new StringBuffer();
@@ -314,7 +312,8 @@ public class StringUtil {
 	/**
 	 * 从字符串中取出一定长度的内容
 	 * 
-	 * @param e
+	 * @param str
+	 * @param len
 	 * @return
 	 */
 	public static String prefixLenStr(String str, int len) {
@@ -331,9 +330,8 @@ public class StringUtil {
 
 	/**
 	 * Description : 过滤空字符串 <br>
-	 * Created on 2007-3-8 16:03:13 <br>
-	 * 
-	 * @param argStr
+	 *
+	 * @param inputStr
 	 * @return
 	 */
 	public static String null2Blank(String inputStr) {
