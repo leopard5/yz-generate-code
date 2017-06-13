@@ -6,9 +6,9 @@
 
 	<bean id="datasource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
-		<property name="url" value="${datasource.url}" />
-		<property name="username" value="${datasource.username}" />
-		<property name="password" value="${datasource.password}" />
+		<property name="url" value="${JDBC.mysql.ConnectionURL}" />
+		<property name="username" value="${JDBC.mysql.Username}" />
+		<property name="password" value="${JDBC.mysql.Password}" />
 
 		<!-- 配置初始化大小、最小、最大 -->
 		<property name="maxActive" value="2000"></property>

@@ -24,7 +24,7 @@ import $name.getFullMessageClassName($table);
 import ${config.getProperty("basePackage")}.resp.QueryResultInfo;
 
 /**
- * @CopyRright (c)2008-2016: <上海红星美凯龙悦家互联网科技有限公司>
+ * @CopyRright (c)2008-2016: <xx互联网科技有限公司>
  * @Project: <mmc>
  * @Comments: <Dubbo层${comment}转换类 Dubbo层的Info对象与dal层的model对象相互转换>
  * @JDK 1.7

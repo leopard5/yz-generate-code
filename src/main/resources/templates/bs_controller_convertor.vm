@@ -26,7 +26,7 @@ import $name.getFullControllerQueryVoClassName($table);
 import $name.getFullControllerVoClassName($table);
 
 /**
- * @CopyRright (c)2008-2016: <上海红星美凯龙悦家互联网科技有限公司>
+ * @CopyRright (c)2008-2016: <xx互联网科技有限公司>
  * @Project: <mmc>
  * @Comments: <web层${comment}转换类 将Valid的Vo类转换为Dubbo层的Req对象>
  * @JDK 1.7
