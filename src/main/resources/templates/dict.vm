@@ -27,10 +27,6 @@ $element.dictValue   ((byte) $element.dictId),     // $element.dictName
         return value;
     }
 
-    public void setValue(byte value) {
-        this.value = value;
-    }
-
     public static boolean exists(Byte status) {
         if (status == null) {
             return false;
@@ -48,7 +44,7 @@ $element.dictValue   ((byte) $element.dictId),     // $element.dictName
         return false;
     }
 
-    public boolean equal(Byte val) {
+    public boolean eq(Byte val) {
         return val == null ? false : val.byteValue() == this.value;
     }
 }
