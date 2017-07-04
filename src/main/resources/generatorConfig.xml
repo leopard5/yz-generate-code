@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <!-- 具体配置内容 -->
+    <!-- 数据库连接驱动包位置 -->
+    <classPathEntry location="D:\Repositroy\mysql\mysql-connector-java\6.0.6\mysql-connector-java-6.0.6.jar"/>
+
+    <!-- 一个数据库一个context -->
+    <context id="Mysql2tables" targetRuntime="MyBatis3">
+        <commentGenerator>
+            <property name="suppressDate" value="false"/>         <!-- 是否取消注释 -->
+            <property name="suppressAllComments" value="true"/>   <!-- 是否生成注释代时间戳-->
+        </commentGenerator>
+
+        <!-- 数据库链接URL 用户名和密码 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://db201.dev.rs.com:3306/marketing_center_lottery"
+                        userId="dev"
+                        password="dev123">
+        </jdbcConnection>
+
+        <!-- 类型转换 -->
+        <javaTypeResolver>
+            <!-- 是否使用bigDecimal， false可自动转化以下类型（Long, Integer, Short, etc.） 
+            该属性可以控制是否强制DECIMAL和NUMERIC类型的字段转换为Java类型的java.math.BigDecimal,默认值为false，一般不需要配置。
+            默认情况下的转换规则为：
+            如果精度>0或者长度>18，就会使用java.math.BigDecimal
+            如果精度=0并且10<=长度<=18，就会使用java.lang.Long
+            如果精度=0并且5<=长度<=9，就会使用java.lang.Integer
+            如果精度=0并且长度<5，就会使用java.lang.Short
+            -->
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!-- 生成实体类地址 -->
+        <javaModelGenerator targetPackage="com.yz.mmc.model"
+                            targetProject="D:\test\mybatis_generator\src">
+            <!-- 是否在当前路径下新加一层schema,eg：fase路径xf9.model， true:xf9.model.[schemaName] -->
+            <property name="enableSubPackages" value="false"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!-- 生成mapxml文件 -->
+        <sqlMapGenerator targetPackage="com.yz.mmc.mapxml"
+                         targetProject="D:\test\mybatis_generator\src">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <!-- 生成mapxml对应client，也就是接口dao -->
+        <javaClientGenerator targetPackage="com.yz.mmc.dao"
+                             targetProject="D:\test\mybatis_generator\src" type="XMLMAPPER">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!-- 配置表信息 -->
+
+        <!-- 活动表 -->
+        <table tableName="mmc_activity" domainObjectName="Activity"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 
+               schema:数据库的schema,可以使用SQL通配符匹配。如果设置了该值，生成SQL的表名会变成如schema.tableName的形式。
+               tableName为对应的数据库表 
+               domainObjectName:生成对象的基本名称。如果没有指定，MBG会自动根据表名来生成名称
+               enable*ByExample   是否生成 example类 enableXXX:XXX代表多种SQL方法，该属性用来指定是否生成对应的XXX语句。  
+        -->
+        <!-- 忽略列，不生成bean 字段 -->
+        <!-- <ignoreColumn column="FRED" />   -->
+        <!-- 指定列的java数据类型 -->
+        <!-- <columnOverride column="LONG_VARCHAR_FIELD" jdbcType="VARCHAR" />   -->
+
+    </context>
+</generatorConfiguration>
+
+
+
+
+
+
