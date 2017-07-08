@@ -87,7 +87,7 @@ public class $bizClass {
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
     public ${table.primaryColumn.javaType} create$modelClass($modelClass $modelVar){
 		// TODO: Describe business logic and implement it
-		${mapperVarName}.insert( $modelVar );
+		${mapperVarName}.insertSelective( $modelVar );
 		return ${modelVar}.getId();
 	}
 	
@@ -108,7 +108,7 @@ public class $bizClass {
 			// TODO：这里请写清楚
 		}
 		// TODO: Describe business logic and implement it
-		result = ${mapperVarName}.updateByPrimaryKey( $modelVar );
+		result = ${mapperVarName}.updateByPrimaryKeySelective( $modelVar );
 		return result;	
 	}
 	
