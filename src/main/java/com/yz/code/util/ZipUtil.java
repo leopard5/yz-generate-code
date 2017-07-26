@@ -73,13 +73,21 @@ public class ZipUtil {
                     }
                 }
             } else {
-                InputStream _in = new FileInputStream(srcFile);
-                zipOut.putNextEntry(new ZipEntry(path + srcFile.getName()));
-                int len = 0;
-                while ((len = _in.read(_byte)) > 0) {
-                    zipOut.write(_byte, 0, len);
+                InputStream _in = null;
+                try {
+                    _in = new FileInputStream(srcFile);
+                    zipOut.putNextEntry(new ZipEntry(path + srcFile.getName()));
+                    int len = 0;
+                    while ((len = _in.read(_byte)) > 0) {
+                        zipOut.write(_byte, 0, len);
+                    }
+                    _in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    _in.close();
                 }
-                _in.close();
+
                 zipOut.closeEntry();
             }
         }
@@ -105,6 +113,8 @@ public class ZipUtil {
     @SuppressWarnings("rawtypes")
     public static List<File> upzipFile(File zipFile, String descDir) {
         List<File> _list = new ArrayList<File>();
+        InputStream _in = null;
+        OutputStream _out = null;
         try {
             ZipFile _zipFile = new ZipFile(zipFile, "GBK");
             for (Enumeration entries = _zipFile.getEntries(); entries.hasMoreElements(); ) {
@@ -117,19 +127,29 @@ public class ZipUtil {
                     if (!_parent.exists()) {
                         _parent.mkdirs();
                     }
-                    InputStream _in = _zipFile.getInputStream(entry);
-                    OutputStream _out = new FileOutputStream(_file);
+                    _in = _zipFile.getInputStream(entry);
+                    _out = new FileOutputStream(_file);
                     int len = 0;
                     while ((len = _in.read(_byte)) > 0) {
                         _out.write(_byte, 0, len);
                     }
-                    _in.close();
                     _out.flush();
-                    _out.close();
                     _list.add(_file);
                 }
             }
         } catch (IOException e) {
+        } finally {
+            try {
+                if (_in != null) {
+                    _in.close();
+                }
+                if (_out != null) {
+                    _out.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+            }
         }
         return _list;
     }
