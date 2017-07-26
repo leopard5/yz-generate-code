@@ -22,26 +22,11 @@ import javax.swing.*;
  */
 public class MyBatisCodeGenerator {
 
-    private static void setaTema(final Component objJanela) {
-        try {
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    JFrame.setDefaultLookAndFeelDecorated(true);
-                    JDialog.setDefaultLookAndFeelDecorated(true);
-
-                    SubstanceLookAndFeel.setSkin(new OfficeBlack2007Skin());
-                    objJanela.setVisible(true);
-                }
-            });
-        } catch (Exception e) {
-        }
-    }
-
 
     public static void main(String[] args) throws Exception {
 
         JFrame frame = new JFrame();
-        setaTema(frame);
+//        setaTema(frame);
 
         frame.setBounds(100, 100, 200, 200);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
