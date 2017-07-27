@@ -1,16 +1,3 @@
-/*
- * 文件名：com.wintao.ris.common.Constants.java
- * <p>
- * <li>简述：公有常量类，所有组件均可以使用</li>
- * </p>
- * @Copyright: Copyright (c) 2013 yanxf
- * 修改内容：[新增]
- * 修改时间：2013-4-29 下午10:01:26
- * 修改人：yanxf
- * @since 1.0
- * @version 1.0
- */
-
 package com.yz.code.util;
 
 /**
@@ -22,7 +9,7 @@ package com.yz.code.util;
  * @see
  * @since 1.0
  */
-public interface Constants {
+public class Constants {
 
     /**
      * 数字0

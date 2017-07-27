@@ -138,6 +138,7 @@ public class ZipUtil {
                 }
             }
         } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             try {
                 if (_in != null) {
@@ -148,7 +149,6 @@ public class ZipUtil {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-            } finally {
             }
         }
         return _list;
