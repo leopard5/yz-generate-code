@@ -116,7 +116,7 @@ public class ZipUtil {
         InputStream _in = null;
         OutputStream _out = null;
         try {
-            ZipFile _zipFile = new ZipFile(zipFile, "GBK");
+            ZipFile _zipFile = new ZipFile(zipFile, "UTF-8");  // GBK
             for (Enumeration entries = _zipFile.getEntries(); entries.hasMoreElements(); ) {
                 ZipEntry entry = (ZipEntry) entries.nextElement();
                 File _file = new File(descDir + File.separator + entry.getName());
@@ -135,21 +135,12 @@ public class ZipUtil {
                     }
                     _out.flush();
                     _list.add(_file);
+                    _in.close();
+                    _out.close();
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (_in != null) {
-                    _in.close();
-                }
-                if (_out != null) {
-                    _out.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
         return _list;
     }
