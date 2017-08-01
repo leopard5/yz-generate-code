@@ -1,5 +1,6 @@
 package com.yz.code.main;
 
+import com.yz.code.constant.Constants;
 import com.yz.code.db.DBHelper;
 import com.yz.code.entity.CreAttr;
 import com.yz.code.entity.DbTableColumn;
@@ -116,8 +117,8 @@ public class Creater {
             // attr_list
 
             content = Utililies.parseTemplate(content, "attr_list", createAttrList());
-            content = Utililies.parseTemplate(content, "importDate", hasDate ? Consts.IMPORT_DATE + ";" : "");
-            content = Utililies.parseTemplate(content, "importTimestamp", hasTimestamp ? Consts.IMPORT_TIMESTAMP + ";" : "");
+            content = Utililies.parseTemplate(content, "importDate", hasDate ? Constants.IMPORT_DATE + ";" : "");
+            content = Utililies.parseTemplate(content, "importTimestamp", hasTimestamp ? Constants.IMPORT_TIMESTAMP + ";" : "");
             // attr_getset_list
             content = Utililies.parseTemplate(content, "attr_getset_list", createAttrGetsetList());
 
@@ -432,14 +433,14 @@ public class Creater {
                                 || column.getDataType().equalsIgnoreCase("time")) {
                             hasTimestamp = true;
                         }
-                        sb.append(Consts.TAB1).append("/** ")
+                        sb.append(Constants.TAB1).append("/** ")
                                 .append(CommonUtils.isBlank(column.getColumnComment()) ? column.getColumnName()
                                         : column.getColumnComment())
-                                .append(" */").append(Consts.ENTER).append(Consts.TAB1)
+                                .append(" */").append(Constants.ENTER).append(Constants.TAB1)
                                 .append(Utililies.getAttrDeclare(Utililies.getVarJavaType(column.getDataType()),
                                         Utililies.columnToFeild(column.getColumnName()),
                                         column.getColumnDefault()))
-                                .append(Consts.ENTER).append(Consts.ENTER);
+                                .append(Constants.ENTER).append(Constants.ENTER);
                     }
                 }
             }
@@ -465,7 +466,7 @@ public class Creater {
                                 ? column.getColumnName() : column.getColumnComment());
                         content = Utililies.parseTemplate(content, "JavaType", Utililies.getJavaType(column.getDataType()));
 
-                        sb.append(content).append(Consts.ENTER);
+                        sb.append(content).append(Constants.ENTER);
                     }
                 }
             }
@@ -482,7 +483,7 @@ public class Creater {
                 String maps = "sb.append(\"; {0}=\" + ({0} == null ? \"null\" : {0}.toString()));\r\n";
                 for (int i = 0, k = columnList.size(); i < k; i++) {
                     mdc = (MysqlDbColumn) columnList.get(i);
-                    sb.append(Consts.TAB2).append(CommonUtils.format(maps, Utililies.columnToFeild(mdc.getColumnName())));
+                    sb.append(Constants.TAB2).append(CommonUtils.format(maps, Utililies.columnToFeild(mdc.getColumnName())));
                 }
             }
         }
@@ -576,9 +577,9 @@ public class Creater {
                 for (int i = 0, k = columnList.size(); i < k; i++) {
                     mdc = (MysqlDbColumn) columnList.get(i);
                     if (!mdc.isPrimaryKey()) {
-                        feildMapList.append(Consts.TAB2)
+                        feildMapList.append(Constants.TAB2)
                                 .append(CommonUtils.format(maps, mdc.getColumnName(), mdc.getDataType(), Utililies.columnToFeild(mdc.getColumnName())))
-                                .append(Consts.ENTER);
+                                .append(Constants.ENTER);
                     }
                 }
             }
@@ -598,7 +599,7 @@ public class Creater {
                         feildJoinId.append(", ");
                     }
                 }
-                feildJoinId.append(Consts.ENTER);
+                feildJoinId.append(Constants.ENTER);
             }
         }
         return feildJoinId.toString();
@@ -612,10 +613,10 @@ public class Creater {
                 /*<if test="groupId != null" >
                     and group_id = #{groupId,jdbcType=BIGINT}
                 </if>*/
-                StringBuffer feild = new StringBuffer(Consts.TAB2);
+                StringBuffer feild = new StringBuffer(Constants.TAB2);
                 feild.append("<if test=\"{0} != null\" >\r\n")
-                        .append(Consts.TAB3).append("and {1} = #{{2},jdbcType={3}}\r\n")
-                        .append(Consts.TAB2).append("</if>\r\n");
+                        .append(Constants.TAB3).append("and {1} = #{{2},jdbcType={3}}\r\n")
+                        .append(Constants.TAB2).append("</if>\r\n");
                 for (int i = 0, k = columnList.size(); i < k; i++) {
                     mdc = (MysqlDbColumn) columnList.get(i);
                     feildIfList.append(
@@ -634,7 +635,7 @@ public class Creater {
     }
 
     public String getFeildJoin() {
-        StringBuffer feildJoin = new StringBuffer(Consts.TAB3);
+        StringBuffer feildJoin = new StringBuffer(Constants.TAB3);
         if (columnList != null) {
             if (DBHelper.sections.equals(MySqlSetPanel.sections)) {
                 MysqlDbColumn mdc = null;
@@ -648,14 +649,14 @@ public class Creater {
                         feildJoin.append(mdc.getColumnName()).append(", ");
                     }
                 }
-                feildJoin.append(Consts.ENTER);
+                feildJoin.append(Constants.ENTER);
             }
         }
         return feildJoin.toString().replaceFirst(", $", "");
     }
 
     public String getFeildMapJoin() {
-        StringBuffer feildMapJoin = new StringBuffer(Consts.TAB3);
+        StringBuffer feildMapJoin = new StringBuffer(Constants.TAB3);
         if (columnList != null) {
             if (DBHelper.sections.equals(MySqlSetPanel.sections)) {
                 MysqlDbColumn mdc = null;
@@ -688,15 +689,15 @@ public class Creater {
                 /*<if test="appSysName != null">
                     APP_SYS_NAME,
                   </if>*/
-                StringBuffer feild = new StringBuffer(Consts.TAB2);
+                StringBuffer feild = new StringBuffer(Constants.TAB2);
                 feild.append("<if test=\"{0} != null\">\r\n")
-                        .append(Consts.TAB3).append("{1},\r\n")
-                        .append(Consts.TAB2).append("</if>\r\n");
+                        .append(Constants.TAB3).append("{1},\r\n")
+                        .append(Constants.TAB2).append("</if>\r\n");
                 for (int i = 0, k = columnList.size(); i < k; i++) {
                     mdc = (MysqlDbColumn) columnList.get(i);
                     if (mdc.isPrimaryKey()) {
                         if (mdc.getExtra() == null || !mdc.getExtra().equalsIgnoreCase("auto_increment")) {
-                            feildIfList.append(Consts.TAB3)
+                            feildIfList.append(Constants.TAB3)
                                     .append(Utililies.columnToFeild(mdc.getColumnName()))
                                     .append(mdc.getColumnName())
                                     .append(",\r\n");
@@ -724,10 +725,10 @@ public class Creater {
                 /*<if test="appSysCode != null">
                     #{appSysCode,jdbcType=VARCHAR},
                   </if>*/
-                StringBuffer feild = new StringBuffer(Consts.TAB2);
+                StringBuffer feild = new StringBuffer(Constants.TAB2);
                 feild.append("<if test=\"{0} != null\">\r\n")
-                        .append(Consts.TAB3).append("#{{0},jdbcType={1}},\r\n")
-                        .append(Consts.TAB2).append("</if>\r\n");
+                        .append(Constants.TAB3).append("#{{0},jdbcType={1}},\r\n")
+                        .append(Constants.TAB2).append("</if>\r\n");
                 String pmap = "#{{0},jdbcType={1}},\r\n";
                 for (int i = 0, k = columnList.size(); i < k; i++) {
                     mdc = (MysqlDbColumn) columnList.get(i);
@@ -762,10 +763,10 @@ public class Creater {
                 /*<if test="appSysCode != null">
                     APP_SYS_CODE = #{appSysCode,jdbcType=VARCHAR},
                   </if>*/
-                StringBuffer feild = new StringBuffer(Consts.TAB2);
+                StringBuffer feild = new StringBuffer(Constants.TAB2);
                 feild.append("<if test=\"{0} != null\">\r\n")
-                        .append(Consts.TAB3).append("{1} = #{{0},jdbcType={2}},\r\n")
-                        .append(Consts.TAB2).append("</if>\r\n");
+                        .append(Constants.TAB3).append("{1} = #{{0},jdbcType={2}},\r\n")
+                        .append(Constants.TAB2).append("</if>\r\n");
                 for (int i = 0, k = columnList.size(); i < k; i++) {
                     mdc = (MysqlDbColumn) columnList.get(i);
                     if (!mdc.isPrimaryKey()) {
@@ -794,7 +795,7 @@ public class Creater {
                 for (int i = 0, k = columnList.size(); i < k; i++) {
                     mdc = (MysqlDbColumn) columnList.get(i);
                     if (!mdc.isPrimaryKey()) {
-                        feildSetList.append(Consts.TAB2).append(
+                        feildSetList.append(Constants.TAB2).append(
                                 CommonUtils.format(
                                         map,
                                         mdc.getColumnName(),
@@ -820,7 +821,7 @@ public class Creater {
                     mdc = (MysqlDbColumn) columnList.get(i);
                     if (mdc.isPrimaryKey()) {
                         if (mdc.getExtra() == null || !mdc.getExtra().equalsIgnoreCase("auto_increment")) {
-                            feildSetList.append(Consts.TAB3).append(
+                            feildSetList.append(Constants.TAB3).append(
                                     CommonUtils.format(
                                             map,
                                             Utililies.columnToFeild(mdc.getColumnName()),
@@ -829,7 +830,7 @@ public class Creater {
                             );
                         }
                     } else {
-                        feildSetList.append(Consts.TAB2).append(
+                        feildSetList.append(Constants.TAB2).append(
                                 CommonUtils.format(
                                         map,
                                         Utililies.columnToFeild(mdc.getColumnName()),

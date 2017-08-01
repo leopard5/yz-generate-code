@@ -1,5 +1,7 @@
 package com.yz.code.util;
 
+import com.yz.code.constant.Constants;
+
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;

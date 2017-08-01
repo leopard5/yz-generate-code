@@ -1,5 +1,7 @@
 package com.yz.code.util;
 
+import com.yz.code.constant.Constants;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
@@ -189,45 +191,45 @@ public class Utililies {
     }
 
     public static String getJavaType(String jdbcType) {
-        String javaType = Consts.OBJECT;
+        String javaType = Constants.OBJECT;
         if (jdbcType.equalsIgnoreCase("varchar") || jdbcType.equalsIgnoreCase("char")) {
-            javaType = Consts.STRING;
+            javaType = Constants.STRING;
         } else if (jdbcType.equalsIgnoreCase("int") || jdbcType.equalsIgnoreCase("integer")) {
-            javaType = Consts.INTEGER;
+            javaType = Constants.INTEGER;
         } else if (jdbcType.equalsIgnoreCase("long") || jdbcType.equalsIgnoreCase("bigint")) {
-            javaType = Consts.LONG;
+            javaType = Constants.LONG;
         } else if (jdbcType.equalsIgnoreCase("float") || jdbcType.equalsIgnoreCase("number")) {
-            javaType = Consts.FLOAT;
+            javaType = Constants.FLOAT;
         } else if (jdbcType.equalsIgnoreCase("double") || jdbcType.equalsIgnoreCase("decimal")) {
-            javaType = Consts.DOUBLE;
+            javaType = Constants.DOUBLE;
         } else if (jdbcType.equalsIgnoreCase("date")) {
-            javaType = Consts.DATE;
+            javaType = Constants.DATE;
         } else if (jdbcType.equalsIgnoreCase("timestamp") || jdbcType.equalsIgnoreCase("time")) {
-            javaType = Consts.TIMESTAMP;
+            javaType = Constants.TIMESTAMP;
         } else if (jdbcType.equalsIgnoreCase("blob")) {
-            javaType = Consts.LBYTE;
+            javaType = Constants.LBYTE;
         }
         return javaType;
     }
 
     public static String getVarJavaType(String jdbcType) {
-        String javaType = Consts.PRIVATE_OBJECT;
+        String javaType = Constants.PRIVATE_OBJECT;
         if (jdbcType.equalsIgnoreCase("varchar") || jdbcType.equalsIgnoreCase("char")) {
-            javaType = Consts.PRIVATE_STRING;
+            javaType = Constants.PRIVATE_STRING;
         } else if (jdbcType.equalsIgnoreCase("int") || jdbcType.equalsIgnoreCase("integer")) {
-            javaType = Consts.PRIVATE_INTEGER;
+            javaType = Constants.PRIVATE_INTEGER;
         } else if (jdbcType.equalsIgnoreCase("long") || jdbcType.equalsIgnoreCase("bigint")) {
-            javaType = Consts.PRIVATE_LONG;
+            javaType = Constants.PRIVATE_LONG;
         } else if (jdbcType.equalsIgnoreCase("float") || jdbcType.equalsIgnoreCase("number")) {
-            javaType = Consts.PRIVATE_FLOAT;
+            javaType = Constants.PRIVATE_FLOAT;
         } else if (jdbcType.equalsIgnoreCase("double") || jdbcType.equalsIgnoreCase("decimal")) {
-            javaType = Consts.PRIVATE_DOUBLE;
+            javaType = Constants.PRIVATE_DOUBLE;
         } else if (jdbcType.equalsIgnoreCase("date")) {
-            javaType = Consts.PRIVATE_DATE;
+            javaType = Constants.PRIVATE_DATE;
         } else if (jdbcType.equalsIgnoreCase("timestamp") || jdbcType.equalsIgnoreCase("time")) {
-            javaType = Consts.PRIVATE_TIMESTAMP;
+            javaType = Constants.PRIVATE_TIMESTAMP;
         } else if (jdbcType.equalsIgnoreCase("blob")) {
-            javaType = Consts.PRIVATE_LBYTE;
+            javaType = Constants.PRIVATE_LBYTE;
         }
         return javaType;
     }

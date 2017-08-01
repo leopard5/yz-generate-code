@@ -1,6 +1,88 @@
-package com.yz.code.util;
+package com.yz.code.constant;
 
-public class Consts {
+public class Constants {
+
+    public static final String GENERATOR_CONFIG_FILE = "generatorConfig.xml";
+    public static final String FOLDER_SEPARATOR = ".";
+    public static final String TABLE_NAME_SEPARATOR = ",";
+
+    /**
+     * 数字0
+     */
+    public static final int NUM_INT0 = 0;
+    /**
+     * 数字1
+     */
+    public static final int NUM_INT1 = 1;
+    /**
+     * 数字2
+     */
+    public static final int NUM_INT2 = 2;
+    /**
+     * 数字3
+     */
+    public static final int NUM_INT3 = 3;
+    /**
+     * 数字4
+     */
+    public static final int NUM_INT4 = 4;
+    /**
+     * 数字48
+     */
+    public static final int NUM_INT48 = 48;
+    /**
+     * 数字57
+     */
+    public static final int NUM_INT57 = 57;
+    /**
+     * 数字64
+     */
+    public static final int NUM_INT64 = 64;
+    /**
+     * 数字65
+     */
+    public static final int NUM_INT65 = 65;
+    /**
+     * 数字常量90
+     */
+    public static final int NUM_INT90 = 90;
+    /**
+     * 数字常量97
+     */
+    public static final int NUM_INT97 = 97;
+    /**
+     * 数字常量122
+     */
+    public static final int NUM_INT122 = 122;
+    /**
+     * 数字常量255
+     */
+    public static final int NUM_INT255 = 255;
+    /**
+     * 字符集UTF8
+     */
+    public static final String CHARSET_UTF8 = "UTF-8";
+
+    /**
+     * 字符集GBK
+     */
+    public static final String CHARSET_GBK = "GBK";
+    /**
+     * 字符集ISO8859-1
+     */
+    public static final String CHARSET_ISO88591 = "ISO8859-1";
+
+    /**
+     * 日期格式字符串常量 "yyyy-MM-dd"
+     */
+    public static final String PATTERN_DATE = "yyyy-MM-dd";
+
+    /**
+     * 日期+时间格式字符串常量 "yyyy-MM-dd HH:mm:ss"
+     */
+    public static final String PATTERN_DATE_TIME = "yyyy-MM-dd HH:mm:ss";
+
+
 
     public final static String PRIVATE = "private ";
     public final static String PUBLIC = "public ";

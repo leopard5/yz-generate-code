@@ -9,7 +9,6 @@ public class ApplicationContextUtil implements ApplicationContextAware {
 
 	private static ApplicationContext applicationContext;
 
-	@Override
 	public synchronized void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		if (ApplicationContextUtil.applicationContext == null) {
 			ApplicationContextUtil.applicationContext = applicationContext;

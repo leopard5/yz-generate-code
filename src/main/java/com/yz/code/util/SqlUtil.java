@@ -2,6 +2,7 @@ package com.yz.code.util;
 
 import java.util.List;
 
+import com.yz.code.constant.Constants;
 import org.springframework.util.StringUtils;
 
 import com.yz.code.schema.ColumnSchema;
@@ -17,7 +18,8 @@ public class SqlUtil {
 				sb.append(col.getColumnName());
 			}
 			else {
-				sb.append(col.getColumnName() + ",");
+				sb.append(col.getColumnName());
+				sb.append(Constants.TABLE_NAME_SEPARATOR);
 			}
 		}
 		return sb.toString();
@@ -188,6 +190,17 @@ public class SqlUtil {
 			}
 
 		}
+		return sb.toString();
+	}
+
+	public static  String getDictSQL(){
+		StringBuilder sb = new StringBuilder(50);
+		sb.append("SELECT ");
+		sb.append("dict_item,dict_id,dict_value,dict_name");
+		sb.append(" FROM ");
+		sb.append(" mmc_dictionary ");
+		sb.append(" WHERE ");
+		sb.append(" STATUS = 1 ");
 		return sb.toString();
 	}
 }

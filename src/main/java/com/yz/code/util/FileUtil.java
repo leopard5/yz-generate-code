@@ -1,15 +1,8 @@
 package com.yz.code.util;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.RandomAccessFile;
+import org.springframework.core.io.ClassPathResource;
+
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
@@ -17,18 +10,15 @@ import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.springframework.core.io.ClassPathResource;
-
 /**
  * 文本文件读写
- * 
- * @author qiyazhong
  *
+ * @author qiyazhong
  */
 public abstract class FileUtil {
     /**
      * 使用nio方式进行文件写入，适合大文件
-     * 
+     *
      * @param str
      * @param fileName
      * @throws IOException
@@ -41,7 +31,7 @@ public abstract class FileUtil {
 
     /**
      * 使用nio方式进行文件写入，适合大文件
-     * 
+     *
      * @param data
      * @param fileName
      * @throws IOException
@@ -64,7 +54,7 @@ public abstract class FileUtil {
 
     /**
      * 使用nio方式进行文件写入，适合大文件
-     * 
+     *
      * @param data
      * @param fileName
      * @throws IOException
@@ -95,9 +85,9 @@ public abstract class FileUtil {
 
     /**
      * 直接用FileOutputStream进行文件写入
-     * 
-     * @param str
+     *
      * @param fileName
+     * @param data
      * @throws IOException
      */
     public static void writeUseBio(String fileName, byte[] data)
@@ -117,7 +107,7 @@ public abstract class FileUtil {
 
     /**
      * 直接用FileOutputStream进行文件写入
-     * 
+     *
      * @param str
      * @param fileName
      * @throws IOException
@@ -133,21 +123,27 @@ public abstract class FileUtil {
 
     public static String readUseBio(String fileName) throws IOException {
         BufferedReader reader = null;
+        FileReader fr = null;
         try {
-            reader = new BufferedReader(new FileReader(fileName));
+            fr = new FileReader(fileName);
+            reader = new BufferedReader(fr);
             String tempString = null;
             StringBuilder sb = new StringBuilder();
             while ((tempString = reader.readLine()) != null) {
                 sb.append(tempString);
             }
             return sb.toString();
-
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             if (reader != null) {
                 reader.close();
-                reader = null;
+            }
+            if (fr != null) {
+                fr.close();
             }
         }
+        return null;
     }
 
     public static long readLong(String fileName) throws IOException {
@@ -210,7 +206,7 @@ public abstract class FileUtil {
 
     /**
      * 创建文件目录
-     * 
+     *
      * @param first
      * @param more
      * @throws IOException
@@ -222,7 +218,7 @@ public abstract class FileUtil {
 
     /**
      * 创建文件
-     * 
+     *
      * @param first
      * @param more
      * @throws IOException
@@ -234,7 +230,7 @@ public abstract class FileUtil {
 
     /**
      * 创建文件目录
-     * 
+     *
      * @param path
      * @throws IOException
      */
@@ -246,7 +242,7 @@ public abstract class FileUtil {
 
     /**
      * 创建文件
-     * 
+     *
      * @param file
      * @throws IOException
      */
@@ -262,7 +258,7 @@ public abstract class FileUtil {
 
     /**
      * 根据class path读取资源内容
-     * 
+     *
      * @param classPath
      * @return
      * @throws IOException
@@ -278,7 +274,7 @@ public abstract class FileUtil {
 
     /**
      * 根据class path读取资源内容
-     * 
+     *
      * @param classPath
      * @return
      * @throws IOException
@@ -297,38 +293,42 @@ public abstract class FileUtil {
         } finally {
             if (inputStream != null) {
                 inputStream.close();
-                inputStream = null;
             }
         }
     }
 
     /**
-     * 
      * 向文件添加内容
-     * 
+     *
      * @param fileName
      * @param data
-     * @throws IOException
-     *             void
+     * @throws IOException void
      * @throws
      */
     public static void appendToFile(String fileName, String data)
             throws IOException {
-        FileOutputStream file = new FileOutputStream(fileName, true);
-        DataOutputStream out = new DataOutputStream(file);
-        out.writeBytes(data);
-        out.flush();
-        out.close();
+        FileOutputStream file = null;
+        DataOutputStream out = null;
+        try {
+            file = new FileOutputStream(fileName, true);
+            out = new DataOutputStream(file);
+            out.writeBytes(data);
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            file.close();
+            out.close();
+        }
     }
 
     /**
-     * 
      * 二进制拷贝
-     * 
+     *
      * @param input
      * @param output
-     * @throws IOException
-     *             void
+     * @throws IOException void
      */
     public static void binaryCopy(InputStream input, OutputStream output)
             throws IOException {
@@ -340,9 +340,8 @@ public abstract class FileUtil {
     }
 
     /**
-     * 
      * 删除目录
-     * 
+     *
      * @param dir
      * @return boolean
      * @throws
@@ -373,9 +372,8 @@ public abstract class FileUtil {
     }
 
     /**
-     * 
      * 删除文件
-     * 
+     *
      * @param dirname
      * @return boolean
      * @throws
@@ -385,13 +383,11 @@ public abstract class FileUtil {
     }
 
     /**
-     * 
      * 输入流变String
-     * 
+     *
      * @param is
      * @return
-     * @throws IOException
-     *             String
+     * @throws IOException String
      */
     public static String inputStreamToString(InputStream is) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(is));

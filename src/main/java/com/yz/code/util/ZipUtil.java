@@ -1,5 +1,6 @@
 package com.yz.code.util;
 
+import com.yz.code.constant.Constants;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
 import org.apache.tools.zip.ZipOutputStream;
@@ -25,7 +26,7 @@ public class ZipUtil {
             if (zip.endsWith(".zip") || zip.endsWith(".ZIP")) {
                 fs = new FileOutputStream(new File(zip));
                 zipOut = new ZipOutputStream(fs);
-                zipOut.setEncoding("GBK");
+                zipOut.setEncoding(Constants.CHARSET_UTF8);
                 for (File _f : srcFiles) {
                     handlerFile(zip, zipOut, _f, "");
                 }
@@ -116,7 +117,7 @@ public class ZipUtil {
         InputStream _in = null;
         OutputStream _out = null;
         try {
-            ZipFile _zipFile = new ZipFile(zipFile, "UTF-8");  // GBK
+            ZipFile _zipFile = new ZipFile(zipFile, Constants.CHARSET_UTF8);  // GBK
             for (Enumeration entries = _zipFile.getEntries(); entries.hasMoreElements(); ) {
                 ZipEntry entry = (ZipEntry) entries.nextElement();
                 File _file = new File(descDir + File.separator + entry.getName());

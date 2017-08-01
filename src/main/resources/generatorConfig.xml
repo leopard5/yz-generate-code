@@ -3,9 +3,13 @@
         PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
+
+    <!-- 引入配置文件 -->
+    <properties resource="local.properties" />
+
     <!-- 具体配置内容 -->
     <!-- 数据库连接驱动包位置 -->
-    <classPathEntry location="D:\Repositroy\mysql\mysql-connector-java\6.0.6\mysql-connector-java-6.0.6.jar"/>
+    <classPathEntry location="${mysql.connect.jar.url}"/>
 
     <!-- 一个数据库一个context -->
     <context id="Mysql2tables" targetRuntime="MyBatis3">
@@ -15,15 +19,15 @@
         </commentGenerator>
 
         <!-- 数据库链接URL 用户名和密码 -->
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://db201.dev.rs.com:3306/marketing_center_lottery"
-                        userId="dev"
-                        password="dev123">
+        <jdbcConnection driverClass="${mysql.connect.driver}"
+                        connectionURL="${mysql.connect.url}"
+                        userId="${mysql.connect.username}"
+                        password="${mysql.connect.password}">
         </jdbcConnection>
 
         <!-- 类型转换 -->
         <javaTypeResolver>
-            <!-- 是否使用bigDecimal， false可自动转化以下类型（Long, Integer, Short, etc.） 
+            <!-- 是否使用bigDecimal， false可自动转化以下类型（Long, Integer, Short, etc.）
             该属性可以控制是否强制DECIMAL和NUMERIC类型的字段转换为Java类型的java.math.BigDecimal,默认值为false，一般不需要配置。
             默认情况下的转换规则为：
             如果精度>0或者长度>18，就会使用java.math.BigDecimal
@@ -35,26 +39,26 @@
         </javaTypeResolver>
 
         <!-- 生成实体类地址 -->
-        <javaModelGenerator targetPackage="com.yz.mmc.model"
-                            targetProject="D:\test\mybatis_generator\src">
+        <javaModelGenerator targetPackage="${output.model.package}"
+                            targetProject="${output.generator.project}">
             <!-- 是否在当前路径下新加一层schema,eg：fase路径xf9.model， true:xf9.model.[schemaName] -->
             <property name="enableSubPackages" value="false"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
         <!-- 生成mapxml文件 -->
-        <sqlMapGenerator targetPackage="com.yz.mmc.mapxml"
-                         targetProject="D:\test\mybatis_generator\src">
+        <sqlMapGenerator targetPackage="${output.mapperxml.package}"
+                         targetProject="${output.generator.project}">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
         <!-- 生成mapxml对应client，也就是接口dao -->
-        <javaClientGenerator targetPackage="com.yz.mmc.dao"
-                             targetProject="D:\test\mybatis_generator\src" type="XMLMAPPER">
+        <javaClientGenerator targetPackage="${output.mapper.package}"
+                             targetProject="${output.generator.project}" type="XMLMAPPER">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
-        <!-- 配置表信息 -->
+        <!-- 配置表信息 start -->
 
         <!-- 活动表 -->
         <table tableName="mmc_activity" domainObjectName="Activity"
@@ -64,6 +68,488 @@
                enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
             <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
         </table>
+
+        <!-- 活动创建参与状态审核记录表 -->
+        <table tableName="mmc_activity_audit_log" domainObjectName="ActivityAuditLog"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 活动展位关联表 -->
+        <table tableName="mmc_activity_booth" domainObjectName="ActivityBooth"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 活动下发表 -->
+        <table tableName="mmc_activity_issued" domainObjectName="ActivityIssued"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 促销活动租金记录表 -->
+        <table tableName="mmc_activity_rents_log" domainObjectName="ActivityRentsLog"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 活动模版表 -->
+        <table tableName="mmc_activity_template" domainObjectName="ActivityTemplate"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 活动模版类型表 -->
+        <table tableName="mmc_activity_template_type" domainObjectName="ActivityTemplateType"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 城市映射表 -->
+        <table tableName="mmc_city_mapping" domainObjectName="CityMapping"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 优惠券表 -->
+        <table tableName="mmc_coupon" domainObjectName="Coupon"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 优惠券渠道表 -->
+        <table tableName="mmc_coupon_channel" domainObjectName="CouponChannel"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 券包表 -->
+        <table tableName="mmc_coupon_package" domainObjectName="CouponPackage"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 券包渠道表 -->
+        <table tableName="mmc_coupon_package_channel" domainObjectName="CouponPackageChannel"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 字典表 -->
+        <table tableName="mmc_dictionary" domainObjectName="Dictionary"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 线下优惠券导出表表 -->
+        <table tableName="mmc_export_coupon" domainObjectName="ExportCoupon"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+
+        <!-- 外部系统交互日志表 -->
+        <table tableName="mmc_interaction_log" domainObjectName="InteractionLog"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 商场下发审核记录表 -->
+        <table tableName="mmc_issued_audit_log" domainObjectName="IssuedAuditLog"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 下发商场表 -->
+        <table tableName="mmc_issued_mall" domainObjectName="IssuedMall"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 下发商户表 -->
+        <table tableName="mmc_issued_shop" domainObjectName="IssuedShop"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 商品促销表 -->
+        <table tableName="mmc_item_promotion" domainObjectName="ItemPromotion"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 促销使用范围表 -->
+        <table tableName="mmc_item_promotion_scope" domainObjectName="ItemPromotionScope"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 促销商品提报log流水表 -->
+        <table tableName="mmc_item_promotion_scope_log" domainObjectName="ItemPromotionScopeLog"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 商品提报库存记录表 -->
+        <table tableName="mmc_item_stock_transaction" domainObjectName="ItemStockTransaction"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 抽奖活动统计数据 -->
+        <table tableName="mmc_lottery_activity_data" domainObjectName="LotteryActivityData"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 抽奖活动模板 -->
+        <table tableName="mmc_lottery_activity_tmpl" domainObjectName="LotteryActivityTmpl"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 用户抽奖次数 -->
+        <table tableName="mmc_lottery_draw_count" domainObjectName="LotteryDrawCount"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 额外抽奖次数日志记录表 -->
+        <table tableName="mmc_lottery_draw_count_log" domainObjectName="LotteryDrawCountLog"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 抽奖记录表 -->
+        <table tableName="mmc_lottery_log" domainObjectName="LotteryLog"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 奖项表 -->
+        <table tableName="mmc_lottery_prize_item" domainObjectName="LotteryPrizeItem"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 奖品中奖时间限制 -->
+        <table tableName="mmc_lottery_prize_limit" domainObjectName="LotteryPrizeLimit"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 抽奖资格 -->
+        <table tableName="mmc_lottery_qualification" domainObjectName="LotteryQualification"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 商场返点配置 -->
+        <table tableName="mmc_mall_config" domainObjectName="MallConfig"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 支付订单记录表 -->
+        <table tableName="mmc_pay_order" domainObjectName="PayOrder"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 奖池表 -->
+        <table tableName="mmc_prize" domainObjectName="Prize"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 奖品活动表 -->
+        <table tableName="mmc_prize_activity" domainObjectName="PrizeActivity"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 抽奖活动审核记录表 -->
+        <table tableName="mmc_prize_activity_audit_log" domainObjectName="PrizeActivityAuditLog"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 奖品是否搜集信息 -->
+        <table tableName="mmc_prize_info" domainObjectName="PrizeInfo"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 中奖记录表 -->
+        <table tableName="mmc_prize_record" domainObjectName="PrizeRecord"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 抽奖活动信息搜集 -->
+        <table tableName="mmc_prize_record_info" domainObjectName="PrizeRecordInfo"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 促销商品提报表 -->
+        <table tableName="mmc_promotion_apply_scope" domainObjectName="PromotionApplyScope"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+
+        <!-- 促销状态审核记录表 -->
+        <table tableName="mmc_promotion_audit_log" domainObjectName="PromotionAuditLog"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 促销商户展位关系表 -->
+        <table tableName="mmc_promotion_shop_booth" domainObjectName="PromotionShopBooth"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 促销的分摊记录表 -->
+        <table tableName="mmc_promotions_share" domainObjectName="PromotionsShare"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+
+        <!-- 促销返点推送费用中心日志表 -->
+        <table tableName="mmc_rebates_log" domainObjectName="RebatesLog"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 促销返点商户设置表 -->
+        <table tableName="mmc_rebates_mall" domainObjectName="RebatesMall"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 促销方案表 -->
+        <table tableName="mmc_rebates_plan" domainObjectName="RebatesPlan"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 促销方案详细表 -->
+        <table tableName="mmc_rebates_plan_detail" domainObjectName="RebatesPlanDetail"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 状态记录表 -->
+        <table tableName="mmc_status_log" domainObjectName="StatusLog"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 优惠券增发记录表 -->
+        <table tableName="mmc_stock_transaction" domainObjectName="StockTransaction"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 促销表 -->
+        <table tableName="mmc_subpromotion" domainObjectName="Subpromotion"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 订单促销使用记录表 -->
+        <table tableName="mmc_used_promotion" domainObjectName="UsedPromotion"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+
+        <!-- 用户预订商品表 -->
+        <table tableName="mmc_user_booking" domainObjectName="UserBooking"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 用户领券记录表 -->
+        <table tableName="mmc_user_coupon" domainObjectName="UserCoupon"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 领券状态变化日志表 -->
+        <table tableName="mmc_user_coupon_log" domainObjectName="UserCouponLog"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 配置表信息 end -->
+
+        <!--<table tableName="mmc_sync_data" domainObjectName="SyncData"-->
+               <!--enableCountByExample="true" enableUpdateByExample="true"-->
+               <!--enableDeleteByExample="true" enableSelectByExample="true"-->
+               <!--selectByExampleQueryId="true" enableInsert="true"-->
+               <!--enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">-->
+            <!--<generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>-->
+        <!--</table>-->
 
         <!-- 
                schema:数据库的schema,可以使用SQL通配符匹配。如果设置了该值，生成SQL的表名会变成如schema.tableName的形式。
