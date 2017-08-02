@@ -277,7 +277,6 @@ public class DataGenerator {
         // generateMapper(tableSchema, ctx, rootDir);
         // generateMessageQuery(tableSchema, ctx, rootDir);
 
-        //OK generateException(tableSchema, ctx, rootDir);
         //OK generateBiz(tableSchema, ctx, rootDir);
         //OK generateValidate(tableSchema, ctx, rootDir);
         //OK generateServiceInterface(tableSchema, ctx, rootDir);
@@ -307,15 +306,6 @@ public class DataGenerator {
         generate(
                 "/src/main/resources/templates/validate.vm",
                 rootDir + "18_validate\\" + NameUtil.getValidateClassName(tableSchema) + ".java",
-                tableSchema,
-                ctx);
-    }
-
-    // 生成异常类
-    public static void generateException(TableSchema tableSchema, ToolContext ctx, String rootDir) throws IOException {
-        generate(
-                "/src/main/resources/templates/exception.vm",
-                rootDir + "16_exception\\" + NameUtil.getExceptionClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
@@ -379,8 +369,6 @@ public class DataGenerator {
             // biz
             // 15
             generateBiz(tableSchema, ctx, rootDir);
-            // 16
-            generateException(tableSchema, ctx, rootDir);
 
             // api
             // 17
