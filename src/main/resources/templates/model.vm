@@ -27,4 +27,7 @@ public class $table.modelName {
 		this.$column.propertyName = $column.propertyName;
 	}
     #end
+
+	//----------------------------------------------------------------------
+	// 以下为自定义属性值
 }
