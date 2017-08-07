@@ -12,7 +12,7 @@ public class $table.modelName {
 	#foreach($column in $table.columns)
 
 	/**
-	 * @Fields $column.propertyName : $column.remarks
+	 * $column.remarks
 	 */
 	private $column.javaType $column.propertyName;
 	#end
@@ -28,6 +28,6 @@ public class $table.modelName {
 	}
     #end
 
-	//----------------------------------------------------------------------
-	// 以下为自定义属性值
+	//-----------------------------------------------------------------------
+	// custom property definition
 }

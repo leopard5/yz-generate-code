@@ -62,4 +62,7 @@ private $column.javaType ${column.propertyName};
 		#end
 	
 	#end
+
+//-----------------------------------------------------------------------
+// custom property definition
 }

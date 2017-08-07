@@ -24,14 +24,14 @@ import $name.getFullMessageClassName($table);
 import ${config.getProperty("basePackage")}.resp.QueryResultInfo;
 
 /**
- * @CopyRright (c)2008-2016: <xx互联网科技有限公司>
+ * @CopyRright (c)2008-2016: <${companyname}>
  * @Project: <mmc>
  * @Comments: <Dubbo层${comment}转换类 Dubbo层的Info对象与dal层的model对象相互转换>
  * @JDK 1.7
  * @Author: <yazhong.qi>
  * @email : <yazhong.qi@163.com>
- * @Create Date: <2016-12-20>
- * @Modify Date: <2016-12-20>
+ * @Create Date: <${nowtime}>
+ * @Modify Date: <${nowtime}>
  * @Version: <1.0>
  */
 public abstract class ${name.getConvertorClassName($table)} {

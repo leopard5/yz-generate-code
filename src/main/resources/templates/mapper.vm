@@ -28,7 +28,9 @@ public interface $mapperClass {
     $table.modelName selectByPrimaryKeyForUpdate($keyParameters);
 
     List<${modelClass}> query${modelClass}($messageQueryClass $modelQueryVar);
-		
+
+//	int insertBatch(@Param("modelList")List<${modelClass} modelList>)
+
 	#foreach($index in $table.indexes)
 	#if($index.isUnique())
 	

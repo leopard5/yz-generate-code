@@ -17,10 +17,10 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import ${name.getFullBizClassName($table)};
@@ -29,7 +29,7 @@ import ${name.getFullModelQueryClassName($table)};
 import ${config.getProperty("basePackage")}.model.Message;
 import ${config.getProperty("basePackage")}.model.QueryResult;
 
-@Controller
+@RestController
 @RequestMapping("${modelVar}")
 public class ${modelClass}Controller {
 
@@ -43,26 +43,22 @@ public class ${modelClass}Controller {
 	}
 
 	@RequestMapping("query")
-	@ResponseBody
 	public QueryResult<${modelClass}> query(${modelQueryClass} ${modelQueryVar}) {
 		Message<QueryResult<${modelClass}>> resultMessage = ${bizVar}.query${modelClass}(${modelQueryVar});
 		return resultMessage.getData();
 	}
 
 	@RequestMapping("get")
-	@ResponseBody
 	public ${modelClass} get(int id) {
 		return ${bizVar}.get${modelClass}(id).getData();
 	}
 
 	@RequestMapping("getAll")
-	@ResponseBody
 	public List<${modelClass}> getAll() {
 		return ${bizVar}.getAll${modelClass}().getData();
 	}
 	
 	@RequestMapping(value = "save", method = RequestMethod.POST)
-	@ResponseBody
 	public Message<Integer> save(${modelClass} ${modelVar}) {
 		if (${modelVar}.getId() == null) {
 			${modelVar}.setCreateUserid("system");
@@ -75,7 +71,6 @@ public class ${modelClass}Controller {
 	}
 
 	@RequestMapping("delete")
-	@ResponseBody
 	public Message<Integer> delete(Integer id) {
 		return ${bizVar}.delete${modelClass}(id);
 	}

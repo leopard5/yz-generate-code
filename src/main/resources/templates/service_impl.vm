@@ -39,14 +39,14 @@ import ${config.getProperty("basePackage")}.resp.QueryResultInfo;
 import ${name.getFullServiceClassName($table)};
 
 /**
- * @CopyRright (c)2008-2016: <xx互联网科技有限公司>
+ * @CopyRright (c)2008-2016: <${companyname}>
  * @Project: <mmc>
  * @Comments: <Dubbo Service ${comment}管理类>
  * @JDK 1.7
  * @Author: <yazhong.qi>
  * @email : <yazhong.qi@163.com>
- * @Create Date: <2016-12-20>
- * @Modify Date: <2016-12-20>
+ * @Create Date: <${nowtime}>
+ * @Modify Date: <${nowtime}>
  * @Version: <1.0>
  */
 @Service("$name.getServiceVarName($table)")

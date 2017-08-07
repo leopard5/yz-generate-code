@@ -96,9 +96,12 @@ public class DataGenerator {
     private static void generateCode(DatabaseSchema databaseSchema) throws IOException {
         String[] tables = ConfigManager.getProperty("tables").split(Constants.TABLE_NAME_SEPARATOR);
         if (tables == null) {
-            throw new IOException("generate tables is null");
+            throw new IOException("generate tables not setting");
         }
         String rootDir = ConfigManager.getProperty("output.root.dir");
+        if (rootDir == null || !StringUtils.hasText(rootDir)) {
+            throw new IOException("output dir not setting");
+        }
         deleteSubFiles(new File(rootDir));
         for (TableSchema tableSchema : databaseSchema.getTables()) {
             for (String tableName : tables) {
@@ -260,6 +263,7 @@ public class DataGenerator {
             }
             isGeneratedDict = true;
         }
+        ctx.put("companyname", ConfigManager.getProperty("company.name"));
 
         generateAll(tableSchema, ctx, rootDir);
         // generateViewAndController(tableSchema, ctx, rootDir);
@@ -267,7 +271,7 @@ public class DataGenerator {
         // "/src/main/resources/templates/index_edit.vm",
         // rootDir + "views\\" + NameUtil.getModelVarName(tableSchema) +
         // "\\edit.html",
-        // tableSchema,
+        // tableSchemba,
         // ctx);
         // generateMessageQuery(tableSchema, ctx, rootDir);
         // generateMapperXml(tableSchema, ctx, rootDir);

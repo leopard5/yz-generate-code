@@ -1,4 +1,4 @@
-#set($comment=$name.getTableComment($table))
+j#set($comment=$name.getTableComment($table))
 package ${config.getProperty("basePackage")}.vo;
 
 import java.math.BigDecimal;
@@ -32,4 +32,7 @@ public class ${name.getControllerVoClassName($table)} implements Serializable {
 		this.$column.propertyName = $column.propertyName;
 	}
     #end
+
+	//-----------------------------------------------------------------------
+	// custom property definition
 }
