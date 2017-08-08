@@ -110,6 +110,8 @@ public class DataSchema {
                 columnSchema.setNullable(nullAble == 1);
                 columnSchemas.add(columnSchema);
             }
+            ColumnSchema columnSchema = columnSchemas.get(columnSchemas.size() - 1);
+            columnSchema.setLastColumn(true);
             return columnSchemas;
         } finally {
             closeConnection(connection);

@@ -12,7 +12,7 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 public class ${name.getControllerVoClassName($table)} implements Serializable {
 
 	/**   
-	 * @Fields serialVersionUID : 序列化版本号 
+	 * serialVersionUID : 序列化版本号
 	 */ 
 	private static final long serialVersionUID = 1L;
 

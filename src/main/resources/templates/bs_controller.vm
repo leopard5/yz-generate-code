@@ -28,7 +28,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,11 +37,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import ${controllerConvertorClassName};
 import ${config.getProperty("basePackage")}.req.$messageQueryClass;
-import $name.getFullMessageReqClassName($table);
+import ${name.getFullMessageReqClassName($table)};
 import ${config.getProperty("basePackage")}.resp.${messageClass};
-import com.yz.mmc.resp.MmcResult;
-import com.yz.mmc.resp.MmcResultCode;
-import com.yz.mmc.resp.QueryResultInfo;
+import ${config.getProperty("basePackage")}.resp.Result;
+import ${config.getProperty("basePackage")}.resp.ResultCode;
+import ${config.getProperty("basePackage")}.resp.QueryResultInfo;
 import ${config.getProperty("basePackage")}.service.${serviceClass};
 import ${config.getProperty("basePackage")}.vo.${name.getControllerQueryVoClassName($table)};
 import ${config.getProperty("basePackage")}.vo.${name.getControllerVoClassName($table)};
@@ -53,7 +53,7 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
 @RequestMapping("${modelVar}")
-@Controller
+@RestController
 @Api(value = "${modelVar}", description = "${comment}管理接口")
 public class ${modelClass}Controller extends BaseController {
 	private final Logger logger = LoggerFactory.getLogger(${modelClass}Controller.class);
@@ -68,7 +68,6 @@ public class ${modelClass}Controller extends BaseController {
 			@ApiResponse(code = 402, message = "没有此操作权限"),
 			 })
 	@ApiOperation(value = "delete${modelClass}", notes = "删除${comment}")
-	@ResponseBody
 	@RequestMapping(value = "delete${modelClass}", method = { RequestMethod.POST })
 	public MmcResult<Integer> delete${modelClass}(Integer id, Integer updateUser, String updateUserName) {
 		MmcResult<Integer> result = MmcResult.newSuccess();
@@ -89,7 +88,6 @@ public class ${modelClass}Controller extends BaseController {
 			@ApiResponse(code = 402, message = "没有此操作权限"),
 			 })
 	@ApiOperation(value = "create${modelClass}", notes = "创建${comment}")
-	@ResponseBody
 	@RequestMapping(value = "create${modelClass}", method = { RequestMethod.POST })
 	public MmcResult<Integer> create${modelClass}(@Valid @RequestBody ${controllerVoClassName} ${controllerVoVar}){
 		MmcResult<Integer> result = MmcResult.newSuccess();
@@ -117,7 +115,6 @@ public class ${modelClass}Controller extends BaseController {
 			@ApiResponse(code = 402, message = "没有此操作权限"),
 			 })
 	@ApiOperation(value = "update${modelClass}", notes = "更新${comment}")
-	@ResponseBody
 	@RequestMapping(value = "update${modelClass}", method = { RequestMethod.POST })
 	public MmcResult<Integer> update${modelClass}(@Valid @RequestBody ${controllerVoClassName} ${controllerVoVar}){
 		MmcResult<Integer> result = MmcResult.newSuccess();
@@ -145,7 +142,6 @@ public class ${modelClass}Controller extends BaseController {
 			@ApiResponse(code = 402, message = "没有此操作权限"),
 			 })
 	@ApiOperation(value = "get${modelClass}/{id}", notes = "根据${comment}ID获取${comment}信息")
-	@ResponseBody
 	@RequestMapping(value = "get${modelClass}/{id}", method = { RequestMethod.GET })
 	public MmcResult<${messageClass}> get${modelClass}(@PathVariable Integer id ){
 		MmcResult<${messageClass}> result = MmcResult.newSuccess();
@@ -166,7 +162,6 @@ public class ${modelClass}Controller extends BaseController {
 			@ApiResponse(code = 402, message = "没有此操作权限"),
 			 })
 	@ApiOperation(value = "query${modelClass}", notes = "分页获取${comment}列表信息")
-	@ResponseBody
 	@RequestMapping(value = "query${modelClass}", method = { RequestMethod.GET })
 	MmcResult<QueryResultInfo<${messageClass}>> query${modelClass}(@Valid @RequestBody ${controllerQueryVoClassName} ${controllerQueryVoVar}){
 		MmcResult<QueryResultInfo<${messageClass}>> result = MmcResult.newSuccess();

@@ -60,7 +60,21 @@
 			<otherwise>order by id desc</otherwise>
 		</choose>
 	</select>
-	
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert into $table.tableName (
+		#foreach($column in $table.columns) #if(!$column.isAutoIncrement()) ${column.columnName} #if(!$column.isLastColumn()),#end #end #end
+        )
+        values
+        <foreach collection="modelList" item="bean" index="index" separator=",">
+            (
+			#foreach($column in $table.columns)
+			#if(!$column.isAutoIncrement())#{bean.${column.propertyName},jdbcType=${column.jdbcType}} #if(!$column.isLastColumn()),#end #end
+			#end
+			)
+        </foreach>
+    </insert>
+
 	#foreach($index in $table.indexes)
 	<select id="$sql.getIndexSelectName($index)" resultMap="BaseResultMap">
 		SELECT

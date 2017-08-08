@@ -397,6 +397,11 @@ public class DataGenerator {
             // 24
             generateControllerBS(tableSchema, ctx, rootDir);
 
+
+            String[] basePackages = ConfigManager.getProperty("basePackage").split("\\.");
+            List<String> basePackageList = Arrays.asList(basePackages);
+            System.out.println(basePackageList.get(basePackageList.size() - 1));
+
         }
     }
 

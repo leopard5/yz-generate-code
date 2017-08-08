@@ -14,7 +14,6 @@ public class ColumnSchema {
 	private boolean nullable;
 	private String remarks;
 	private String defaultValue;
-	private String isAutoincrement;
 	private boolean isPrimary;
 	private boolean isAutoIncrement;
 	private String propertyName;
@@ -25,6 +24,8 @@ public class ColumnSchema {
 
 	private String propertyVarName;
 	private String cPropertyName;
+	private boolean lastColumn;
+
 
 	public String getJavaType() {
 		return javaType;
@@ -169,14 +170,6 @@ public class ColumnSchema {
 
 	public void setDefaultValue(String defaultValue) {
 		this.defaultValue = defaultValue;
-	}
-
-	public String getIsAutoincrement() {
-		return isAutoincrement;
-	}
-
-	public void setIsAutoincrement(String isAutoincrement) {
-		this.isAutoincrement = isAutoincrement;
 	}
 
 	public boolean isPrimary() {
@@ -473,5 +466,13 @@ public class ColumnSchema {
 	
 	public boolean isAuditStatusColumn() {
 		return this.columnName.equalsIgnoreCase(TableSchema.AUDIT_STATUS_COLUMN);
+	}
+
+	public boolean isLastColumn() {
+		return lastColumn;
+	}
+
+	public void setLastColumn(boolean lastColumn) {
+		this.lastColumn = lastColumn;
 	}
 }
