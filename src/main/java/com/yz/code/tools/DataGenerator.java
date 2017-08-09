@@ -33,6 +33,8 @@ public class DataGenerator {
     public static ClassPathXmlApplicationContext applicationContext = null;
     public static Boolean isGeneratedDict = false;
     public static List<String> tableNames = new ArrayList<String>();
+    public static String projectName = null;
+    public static String outputRootDir = null;
 
 
     public static void main(String[] args) {
@@ -83,7 +85,7 @@ public class DataGenerator {
         config.getContexts().get(0).getJavaModelGeneratorConfiguration().setTargetPackage(modelPackage);
         config.getContexts().get(0).getSqlMapGeneratorConfiguration().setTargetPackage(sqlMapPackage);
 
-        List<TableConfiguration> tableConfigurations =  config.getContexts().get(0).getTableConfigurations();
+        List<TableConfiguration> tableConfigurations = config.getContexts().get(0).getTableConfigurations();
         for (TableConfiguration tableConfiguration : tableConfigurations) {
             tableNames.add(tableConfiguration.getTableName());
         }
@@ -98,16 +100,16 @@ public class DataGenerator {
         if (tables == null) {
             throw new IOException("generate tables not setting");
         }
-        String rootDir = ConfigManager.getProperty("output.root.dir");
-        if (rootDir == null || !StringUtils.hasText(rootDir)) {
+        outputRootDir = ConfigManager.getProperty("output.root.dir");
+        if (outputRootDir == null || !StringUtils.hasText(outputRootDir)) {
             throw new IOException("output dir not setting");
         }
-        deleteSubFiles(new File(rootDir));
+        deleteSubFiles(new File(outputRootDir));
         for (TableSchema tableSchema : databaseSchema.getTables()) {
             for (String tableName : tables) {
                 if (tableSchema.getTableName().equalsIgnoreCase(tableName)
                         && tableNames.contains(tableName)) {
-                    generate(tableSchema, rootDir);
+                    generate(tableSchema);
                 }
             }
         }
@@ -232,7 +234,7 @@ public class DataGenerator {
 //        }
 //    }
 
-    public static void generate(TableSchema tableSchema, String rootDir) throws IOException {
+    public static void generate(TableSchema tableSchema) throws IOException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Velocity.init();
         ToolManager manager = new ToolManager();
@@ -242,6 +244,9 @@ public class DataGenerator {
         ctx.put("table", tableSchema);
         // 加入当前时间
         ctx.put("nowtime", sdf.format(new Date()));
+
+        ctx.put("companyname", ConfigManager.getProperty("company.name"));
+        ctx.put("projectname", projectName);
 
         if (!isGeneratedDict) {
             Map<String, List<Object>> data = generateDictionary();
@@ -256,151 +261,119 @@ public class DataGenerator {
                 ctx.put("class", sbBuffer.toString());
                 ctx.put("list_dict", entry.getValue());
                 ctx.put("caption", ConfigManager.getProperty(entry.getKey()));
-                generateDictionary(tableSchema, ctx, rootDir, sbBuffer.toString());
+                generateDictionary(tableSchema, ctx, sbBuffer.toString());
                 ctx.remove("class");
                 ctx.remove("list_dict");
                 ctx.remove("caption");
             }
             isGeneratedDict = true;
         }
-        ctx.put("companyname", ConfigManager.getProperty("company.name"));
-
-        generateAll(tableSchema, ctx, rootDir);
-        // generateViewAndController(tableSchema, ctx, rootDir);
-        // generate(
-        // "/src/main/resources/templates/index_edit.vm",
-        // rootDir + "views\\" + NameUtil.getModelVarName(tableSchema) +
-        // "\\edit.html",
-        // tableSchemba,
-        // ctx);
-        // generateMessageQuery(tableSchema, ctx, rootDir);
-        // generateMapperXml(tableSchema, ctx, rootDir);
-        // generateMapper(tableSchema, ctx, rootDir);
-        // generateControllerBS(tableSchema, ctx, rootDir);
-        // generateViewBS(tableSchema, ctx, rootDir);
-        // generateMapper(tableSchema, ctx, rootDir);
-        // generateMessageQuery(tableSchema, ctx, rootDir);
-
-        //OK generateBiz(tableSchema, ctx, rootDir);
-        //OK generateValidate(tableSchema, ctx, rootDir);
-        //OK generateServiceInterface(tableSchema, ctx, rootDir);
-        //OK generateServiceImpl(tableSchema, ctx, rootDir);
-        //OK generateConvertor(tableSchema, ctx, rootDir);
-
-        //OK generateTest(tableSchema, ctx, rootDir);
-        //OK generateControllerVoBS(tableSchema, ctx, rootDir);
-        //OK generateControllerQueryVoBS(tableSchema, ctx, rootDir);
-        //OK generateControllerConvertor(tableSchema, ctx, rootDir);
-        //OK generateControllerBS(tableSchema, ctx, rootDir);
-
-
+        generateAll(tableSchema, ctx);
     }
 
     // 生成字典类
-    public static void generateDictionary(TableSchema tableSchema, ToolContext ctx, String rootDir, String className) throws IOException {
+    public static void generateDictionary(TableSchema tableSchema, ToolContext ctx, String className) throws IOException {
         generate(
                 "/src/main/resources/templates/dict.vm",
-                rootDir + "10_dict\\" + className + ".java",
+                outputRootDir + ConfigManager.getProperty("package.name.dict") + "\\" + className + ".java",
                 tableSchema,
                 ctx);
     }
 
     // 生成数据验证类
-    public static void generateValidate(TableSchema tableSchema, ToolContext ctx, String rootDir) throws IOException {
+    public static void generateValidate(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "/src/main/resources/templates/validate.vm",
-                rootDir + "18_validate\\" + NameUtil.getValidateClassName(tableSchema) + ".java",
+                outputRootDir + ConfigManager.getProperty("package.name.validate") + "\\" + NameUtil.getValidateClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
 
-    public static void generateControllerBS(TableSchema tableSchema, ToolContext ctx, String rootDir) throws IOException {
+    public static void generateControllerBS(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "/src/main/resources/templates/bs_controller.vm",
-                rootDir + "24_controller\\" + NameUtil.getControllerClassName(tableSchema) + ".java",
+                outputRootDir + "24_controller\\" + NameUtil.getControllerClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
 
-    public static void generateControllerVoBS(TableSchema tableSchema, ToolContext ctx, String rootDir) throws IOException {
+    public static void generateControllerVoBS(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "/src/main/resources/templates/bs_controller_vo.vm",
-                rootDir + "22_controller_vo\\" + NameUtil.getControllerVoClassName(tableSchema) + ".java",
+                outputRootDir + "22_controller_vo\\" + NameUtil.getControllerVoClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
 
-    public static void generateViewBS(TableSchema tableSchema, ToolContext ctx, String rootDir) throws IOException {
+    public static void generateViewBS(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "/src/main/resources/templates/bs_index_view.vm",
-                rootDir + "view\\" + NameUtil.getModelVarName(tableSchema) + ".html",
+                outputRootDir + "view\\" + NameUtil.getModelVarName(tableSchema) + ".html",
                 tableSchema,
                 ctx);
     }
 
-    public static void generateController(TableSchema tableSchema, ToolContext ctx, String rootDir) throws IOException {
+    public static void generateController(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "/src/main/resources/templates/controller.vm",
-                rootDir + "controller\\" + NameUtil.getConvertorClassName(tableSchema) + ".java",
+                outputRootDir + "controller\\" + NameUtil.getConvertorClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
 
-    public static void generateView(TableSchema tableSchema, ToolContext ctx, String rootDir) throws IOException {
+    public static void generateView(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "/src/main/resources/templates/index_view.vm",
-                rootDir + "view\\" + NameUtil.getModelVarName(tableSchema) + ".html",
+                outputRootDir + "view\\" + NameUtil.getModelVarName(tableSchema) + ".html",
                 tableSchema,
                 ctx);
     }
 
-    public static void generateAll(TableSchema tableSchema, ToolContext ctx, String rootDir) throws IOException {
+    public static void generateAll(TableSchema tableSchema, ToolContext ctx) throws IOException {
+        String[] basePackages = ConfigManager.getProperty("basePackage").split("\\.");
+        List<String> basePackageList = Arrays.asList(basePackages);
 
+        projectName = basePackageList.get(basePackageList.size() - 1);
         // 11
-        generateModel(tableSchema, ctx, rootDir);
-        generateModelQuery(tableSchema, ctx, rootDir);
+        generateModel(tableSchema, ctx);
+        generateModelQuery(tableSchema, ctx);
         // 12
-        generateMessage(tableSchema, ctx, rootDir);
-        generateMessageReq(tableSchema, ctx, rootDir);
-        generateMessageQuery(tableSchema, ctx, rootDir);
+        generateMessage(tableSchema, ctx);
+        generateMessageReq(tableSchema, ctx);
+        generateMessageQuery(tableSchema, ctx);
         if (!tableSchema.isView()) {
             // dal
             // 13
-            generateMapper(tableSchema, ctx, rootDir);
+            generateMapper(tableSchema, ctx);
             // 14
-            generateMapperXml(tableSchema, ctx, rootDir);
+            generateMapperXml(tableSchema, ctx);
 
             // biz
             // 15
-            generateBiz(tableSchema, ctx, rootDir);
+            generateBiz(tableSchema, ctx);
 
             // api
             // 17
-            generateServiceInterface(tableSchema, ctx, rootDir);
+            generateServiceInterface(tableSchema, ctx);
 
             // service
             // 18
-            generateValidate(tableSchema, ctx, rootDir);
+            generateValidate(tableSchema, ctx);
             // 19
-            generateServiceImpl(tableSchema, ctx, rootDir);
+            generateServiceImpl(tableSchema, ctx);
             // 20
-            generateConvertor(tableSchema, ctx, rootDir);
+            generateConvertor(tableSchema, ctx);
             // 21
-            generateTest(tableSchema, ctx, rootDir);
+            generateTest(tableSchema, ctx);
 
             // web
             // 22
-            generateControllerVoBS(tableSchema, ctx, rootDir);
-            generateControllerQueryVoBS(tableSchema, ctx, rootDir);
+            generateControllerVoBS(tableSchema, ctx);
+            generateControllerQueryVoBS(tableSchema, ctx);
             // 23
-            generateControllerConvertor(tableSchema, ctx, rootDir);
+            generateControllerConvertor(tableSchema, ctx);
             // 24
-            generateControllerBS(tableSchema, ctx, rootDir);
-
-
-            String[] basePackages = ConfigManager.getProperty("basePackage").split("\\.");
-            List<String> basePackageList = Arrays.asList(basePackages);
-            System.out.println(basePackageList.get(basePackageList.size() - 1));
+            generateControllerBS(tableSchema, ctx);
 
         }
     }
@@ -439,124 +412,124 @@ public class DataGenerator {
         return Interception;
     }
 
-    private static void generateTest(TableSchema tableSchema, ToolContext ctx, String rootDir) throws IOException {
+    private static void generateTest(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "/src/main/resources/templates/service_test.vm",
-                rootDir + "21_tests\\" + NameUtil.getTestClassName(tableSchema) + ".java",
+                outputRootDir + "21_tests\\" + NameUtil.getTestClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
 
-    private static void generateConvertor(TableSchema tableSchema, ToolContext ctx, String rootDir) throws IOException {
+    private static void generateConvertor(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "/src/main/resources/templates/convertor.vm",
-                rootDir + "20_service_convertor\\" + NameUtil.getConvertorClassName(tableSchema) + ".java",
+                outputRootDir + "20_service_convertor\\" + NameUtil.getConvertorClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
 
-    private static void generateControllerConvertor(TableSchema tableSchema, ToolContext ctx, String rootDir) throws IOException {
+    private static void generateControllerConvertor(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "/src/main/resources/templates/bs_controller_convertor.vm",
-                rootDir + "23_controller_convertor\\" + NameUtil.getConvertorClassName(tableSchema) + ".java",
+                outputRootDir + "23_controller_convertor\\" + NameUtil.getConvertorClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
 
-    private static void generateServiceImpl(TableSchema tableSchema, ToolContext ctx, String rootDir) throws IOException {
+    private static void generateServiceImpl(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "/src/main/resources/templates/service_impl.vm",
-                rootDir + "19_service_impl\\" + NameUtil.getServiceImplClassName(tableSchema) + ".java",
+                outputRootDir + "19_service_impl\\" + NameUtil.getServiceImplClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
 
-    private static void generateMessageQuery(TableSchema tableSchema, ToolContext ctx, String rootDir) throws IOException {
+    private static void generateMessageQuery(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "/src/main/resources/templates/messageQuery.vm",
-                rootDir + "12_req\\" + NameUtil.getMessageQueryClassName(tableSchema) + ".java",
+                outputRootDir + "12_req\\" + NameUtil.getMessageQueryClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
 
-    private static void generateControllerQueryVoBS(TableSchema tableSchema, ToolContext ctx, String rootDir) throws IOException {
+    private static void generateControllerQueryVoBS(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "/src/main/resources/templates/bs_controllerQuery_vo.vm",
-                rootDir + "22_controller_vo\\" + NameUtil.getControllerQueryVoClassName(tableSchema) + ".java",
+                outputRootDir + "22_controller_vo\\" + NameUtil.getControllerQueryVoClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
 
-    private static void generateServiceInterface(TableSchema tableSchema, ToolContext ctx, String rootDir) throws IOException {
+    private static void generateServiceInterface(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "/src/main/resources/templates/service.vm",
-                rootDir + "17_service\\" + NameUtil.getServiceClassName(tableSchema) + ".java",
+                outputRootDir + "17_service\\" + NameUtil.getServiceClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
 
-    private static void generateModelQuery(TableSchema tableSchema, ToolContext ctx, String rootDir) throws IOException {
+    private static void generateModelQuery(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "/src/main/resources/templates/modelQuery.vm",
-                rootDir + "11_model\\" + NameUtil.getModelQueryClassName(tableSchema) + ".java",
+                outputRootDir + "11_model\\" + NameUtil.getModelQueryClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
 
-    private static void generateMapper(TableSchema tableSchema, ToolContext ctx, String rootDir) throws IOException {
+    private static void generateMapper(TableSchema tableSchema, ToolContext ctx) throws IOException {
         ctx.put("mapperbase", getMapperBaseInterception(tableSchema));
         generate(
                 "/src/main/resources/templates/mapper.vm",
-                rootDir + "13_dao\\" + NameUtil.getMapperClassName(tableSchema) + ".java",
+                outputRootDir + "13_dao\\" + NameUtil.getMapperClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
         ctx.remove("mapperbase");
     }
 
-    private static void generateMapperXml(TableSchema tableSchema, ToolContext ctx, String rootDir) throws IOException {
+    private static void generateMapperXml(TableSchema tableSchema, ToolContext ctx) throws IOException {
         ctx.put("mapperbasexml", getMapperXmlBaseInterception(tableSchema));
         generate(
                 "/src/main/resources/templates/mapper_xml.vm",
-                rootDir + "14_mappers\\" + NameUtil.getModelClassName(tableSchema) + "Mapper.xml",
+                outputRootDir + "14_mappers\\" + NameUtil.getModelClassName(tableSchema) + "Mapper.xml",
                 tableSchema,
                 ctx);
         ctx.remove("mapperbasexml");
     }
 
-    private static void generateBiz(TableSchema tableSchema, ToolContext ctx, String rootDir) throws IOException {
+    private static void generateBiz(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "/src/main/resources/templates/biz.vm",
-                rootDir + "15_biz\\" + NameUtil.getBizClassName(tableSchema) + ".java",
+                outputRootDir + "15_biz\\" + NameUtil.getBizClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
 
-    private static void generateMessage(TableSchema tableSchema, ToolContext ctx, String rootDir) throws IOException {
+    private static void generateMessage(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "/src/main/resources/templates/message.vm",
-                rootDir + "12_message\\" + NameUtil.getMessageClassName(tableSchema) + ".java",
+                outputRootDir + "12_message\\" + NameUtil.getMessageClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
 
-    private static void generateMessageReq(TableSchema tableSchema, ToolContext ctx, String rootDir) throws IOException {
+    private static void generateMessageReq(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "/src/main/resources/templates/message_req.vm",
-                rootDir + "12_req\\" + NameUtil.getMessageReqClassName(tableSchema) + ".java",
+                outputRootDir + "12_req\\" + NameUtil.getMessageReqClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
 
-    private static void generateModel(TableSchema tableSchema, ToolContext ctx, String rootDir) throws IOException {
+    private static void generateModel(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "/src/main/resources/templates/model.vm",
-                rootDir + "11_model\\" + NameUtil.getModelClassName(tableSchema) + ".java",
+                outputRootDir + ConfigManager.getProperty("package.name.model") + "\\" + NameUtil.getModelClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
         // 拷贝xxExample.java到model目录
-        String xxExamplePath = "";
-        String context = "";
-        String outPutJavaFile = rootDir + "11_model\\" + NameUtil.getModelClassName(tableSchema) + "Example.java";
+        String xxExamplePath = null;
+        String context = null;
+        String outPutJavaFile = outputRootDir + "11_model\\" + NameUtil.getModelClassName(tableSchema) + "Example.java";
         try {
             xxExamplePath = CodeUtil.getFilePathOfMyBatisGenerator(ConfigManager.getProperty("output.model.package")) + NameUtil.getModelClassName(tableSchema) + "Example.java";
             context = FileUtil.readStringUseNio(xxExamplePath);
