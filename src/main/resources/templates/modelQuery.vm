@@ -24,4 +24,9 @@ public class ${table.modelName}Query extends Query {
 		this.$column.propertyName = $column.propertyName;
 	}
     #end
+
+	/**
+	* The following custom property definition
+	*/
+
 }

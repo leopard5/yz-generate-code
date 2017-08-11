@@ -35,7 +35,7 @@ public class DataGenerator {
     public static List<String> tableNames = new ArrayList<String>();
     public static String projectName = null;
     public static String outputRootDir = null;
-
+    public static String templateDir = null;
 
     public static void main(String[] args) {
         try {
@@ -44,6 +44,12 @@ public class DataGenerator {
 
             // mybatis-generator-maven-plugin 1.3.5
             mavenPlugins_MyBatis_Generator(ConfigManager.getProperty("basePackage"));
+
+            // setting template dir
+            templateDir = ConfigManager.getProperty("template.file.dir");
+            if (!templateDir.endsWith("\\/")) {
+                templateDir += "/";
+            }
 
             DatabaseSchema databaseSchema = dataSchema.getDatabaseSchema();
             // System.out.print(JSON.toJSONString(databaseSchema));
@@ -245,7 +251,8 @@ public class DataGenerator {
         // 加入当前时间
         ctx.put("nowtime", sdf.format(new Date()));
 
-        ctx.put("companyname", ConfigManager.getProperty("company.name"));
+        String companyName = ConfigManager.getProperty("company.name");
+        ctx.put("companyname", companyName);
         ctx.put("projectname", projectName);
 
         if (!isGeneratedDict) {
@@ -274,48 +281,48 @@ public class DataGenerator {
     // 生成字典类
     public static void generateDictionary(TableSchema tableSchema, ToolContext ctx, String className) throws IOException {
         generate(
-                "/src/main/resources/templates/dict.vm",
-                outputRootDir + ConfigManager.getProperty("package.name.dict") + "\\" + className + ".java",
+                "dict.vm",
+                outputRootDir + ConfigManager.getProperty("package.name.enums") + "\\" + className + ".java",
                 tableSchema,
                 ctx);
     }
 
     // 生成数据验证类
-    public static void generateValidate(TableSchema tableSchema, ToolContext ctx) throws IOException {
+    public static void generateServiceValidate(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "/src/main/resources/templates/validate.vm",
-                outputRootDir + ConfigManager.getProperty("package.name.validate") + "\\" + NameUtil.getValidateClassName(tableSchema) + ".java",
+                "validate.vm",
+                outputRootDir + ConfigManager.getProperty("package.name.service.validate") + "\\" + NameUtil.getValidateClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
 
     public static void generateControllerBS(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "/src/main/resources/templates/bs_controller.vm",
-                outputRootDir + "24_controller\\" + NameUtil.getControllerClassName(tableSchema) + ".java",
+                "bs_controller.vm",
+                outputRootDir + ConfigManager.getProperty("package.name.web.controller") + "\\" + NameUtil.getControllerClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
 
     public static void generateControllerVoBS(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "/src/main/resources/templates/bs_controller_vo.vm",
-                outputRootDir + "22_controller_vo\\" + NameUtil.getControllerVoClassName(tableSchema) + ".java",
+                "bs_controller_vo.vm",
+                outputRootDir + ConfigManager.getProperty("package.name.web.vo") + "\\" + NameUtil.getControllerVoClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
 
     public static void generateViewBS(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "/src/main/resources/templates/bs_index_view.vm",
-                outputRootDir + "view\\" + NameUtil.getModelVarName(tableSchema) + ".html",
+                "bs_index_view.vm",
+                outputRootDir + ConfigManager.getProperty("package.name.web.vo") + "\\" + NameUtil.getModelVarName(tableSchema) + ".html",
                 tableSchema,
                 ctx);
     }
 
     public static void generateController(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "/src/main/resources/templates/controller.vm",
+                "controller.vm",
                 outputRootDir + "controller\\" + NameUtil.getConvertorClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
@@ -323,7 +330,7 @@ public class DataGenerator {
 
     public static void generateView(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "/src/main/resources/templates/index_view.vm",
+                "index_view.vm",
                 outputRootDir + "view\\" + NameUtil.getModelVarName(tableSchema) + ".html",
                 tableSchema,
                 ctx);
@@ -334,54 +341,45 @@ public class DataGenerator {
         List<String> basePackageList = Arrays.asList(basePackages);
 
         projectName = basePackageList.get(basePackageList.size() - 1);
-        // 11
-        generateModel(tableSchema, ctx);
-        generateModelQuery(tableSchema, ctx);
-        // 12
-        generateMessage(tableSchema, ctx);
-        generateMessageReq(tableSchema, ctx);
-        generateMessageQuery(tableSchema, ctx);
+        // dal
+        generateDalModel(tableSchema, ctx);
+        generateDalModelQuery(tableSchema, ctx);
+
+        // api
+        generateApiReq(tableSchema, ctx);
+        generateApiReqQuery(tableSchema, ctx);
+        generateApiResp(tableSchema, ctx);
+
         if (!tableSchema.isView()) {
             // dal
-            // 13
-            generateMapper(tableSchema, ctx);
-            // 14
-            generateMapperXml(tableSchema, ctx);
+            generateDalMapper(tableSchema, ctx);
+            generateDalMapperXml(tableSchema, ctx);
 
             // biz
-            // 15
             generateBiz(tableSchema, ctx);
+            generateBizConvertor(tableSchema, ctx);
 
             // api
-            // 17
-            generateServiceInterface(tableSchema, ctx);
+            generateApiServiceInterface(tableSchema, ctx);
 
             // service
-            // 18
-            generateValidate(tableSchema, ctx);
-            // 19
+            generateServiceValidate(tableSchema, ctx);
             generateServiceImpl(tableSchema, ctx);
-            // 20
-            generateConvertor(tableSchema, ctx);
-            // 21
-            generateTest(tableSchema, ctx);
+            generateServiceTest(tableSchema, ctx);
 
             // web
-            // 22
             generateControllerVoBS(tableSchema, ctx);
             generateControllerQueryVoBS(tableSchema, ctx);
-            // 23
             generateControllerConvertor(tableSchema, ctx);
-            // 24
             generateControllerBS(tableSchema, ctx);
 
         }
     }
 
     private static String getMapperBaseInterception(TableSchema tableSchema) {
-        String fileNameDaoBase = "";
-        String contextBase = "";
-        String Interception = "";
+        String fileNameDaoBase = null;
+        String contextBase = null;
+        String Interception = null;
         try {
             fileNameDaoBase = CodeUtil.getFilePathOfMyBatisGenerator(ConfigManager.getProperty("output.mapper.package")) + NameUtil.getMapperClassName(tableSchema) + ".java";
             contextBase = FileUtil.readStringUseNio(fileNameDaoBase);
@@ -412,85 +410,69 @@ public class DataGenerator {
         return Interception;
     }
 
-    private static void generateTest(TableSchema tableSchema, ToolContext ctx) throws IOException {
+    private static void generateServiceTest(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "/src/main/resources/templates/service_test.vm",
-                outputRootDir + "21_tests\\" + NameUtil.getTestClassName(tableSchema) + ".java",
+                "service_test.vm",
+                outputRootDir + ConfigManager.getProperty("package.name.service.test") + "\\" + NameUtil.getTestClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
 
-    private static void generateConvertor(TableSchema tableSchema, ToolContext ctx) throws IOException {
+    private static void generateBizConvertor(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "/src/main/resources/templates/convertor.vm",
-                outputRootDir + "20_service_convertor\\" + NameUtil.getConvertorClassName(tableSchema) + ".java",
+                "biz_convertor.vm",
+                outputRootDir + ConfigManager.getProperty("package.name.biz.convertor") + "\\" + NameUtil.getConvertorClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
 
     private static void generateControllerConvertor(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "/src/main/resources/templates/bs_controller_convertor.vm",
-                outputRootDir + "23_controller_convertor\\" + NameUtil.getConvertorClassName(tableSchema) + ".java",
+                "bs_controller_convertor.vm",
+                outputRootDir + ConfigManager.getProperty("package.name.web.vo.convertor") + "\\" + NameUtil.getConvertorClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
 
     private static void generateServiceImpl(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "/src/main/resources/templates/service_impl.vm",
-                outputRootDir + "19_service_impl\\" + NameUtil.getServiceImplClassName(tableSchema) + ".java",
-                tableSchema,
-                ctx);
-    }
-
-    private static void generateMessageQuery(TableSchema tableSchema, ToolContext ctx) throws IOException {
-        generate(
-                "/src/main/resources/templates/messageQuery.vm",
-                outputRootDir + "12_req\\" + NameUtil.getMessageQueryClassName(tableSchema) + ".java",
+                "service_impl.vm",
+                outputRootDir + ConfigManager.getProperty("package.name.service.impl") + "\\" + NameUtil.getServiceImplClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
 
     private static void generateControllerQueryVoBS(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "/src/main/resources/templates/bs_controllerQuery_vo.vm",
-                outputRootDir + "22_controller_vo\\" + NameUtil.getControllerQueryVoClassName(tableSchema) + ".java",
+                "bs_controllerQuery_vo.vm",
+                outputRootDir + ConfigManager.getProperty("package.name.web.vo") + "\\" + NameUtil.getControllerQueryVoClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
 
-    private static void generateServiceInterface(TableSchema tableSchema, ToolContext ctx) throws IOException {
+    private static void generateApiServiceInterface(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "/src/main/resources/templates/service.vm",
-                outputRootDir + "17_service\\" + NameUtil.getServiceClassName(tableSchema) + ".java",
+                "service.vm",
+                outputRootDir + ConfigManager.getProperty("package.name.service") + "\\" + NameUtil.getServiceClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
 
-    private static void generateModelQuery(TableSchema tableSchema, ToolContext ctx) throws IOException {
-        generate(
-                "/src/main/resources/templates/modelQuery.vm",
-                outputRootDir + "11_model\\" + NameUtil.getModelQueryClassName(tableSchema) + ".java",
-                tableSchema,
-                ctx);
-    }
-
-    private static void generateMapper(TableSchema tableSchema, ToolContext ctx) throws IOException {
+    private static void generateDalMapper(TableSchema tableSchema, ToolContext ctx) throws IOException {
         ctx.put("mapperbase", getMapperBaseInterception(tableSchema));
         generate(
-                "/src/main/resources/templates/mapper.vm",
-                outputRootDir + "13_dao\\" + NameUtil.getMapperClassName(tableSchema) + ".java",
+                "mapper.vm",
+                outputRootDir + ConfigManager.getProperty("package.name.mapper") + "\\" + NameUtil.getMapperClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
         ctx.remove("mapperbase");
     }
 
-    private static void generateMapperXml(TableSchema tableSchema, ToolContext ctx) throws IOException {
+    private static void generateDalMapperXml(TableSchema tableSchema, ToolContext ctx) throws IOException {
         ctx.put("mapperbasexml", getMapperXmlBaseInterception(tableSchema));
         generate(
-                "/src/main/resources/templates/mapper_xml.vm",
-                outputRootDir + "14_mappers\\" + NameUtil.getModelClassName(tableSchema) + "Mapper.xml",
+                "mapper_xml.vm",
+                outputRootDir + ConfigManager.getProperty("package.name.mapper.xml") + "\\" + NameUtil.getModelClassName(tableSchema) + "Mapper.xml",
                 tableSchema,
                 ctx);
         ctx.remove("mapperbasexml");
@@ -498,38 +480,46 @@ public class DataGenerator {
 
     private static void generateBiz(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "/src/main/resources/templates/biz.vm",
-                outputRootDir + "15_biz\\" + NameUtil.getBizClassName(tableSchema) + ".java",
+                "biz.vm",
+                outputRootDir + ConfigManager.getProperty("package.name.biz") + "\\" + NameUtil.getBizClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
 
-    private static void generateMessage(TableSchema tableSchema, ToolContext ctx) throws IOException {
+    private static void generateApiResp(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "/src/main/resources/templates/message.vm",
-                outputRootDir + "12_message\\" + NameUtil.getMessageClassName(tableSchema) + ".java",
+                "message.vm",
+                outputRootDir + ConfigManager.getProperty("package.name.resp") + "\\" + NameUtil.getMessageClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
 
-    private static void generateMessageReq(TableSchema tableSchema, ToolContext ctx) throws IOException {
+    private static void generateApiReq(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "/src/main/resources/templates/message_req.vm",
-                outputRootDir + "12_req\\" + NameUtil.getMessageReqClassName(tableSchema) + ".java",
+                "message_req.vm",
+                outputRootDir + ConfigManager.getProperty("package.name.req") + "\\" + NameUtil.getMessageReqClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
 
-    private static void generateModel(TableSchema tableSchema, ToolContext ctx) throws IOException {
+    private static void generateApiReqQuery(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "/src/main/resources/templates/model.vm",
+                "messageQuery.vm",
+                outputRootDir + ConfigManager.getProperty("package.name.req") + "\\" + NameUtil.getMessageQueryClassName(tableSchema) + ".java",
+                tableSchema,
+                ctx);
+    }
+
+    private static void generateDalModel(TableSchema tableSchema, ToolContext ctx) throws IOException {
+        generate(
+                "model.vm",
                 outputRootDir + ConfigManager.getProperty("package.name.model") + "\\" + NameUtil.getModelClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
         // 拷贝xxExample.java到model目录
         String xxExamplePath = null;
         String context = null;
-        String outPutJavaFile = outputRootDir + "11_model\\" + NameUtil.getModelClassName(tableSchema) + "Example.java";
+        String outPutJavaFile = outputRootDir + ConfigManager.getProperty("package.name.model") + "\\" + NameUtil.getModelClassName(tableSchema) + "Example.java";
         try {
             xxExamplePath = CodeUtil.getFilePathOfMyBatisGenerator(ConfigManager.getProperty("output.model.package")) + NameUtil.getModelClassName(tableSchema) + "Example.java";
             context = FileUtil.readStringUseNio(xxExamplePath);
@@ -537,6 +527,14 @@ public class DataGenerator {
         } catch (Exception e) {
             System.out.println("copy file[" + outPutJavaFile + "] error!!!");
         }
+    }
+
+    private static void generateDalModelQuery(TableSchema tableSchema, ToolContext ctx) throws IOException {
+        generate(
+                "modelQuery.vm",
+                outputRootDir + ConfigManager.getProperty("package.name.model") + "\\" + NameUtil.getModelQueryClassName(tableSchema) + ".java",
+                tableSchema,
+                ctx);
     }
 
     private static void generate(
@@ -547,13 +545,14 @@ public class DataGenerator {
         PrintWriter filewriter = null;
         FileOutputStream fileOutputStream = null;
         try {
+            String templatePath = templateDir + templateName;
             File file = new File(fileName);
             if (!file.getParentFile().exists()) {
                 file.getParentFile().mkdirs();
             }
             fileOutputStream = new FileOutputStream(fileName);
             filewriter = new PrintWriter(fileOutputStream, true);
-            filewriter.print(generateCode(templateName, tableSchema, ctx));
+            filewriter.print(generateCode(templatePath, tableSchema, ctx));
         } catch (FileNotFoundException e) {
             // TODO 自动生成的 catch 块
             e.printStackTrace();
@@ -596,5 +595,7 @@ public class DataGenerator {
         toolMap.put("code", new ToolInfo("code", CodeUtil.class));
         Toolbox toolbox = new Toolbox(toolMap);
         ctx.addToolbox(toolbox);
+
+
     }
 }

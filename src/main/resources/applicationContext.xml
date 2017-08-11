@@ -16,8 +16,8 @@
 				<value>classpath:local.properties</value>
 			</list>
 		</property>
+		<property name="fileEncoding" value="utf-8" />
 	</bean>
-
 
 	<import resource="classpath:spring-db.xml" />
 
