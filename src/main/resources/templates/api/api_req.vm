@@ -30,4 +30,8 @@ public class ${name.getMessageReqClassName($table)} implements Serializable {
 		this.$column.propertyName = $column.propertyName;
 	}
     #end
+
+	/**
+	* The following custom property definition
+	*/
 }

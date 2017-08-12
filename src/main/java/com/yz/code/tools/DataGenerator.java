@@ -281,7 +281,7 @@ public class DataGenerator {
     // 生成字典类
     public static void generateDictionary(TableSchema tableSchema, ToolContext ctx, String className) throws IOException {
         generate(
-                "dict.vm",
+                "api/dict.vm",
                 outputRootDir + ConfigManager.getProperty("package.name.enums") + "\\" + className + ".java",
                 tableSchema,
                 ctx);
@@ -290,7 +290,7 @@ public class DataGenerator {
     // 生成数据验证类
     public static void generateServiceValidate(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "validate.vm",
+                "service/validate.vm",
                 outputRootDir + ConfigManager.getProperty("package.name.service.validate") + "\\" + NameUtil.getValidateClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
@@ -298,7 +298,7 @@ public class DataGenerator {
 
     public static void generateControllerBS(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "bs_controller.vm",
+                "web/bs_controller.vm",
                 outputRootDir + ConfigManager.getProperty("package.name.web.controller") + "\\" + NameUtil.getControllerClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
@@ -306,7 +306,7 @@ public class DataGenerator {
 
     public static void generateControllerVoBS(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "bs_controller_vo.vm",
+                "web/bs_controller_vo.vm",
                 outputRootDir + ConfigManager.getProperty("package.name.web.vo") + "\\" + NameUtil.getControllerVoClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
@@ -412,7 +412,7 @@ public class DataGenerator {
 
     private static void generateServiceTest(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "service_test.vm",
+                "service/service_test.vm",
                 outputRootDir + ConfigManager.getProperty("package.name.service.test") + "\\" + NameUtil.getTestClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
@@ -420,7 +420,7 @@ public class DataGenerator {
 
     private static void generateBizConvertor(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "biz_convertor.vm",
+                "biz/biz_convertor.vm",
                 outputRootDir + ConfigManager.getProperty("package.name.biz.convertor") + "\\" + NameUtil.getConvertorClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
@@ -428,7 +428,7 @@ public class DataGenerator {
 
     private static void generateControllerConvertor(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "bs_controller_convertor.vm",
+                "web/bs_controller_convertor.vm",
                 outputRootDir + ConfigManager.getProperty("package.name.web.vo.convertor") + "\\" + NameUtil.getConvertorClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
@@ -436,7 +436,7 @@ public class DataGenerator {
 
     private static void generateServiceImpl(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "service_impl.vm",
+                "service/service_impl.vm",
                 outputRootDir + ConfigManager.getProperty("package.name.service.impl") + "\\" + NameUtil.getServiceImplClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
@@ -444,7 +444,7 @@ public class DataGenerator {
 
     private static void generateControllerQueryVoBS(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "bs_controllerQuery_vo.vm",
+                "web/bs_controllerQuery_vo.vm",
                 outputRootDir + ConfigManager.getProperty("package.name.web.vo") + "\\" + NameUtil.getControllerQueryVoClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
@@ -452,7 +452,7 @@ public class DataGenerator {
 
     private static void generateApiServiceInterface(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "service.vm",
+                "interface.vm",
                 outputRootDir + ConfigManager.getProperty("package.name.service") + "\\" + NameUtil.getServiceClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
@@ -461,7 +461,7 @@ public class DataGenerator {
     private static void generateDalMapper(TableSchema tableSchema, ToolContext ctx) throws IOException {
         ctx.put("mapperbase", getMapperBaseInterception(tableSchema));
         generate(
-                "mapper.vm",
+                "dal/mapper.vm",
                 outputRootDir + ConfigManager.getProperty("package.name.mapper") + "\\" + NameUtil.getMapperClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
@@ -471,7 +471,7 @@ public class DataGenerator {
     private static void generateDalMapperXml(TableSchema tableSchema, ToolContext ctx) throws IOException {
         ctx.put("mapperbasexml", getMapperXmlBaseInterception(tableSchema));
         generate(
-                "mapper_xml.vm",
+                "dal/mapper_xml.vm",
                 outputRootDir + ConfigManager.getProperty("package.name.mapper.xml") + "\\" + NameUtil.getModelClassName(tableSchema) + "Mapper.xml",
                 tableSchema,
                 ctx);
@@ -480,7 +480,7 @@ public class DataGenerator {
 
     private static void generateBiz(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "biz.vm",
+                "biz/biz.vm",
                 outputRootDir + ConfigManager.getProperty("package.name.biz") + "\\" + NameUtil.getBizClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
@@ -488,7 +488,7 @@ public class DataGenerator {
 
     private static void generateApiResp(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "message.vm",
+                "api/api_resp.vm",
                 outputRootDir + ConfigManager.getProperty("package.name.resp") + "\\" + NameUtil.getMessageClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
@@ -496,7 +496,7 @@ public class DataGenerator {
 
     private static void generateApiReq(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "message_req.vm",
+                "api/api_req.vm",
                 outputRootDir + ConfigManager.getProperty("package.name.req") + "\\" + NameUtil.getMessageReqClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
@@ -504,7 +504,7 @@ public class DataGenerator {
 
     private static void generateApiReqQuery(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "messageQuery.vm",
+                "api/api_reqQuery.vm",
                 outputRootDir + ConfigManager.getProperty("package.name.req") + "\\" + NameUtil.getMessageQueryClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
@@ -512,7 +512,7 @@ public class DataGenerator {
 
     private static void generateDalModel(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "model.vm",
+                "dal/model.vm",
                 outputRootDir + ConfigManager.getProperty("package.name.model") + "\\" + NameUtil.getModelClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
@@ -531,7 +531,7 @@ public class DataGenerator {
 
     private static void generateDalModelQuery(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "modelQuery.vm",
+                "dal/modelQuery.vm",
                 outputRootDir + ConfigManager.getProperty("package.name.model") + "\\" + NameUtil.getModelQueryClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);

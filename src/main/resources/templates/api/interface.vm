@@ -68,7 +68,18 @@ MmcResult<Integer> delete$modelClass($primaryKeyParameter);
 	 * @return
 	 */
     MmcResult<${table.primaryColumn.javaType}> create$modelClass($messageReqClass $messageReqVarName);
-	
+
+	/**
+	 *
+	 * 批量创建${comment}
+	 *
+	 * @author yazhong.qi
+	 * @version 1.0.0
+	 * @param List<$messageReqVarName>
+	 * @return
+	 */
+    MmcResult<${table.primaryColumn.javaType}> batchInsert(List<$messageReqClass> ${messageReqVarName}s);
+
 	/**
 	 * 
 	 * 更新${comment}
@@ -101,4 +112,8 @@ MmcResult<Integer> delete$modelClass($primaryKeyParameter);
 	 * @return
 	 */
     MmcResult<QueryResultInfo<${messageClass}>> query${modelClass}($messageQueryClass $messageQueryVar);
+
+    /**
+    * The following custom service interface about dubbo
+    */
 }
