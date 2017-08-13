@@ -1,6 +1,7 @@
 package com.yz.code.tools;
 
 import com.yz.code.constant.Constants;
+import com.yz.code.enmus.UItype;
 import com.yz.code.schema.DatabaseSchema;
 import com.yz.code.schema.Dictionary;
 import com.yz.code.schema.TableSchema;
@@ -49,6 +50,10 @@ public class DataGenerator {
             templateDir = ConfigManager.getProperty("template.file.dir");
             if (!templateDir.endsWith("\\/")) {
                 templateDir += "/";
+            }
+            uiType = Byte.valueOf(ConfigManager.getProperty("ui.config")).byteValue();
+            if (!UItype.exists(uiType)) {
+                throw new Exception("ui not config!")
             }
 
             DatabaseSchema databaseSchema = dataSchema.getDatabaseSchema();
@@ -452,7 +457,7 @@ public class DataGenerator {
 
     private static void generateApiServiceInterface(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
-                "interface.vm",
+                "api/interface.vm",
                 outputRootDir + ConfigManager.getProperty("package.name.service") + "\\" + NameUtil.getServiceClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
