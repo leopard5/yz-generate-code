@@ -51,10 +51,10 @@ public class DataGenerator {
             if (!templateDir.endsWith("\\/")) {
                 templateDir += "/";
             }
-            uiType = Byte.valueOf(ConfigManager.getProperty("ui.config")).byteValue();
-            if (!UItype.exists(uiType)) {
-                throw new Exception("ui not config!")
-            }
+//            uiType = Byte.valueOf(ConfigManager.getProperty("ui.config")).byteValue();
+//            if (!UItype.exists(uiType)) {
+//                throw new Exception("ui not config!")
+//            }
 
             DatabaseSchema databaseSchema = dataSchema.getDatabaseSchema();
             // System.out.print(JSON.toJSONString(databaseSchema));
