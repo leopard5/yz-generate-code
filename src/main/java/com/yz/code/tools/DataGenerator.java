@@ -1,7 +1,7 @@
 package com.yz.code.tools;
 
 import com.yz.code.constant.Constants;
-import com.yz.code.enmus.UItype;
+import com.yz.code.enums.UItype;
 import com.yz.code.schema.DatabaseSchema;
 import com.yz.code.schema.Dictionary;
 import com.yz.code.schema.TableSchema;
@@ -37,6 +37,7 @@ public class DataGenerator {
     public static String projectName = null;
     public static String outputRootDir = null;
     public static String templateDir = null;
+    public static Byte uiType = null;
 
     public static void main(String[] args) {
         try {
@@ -51,10 +52,10 @@ public class DataGenerator {
             if (!templateDir.endsWith("\\/")) {
                 templateDir += "/";
             }
-//            uiType = Byte.valueOf(ConfigManager.getProperty("ui.config")).byteValue();
-//            if (!UItype.exists(uiType)) {
-//                throw new Exception("ui not config!")
-//            }
+            uiType = Byte.valueOf(ConfigManager.getProperty("ui.config")==null?"0":ConfigManager.getProperty("ui.config"));
+            if (!UItype.exists(uiType)) {
+                throw new Exception("ui selected not config!");
+            }
 
             DatabaseSchema databaseSchema = dataSchema.getDatabaseSchema();
             // System.out.print(JSON.toJSONString(databaseSchema));

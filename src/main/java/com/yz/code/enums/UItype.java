@@ -1,11 +1,10 @@
-package com.yz.code.enmus;
+package com.yz.code.enums;
 
 public enum UItype {
     EASYUI       ((byte) 1),
     BOOTSTRAP    ((byte) 2),
     VUE          ((byte) 3),
     REACT        ((byte) 4),
-
 
     ;
     private byte value;
