@@ -2,7 +2,7 @@
     <tool>
         <key>config</key>
         <scope>application</scope>
-        <class>com.yz.code.util.ConfigManager</class>
+        <class>com.yz.code.config.ConfigManager</class>
     </tool>
     <tool>
         <key>StringUtil</key>

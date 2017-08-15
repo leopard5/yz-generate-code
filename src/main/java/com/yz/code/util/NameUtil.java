@@ -1,5 +1,6 @@
 package com.yz.code.util;
 
+import com.yz.code.config.ConfigManager;
 import org.springframework.util.StringUtils;
 
 import com.yz.code.schema.TableSchema;

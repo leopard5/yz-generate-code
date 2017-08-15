@@ -10,7 +10,7 @@
 
 	<bean class="com.yz.code.util.ApplicationContextUtil"></bean>
 	
-	<bean class="com.yz.code.util.ConfigManager">
+	<bean class="com.yz.code.config.ConfigManager">
 		<property name="locations">
 			<list>
 				<value>classpath:local.properties</value>

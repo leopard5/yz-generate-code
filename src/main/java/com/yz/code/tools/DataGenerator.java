@@ -1,5 +1,6 @@
 package com.yz.code.tools;
 
+import com.yz.code.config.ConfigManager;
 import com.yz.code.constant.Constants;
 import com.yz.code.enums.UItype;
 import com.yz.code.schema.DatabaseSchema;

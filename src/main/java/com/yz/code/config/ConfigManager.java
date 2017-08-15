@@ -1,4 +1,4 @@
-package com.yz.code.util;
+package com.yz.code.config;
 
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -7,8 +7,6 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.util.CollectionUtils;
-
-import com.alibaba.fastjson.JSON;
 
 public final class ConfigManager extends PropertyPlaceholderConfigurer {
 	static final ConcurrentHashMap<String, String> ALL_PROPERTIES = new ConcurrentHashMap<String, String>();

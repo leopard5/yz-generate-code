@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.util.StringUtils;
 
-import com.yz.code.util.ConfigManager;
+import com.yz.code.config.ConfigManager;
 import com.yz.code.util.StringUtil;
 
 

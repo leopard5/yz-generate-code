@@ -1,5 +1,6 @@
 package com.yz.code.util;
 
+import com.yz.code.config.ConfigManager;
 import com.yz.code.schema.ColumnSchema;
 import org.springframework.util.StringUtils;
 
