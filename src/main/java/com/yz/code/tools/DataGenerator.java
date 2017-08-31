@@ -272,7 +272,7 @@ public class DataGenerator {
                 for (String string : itemsStrings) {
                     sbBuffer.append(StringUtils.capitalize(string));
                 }
-                ctx.put("class", sbBuffer.toString());
+                ctx.put("class", NameUtil.getEnumClassName(sbBuffer.toString()));
                 ctx.put("list_dict", entry.getValue());
                 ctx.put("caption", ConfigManager.getProperty(entry.getKey()));
                 generateDictionary(tableSchema, ctx, sbBuffer.toString());
@@ -289,7 +289,8 @@ public class DataGenerator {
     public static void generateDictionary(TableSchema tableSchema, ToolContext ctx, String className) throws IOException {
         generate(
                 "api/dict.vm",
-                outputRootDir + ConfigManager.getProperty("package.name.enums") + "\\" + className + ".java",
+                outputRootDir + ConfigManager.getProperty("package.name.enums")
+                        + "\\" + NameUtil.getEnumClassName(className) + ".java",
                 tableSchema,
                 ctx);
     }

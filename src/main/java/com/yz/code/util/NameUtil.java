@@ -297,4 +297,8 @@ public class NameUtil {
 	public static String getTableComment(TableSchema tableSchema){
 		return tableSchema.getComment();
 	}
+
+	public static String getEnumClassName(String prefix){
+		return prefix + "Enum";
+	}
 }
