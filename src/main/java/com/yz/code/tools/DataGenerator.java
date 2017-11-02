@@ -1,3 +1,18 @@
+/*
+ * Copyright 2012-2017 yazhong.qi
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.yz.code.tools;
 
 import com.yz.code.config.ConfigManager;
@@ -31,9 +46,13 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * @author yazhong.qi
+ * @since 1.6.0
+ */
 public class DataGenerator {
     public static ClassPathXmlApplicationContext applicationContext = null;
-    public static Boolean isGeneratedDict = false;
+    public static String dictionaryTableName = null;
     public static List<String> tableNames = new ArrayList<String>();
     public static String projectName = null;
     public static String outputRootDir = null;
@@ -46,17 +65,9 @@ public class DataGenerator {
             DataSchema dataSchema = applicationContext.getBean("dataSchema", DataSchema.class);
 
             // mybatis-generator-maven-plugin 1.3.5
-            mavenPlugins_MyBatis_Generator(ConfigManager.getProperty("basePackage"));
+            mavenPluginsMyBatisGenerator(ConfigManager.getProperty("basePackage"));
 
-            // setting template dir
-            templateDir = ConfigManager.getProperty("template.file.dir");
-            if (!templateDir.endsWith("\\/")) {
-                templateDir += "/";
-            }
-            uiType = Byte.valueOf(ConfigManager.getProperty("ui.config")==null?"0":ConfigManager.getProperty("ui.config"));
-            if (!UItype.exists(uiType)) {
-                throw new Exception("ui selected not config!");
-            }
+            globalVariableSettings();
 
             DatabaseSchema databaseSchema = dataSchema.getDatabaseSchema();
             // System.out.print(JSON.toJSONString(databaseSchema));
@@ -77,7 +88,21 @@ public class DataGenerator {
         }
     }
 
-    private static void mavenPlugins_MyBatis_Generator(String generatorPackagePrefix) throws Exception {
+    private static void globalVariableSettings() throws Exception {
+        // setting template dir
+        templateDir = ConfigManager.getProperty("template.file.dir");
+        if (!templateDir.endsWith("\\/")) {
+            templateDir += "/";
+        }
+        uiType = Byte.valueOf(ConfigManager.getProperty("ui.config") == null ? "0" : ConfigManager.getProperty("ui.config"));
+        if (!UItype.exists(uiType)) {
+            throw new Exception("ui selected not config!");
+        }
+
+        dictionaryTableName = ConfigManager.getProperty("dict.table.name");
+    }
+
+    private static void mavenPluginsMyBatisGenerator(String generatorPackagePrefix) throws Exception {
         if (generatorPackagePrefix == null) {
             throw new Exception("generatorPackagePrefix is null");
         }
@@ -109,26 +134,25 @@ public class DataGenerator {
     }
 
     private static void generateCode(DatabaseSchema databaseSchema) throws IOException {
-        String[] tables = ConfigManager.getProperty("tables").split(Constants.TABLE_NAME_SEPARATOR);
-        if (tables == null) {
-            throw new IOException("generate tables not setting");
-        }
+        String[] tables = ConfigManager.getProperty("limit.tables").split(Constants.TABLE_NAME_SEPARATOR);
         outputRootDir = ConfigManager.getProperty("output.root.dir");
         if (outputRootDir == null || !StringUtils.hasText(outputRootDir)) {
             throw new IOException("output dir not setting");
         }
         deleteSubFiles(new File(outputRootDir));
         for (TableSchema tableSchema : databaseSchema.getTables()) {
-            for (String tableName : tables) {
-                if (tableSchema.getTableName().equalsIgnoreCase(tableName)
-                        && tableNames.contains(tableName)) {
-                    generate(tableSchema);
+            //
+            if (tables != null) {
+                for (String tableName : tables) {
+                    if (tableSchema.getTableName().equalsIgnoreCase(tableName)
+                            && tableNames.contains(tableName)) {
+                        generate(tableSchema);
+                    }
                 }
+            } else {
+                generate(tableSchema);
             }
         }
-
-        // 生成字典类
-
     }
 
     private static Map generateDictionary() {
@@ -260,9 +284,9 @@ public class DataGenerator {
 
         String companyName = ConfigManager.getProperty("company.name");
         ctx.put("companyname", companyName);
-        ctx.put("projectname", projectName);
+        ctx.put("projectname", getProjectNameFromConfigFile());
 
-        if (!isGeneratedDict) {
+        if (dictionaryTableName != null || StringUtils.hasText(dictionaryTableName)) {
             Map<String, List<Object>> data = generateDictionary();
             String className = "";
             for (Map.Entry<String, List<Object>> entry : data.entrySet()) {
@@ -280,7 +304,6 @@ public class DataGenerator {
                 ctx.remove("list_dict");
                 ctx.remove("caption");
             }
-            isGeneratedDict = true;
         }
         generateAll(tableSchema, ctx);
     }
@@ -344,11 +367,17 @@ public class DataGenerator {
                 ctx);
     }
 
-    public static void generateAll(TableSchema tableSchema, ToolContext ctx) throws IOException {
+    private static String getProjectNameFromConfigFile() {
         String[] basePackages = ConfigManager.getProperty("basePackage").split("\\.");
-        List<String> basePackageList = Arrays.asList(basePackages);
+        if (basePackages != null) {
+            List<String> basePackageList = Arrays.asList(basePackages);
+            return basePackageList.get(basePackageList.size() - 1);
+        }
+        return "";
+    }
 
-        projectName = basePackageList.get(basePackageList.size() - 1);
+    public static void generateAll(TableSchema tableSchema, ToolContext ctx) throws IOException {
+
         // dal
         generateDalModel(tableSchema, ctx);
         generateDalModelQuery(tableSchema, ctx);
