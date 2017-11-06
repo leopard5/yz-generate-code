@@ -31,6 +31,12 @@ public class ProjectGenerator {
      * 5. dal
      * 6. core
      *
+     *
+     * resource
+     * 1. parent pom
+     * 2. modules all
+     * 3.
+     * 4.
      */
 
 
