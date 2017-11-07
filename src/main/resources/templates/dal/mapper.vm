@@ -6,24 +6,25 @@ package ${config.getProperty("basePackage")}.dao;
 #set($messageQueryClass=$name.getMessageQueryClassName($table))
 #set($modelQueryVar=$name.getModelQueryVarName($table))
 
-import java.util.Date;
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
-import $name.getFullMessageQueryClassName($table);
 import $name.getFullModelClassName($table);
 import $name.getFullModelExampleClassName($table);
+import $name.getFullMessageQueryClassName($table);
+import org.apache.ibatis.annotations.Param;
+
+#if($table.hasDateColumn())
+import java.util.Date;
+#end
+import java.util.List;
 
 public interface $mapperClass {
 	$mapperbase
-	#if($table.hasDeleteColumn())
+#if($table.hasDeleteColumn())
     int logicalDeleteByPrimaryKey(
         		@Param("$table.primaryColumn.propertyName")$table.primaryColumn.javaType $table.primaryColumn.propertyName,
         		@Param("updateUser")String updateUser,
 				@Param("updateUserName")String updateUserName,
 				@Param("updateTime")Date updateTime);
-	#end
+#end
 
     $table.modelName selectByPrimaryKeyForUpdate($keyParameters);
 
@@ -31,15 +32,15 @@ public interface $mapperClass {
 
 	int insertBatch(@Param("modelList")List<${modelClass}> modelList);
 
-	#foreach($index in $table.indexes)
-	#if($index.isUnique())
-	
+#foreach($index in $table.indexes)
+#if($index.isUnique())
+
 	$table.modelName ${sql.getIndexSelectName($index)}(${code.getDbParameters($index.memberColumns)});	
-	#else
+#else
 	
 	List<${modelClass}> ${sql.getIndexSelectName($index)}(${code.getDbParameters($index.memberColumns)});
-	#end
-	#end
+#end
+#end
 
 
 }

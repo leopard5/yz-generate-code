@@ -54,20 +54,22 @@ public class DataGenerator {
     public static ClassPathXmlApplicationContext applicationContext = null;
     public static String dictionaryTableName = null;
     public static List<String> tableNames = new ArrayList<String>();
-    public static String projectName = null;
     public static String outputRootDir = null;
     public static String templateDir = null;
     public static Byte uiType = null;
+    public static String companyAbbreviation = null;
+    public static String projectAbbreviation = null;
+    public static String basePackage = null;
 
     public static void main(String[] args) {
         try {
             applicationContext = new ClassPathXmlApplicationContext("classpath:applicationContext.xml");
             DataSchema dataSchema = applicationContext.getBean("dataSchema", DataSchema.class);
 
+            globalVariableSettings();
+
             // mybatis-generator-maven-plugin 1.3.5
             mavenPluginsMyBatisGenerator(ConfigManager.getProperty("basePackage"));
-
-            globalVariableSettings();
 
             DatabaseSchema databaseSchema = dataSchema.getDatabaseSchema();
             // System.out.print(JSON.toJSONString(databaseSchema));
@@ -99,7 +101,19 @@ public class DataGenerator {
             throw new Exception("ui selected not config!");
         }
 
+        companyAbbreviation = ConfigManager.getProperty("company.abbreviation");
+        if (companyAbbreviation == null || !StringUtils.hasText(companyAbbreviation)) {
+            throw new Exception("Required items [company.abbreviation]");
+        }
+        projectAbbreviation = ConfigManager.getProperty("project.abbreviation");
+        if (companyAbbreviation == null || !StringUtils.hasText(companyAbbreviation)) {
+            throw new Exception("Required items [project.abbreviation]");
+        }
         dictionaryTableName = ConfigManager.getProperty("dict.table.name");
+
+        basePackage = "com" + Constants.FOLDER_SEPARATOR + companyAbbreviation + Constants.FOLDER_SEPARATOR + projectAbbreviation;
+
+        ConfigManager.setProperty(Constants.BASE_PACKAGE, basePackage);
     }
 
     private static void mavenPluginsMyBatisGenerator(String generatorPackagePrefix) throws Exception {
@@ -380,7 +394,10 @@ public class DataGenerator {
 
         // dal
         generateDalModel(tableSchema, ctx);
-        generateDalModelQuery(tableSchema, ctx);
+        /**
+         * never used
+         */
+        // generateDalModelQuery(tableSchema, ctx);
 
         // api
         generateApiReq(tableSchema, ctx);

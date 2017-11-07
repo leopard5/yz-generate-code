@@ -2,20 +2,23 @@
 package ${config.getProperty("basePackage")}.req;
 
 import java.io.Serializable;
+#if($table.hasBigDecimalColumn())
 import java.math.BigDecimal;
+#end
+#if($table.hasDateColumn())
 import java.util.Date;
+#end
 
 public class ${name.getMessageReqClassName($table)} implements Serializable {
-
-	/**   
-	 * @Fields serialVersionUID : 序列化版本号 
+	/**
+	 * serialVersionUID
 	 */ 
 	private static final long serialVersionUID = 1L;
 
 	#foreach($column in $table.columns)
 		
 	/**
-	 * @Fields $column.propertyName : $column.remarks
+	 * $column.remarks
 	 */
 	private $column.javaType $column.propertyName;
 	#end

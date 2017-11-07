@@ -1,9 +1,13 @@
 #set($comment=$name.getTableComment($table))
 package ${config.getProperty("basePackage")}.resp;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import java.io.Serializable;
+#if($table.hasBigDecimalColumn())
+import java.math.BigDecimal;
+#end
+#if($table.hasDateColumn())
+import java.util.Date;
+#end
 
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
@@ -12,27 +16,30 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 public class ${name.getMessageClassName($table)} implements Serializable {
 
 	/**   
-	 * @Fields serialVersionUID : 序列化版本号 
+	 * serialVersionUID
 	 */ 
 	private static final long serialVersionUID = 1L;
 
-	#foreach($column in $table.columns)
-		
+#foreach($column in $table.columns)
+
 	/**
-	 * @Fields $column.propertyName : $column.remarks
+	 * $column.remarks
 	 */
 	@ApiModelProperty("${column.remarks}")
 	private $column.javaType $column.propertyName;
-	#end
-	
-    #foreach($column in $table.columns)
+#end
+
+#foreach($column in $table.columns)
 
 	public $column.javaType ${column.getter}(){
 		return $column.propertyName;
 	}
-	
 	public void ${column.setter}($column.javaType $column.propertyName){
 		this.$column.propertyName = $column.propertyName;
 	}
-    #end
+#end
+
+	/**
+	* The following custom property definition
+	*/
 }

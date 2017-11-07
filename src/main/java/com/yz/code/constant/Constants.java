@@ -5,6 +5,7 @@ public class Constants {
     public static final String GENERATOR_CONFIG_FILE = "generatorConfig.xml";
     public static final String FOLDER_SEPARATOR = ".";
     public static final String TABLE_NAME_SEPARATOR = ",";
+    public static final String BASE_PACKAGE = "basePackage";
 
     /**
      * 数字0

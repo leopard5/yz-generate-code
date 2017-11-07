@@ -14,7 +14,11 @@ public final class ConfigManager extends PropertyPlaceholderConfigurer {
 	public static String getProperty(String propertyName) {
 		return ALL_PROPERTIES.get(propertyName);
 	}
-	
+
+	public static void setProperty(String key, String value){
+		ALL_PROPERTIES.put(key, value);
+	}
+
 	@Override
     protected void processProperties(ConfigurableListableBeanFactory beanFactory,
             Properties props) throws BeansException {

@@ -69,6 +69,32 @@
             <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
         </table>
 
+        <!-- 活动审核日志表 -->
+        <table tableName="aps_activity_audit_log" domainObjectName="ActivityAuditLog"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 活动页元素表 -->
+        <table tableName="aps_activity_element" domainObjectName="ActivityElement"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <!-- 活动页元素配置表 -->
+        <table tableName="aps_activity_element_config" domainObjectName="ActivityElementConfig"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
 
         <!-- 配置表信息 end -->
 

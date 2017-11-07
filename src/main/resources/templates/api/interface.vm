@@ -13,105 +13,107 @@ package ${config.getProperty("basePackage")}.service;
 #set($modelQueryVar=$name.getModelQueryVarName($table))
 #set($comment=$name.getTableComment($table))
 
-import ${name.getFullMessageQueryClassName($table)};
 import ${name.getFullMessageReqClassName($table)};
+import ${name.getFullMessageQueryClassName($table)};
 import ${name.getFullMessageClassName($table)};
-import ${config.getProperty("basePackage")}.resp.MmcResult;
-import ${config.getProperty("basePackage")}.resp.QueryResultInfo;
+import ${config.getProperty("basePackage")}.resp.base.QueryResultODTO;
+import ${name.getFullProjectResultClassName()};
+
+import java.util.List;
 
 /**
- * @CopyRright (c)2008-2016: <${companyname}>
- * @Project: <mmc>
+ * @CopyRright (c)2008-2017: <${companyname}>
+ * @Project: <${config.getProperty("project.abbreviation")}>
  * @Comments: <对外API ${comment}管理接口>
  * @JDK 1.7
- * @Author: <yazhong.qi>
- * @email : <yazhong.qi@163.com>
+ * @Author: <${config.getProperty("project.Author")}>
+ * @email : <${config.getProperty("project.email")}>
  * @Create Date: <${nowtime}>
  * @Modify Date: <${nowtime}>
  * @Version: <1.0>
  */
 public interface ${name.getServiceClassName($table)} {
 
-	#if($table.hasDeleteColumn())
-/**
+#if($table.hasDeleteColumn())
+	/**
 	 * 
 	 * 删除${comment}
 	 * 
-	 * @author yazhong.qi
+	 * @author ${config.getProperty("project.Author")}
 	 * @version 1.0.0
 	 * @param id
 	 * @param updateUser
 	 * @param updateUserName
 	 * @return
 	 */
-MmcResult<Integer> delete$modelClass($primaryKeyParameter, String updateUser, String updateUserName);
-	#else
+	${name.getProjectResultClassName()}<Integer> delete$modelClass($primaryKeyParameter, String updateUser, String updateUserName);
+#else
 	/**
 	 * 
 	 * 删除${comment}
 	 * 
-	 * @author yazhong.qi
+	 * @author ${config.getProperty("project.Author")}
 	 * @version 1.0.0
 	 * @param primaryKeyParameter
 	 * @return
 	 */
-MmcResult<Integer> delete$modelClass($primaryKeyParameter);
-	#end
+	${name.getProjectResultClassName()}<Integer> delete$modelClass($primaryKeyParameter);
+#end
 	
 	/**
 	 * 
 	 * 创建${comment}
 	 * 
-	 * @author yazhong.qi
+	 * @author ${config.getProperty("project.Author")}
 	 * @version 1.0.0
 	 * @param $messageReqVarName
 	 * @return
 	 */
-    MmcResult<${table.primaryColumn.javaType}> create$modelClass($messageReqClass $messageReqVarName);
+	${name.getProjectResultClassName()}<${table.primaryColumn.javaType}> create$modelClass($messageReqClass $messageReqVarName);
 
 	/**
 	 *
 	 * 批量创建${comment}
 	 *
-	 * @author yazhong.qi
+	 * @author ${config.getProperty("project.Author")}
 	 * @version 1.0.0
-	 * @param List<$messageReqVarName>
+	 * @param ${messageReqVarName}s
 	 * @return
 	 */
-    MmcResult<${table.primaryColumn.javaType}> batchInsert(List<$messageReqClass> ${messageReqVarName}s);
+	${name.getProjectResultClassName()}<${table.primaryColumn.javaType}> batchInsert(List<$messageReqClass> ${messageReqVarName}s);
 
 	/**
 	 * 
 	 * 更新${comment}
 	 * 
-	 * @author yazhong.qi
+	 * @author ${config.getProperty("project.Author")}
 	 * @version 1.0.0
-	 * @param $messageVarName
+	 * @param $messageReqVarName
 	 * @return
 	 */
-	MmcResult<Integer> update$modelClass($messageReqClass $messageReqVarName);
+	${name.getProjectResultClassName()}<Integer> update$modelClass($messageReqClass $messageReqVarName);
 	
 	/**
 	 * 
 	 * 根据ID获取${comment}信息
 	 * 
-	 * @author yazhong.qi
+	 * @author ${config.getProperty("project.Author")}
 	 * @version 1.0.0
 	 * @param id
 	 * @return
 	 */
-	MmcResult<$messageClass> get$modelClass( $primaryKeyParameter );
+	${name.getProjectResultClassName()}<$messageClass> get$modelClass( $primaryKeyParameter );
 
 	/**
 	 * 
 	 * 分页查询${comment}信息
 	 * 
-	 * @author yazhong.qi
+	 * @author ${config.getProperty("project.Author")}
 	 * @version 1.0.0
 	 * @param ${messageQueryVar}
 	 * @return
 	 */
-    MmcResult<QueryResultInfo<${messageClass}>> query${modelClass}($messageQueryClass $messageQueryVar);
+	${name.getProjectResultClassName()}<QueryResultODTO<${messageClass}>> query${modelClass}($messageQueryClass $messageQueryVar);
 
     /**
     * The following custom service interface about dubbo
