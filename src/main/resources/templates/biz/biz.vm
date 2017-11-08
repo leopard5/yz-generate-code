@@ -97,7 +97,22 @@ public class $bizClass {
 		${mapperVarName}.insertSelective( $modelVar );
 		return ${modelVar}.getId();
 	}
-	
+
+    /**
+    *
+    * 批量创建
+    *
+    * @author ${config.getProperty("project.Author")}
+    * @version 1.0.0
+    * @param ${modelVar}List
+    * @return
+    */
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
+    public int batchCreate${modelClass}(List<$modelClass> ${modelVar}List){
+    	// TODO: Describe business logic and implement it
+    	return ${mapperVarName}.insertBatch( ${modelVar}List );
+    }
+
 	/**
 	 * 
 	 * 更新${comment}

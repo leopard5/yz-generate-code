@@ -14,6 +14,7 @@ package ${config.getProperty("basePackage")}.biz.convertor;
 import $name.getFullModelClassName($table);
 import $name.getFullMessageReqClassName($table);
 import $name.getFullMessageClassName($table);
+import ${config.getProperty("basePackage")}.resp.base.QueryResultODTO;
 import org.springframework.cglib.beans.BeanCopier;
 
 import java.util.ArrayList;
@@ -71,4 +72,14 @@ public abstract class ${name.getConvertorClassName($table)} {
 		}
 		return ${modelVar}List;
 	}
+
+    public static QueryResultODTO<${messageClass}> toQueryResult(QueryResultODTO<${modelClass}> queryResult) {
+    	QueryResultODTO<${messageClass}> queryResultInfo = new QueryResultODTO<${messageClass}>();
+        queryResultInfo.setPageNo(queryResult.getPageNo());
+        queryResultInfo.setPageSize(queryResult.getPageSize());
+        queryResultInfo.setTotalPages(queryResult.getTotalPages());
+        queryResultInfo.setTotalRecords(queryResult.getTotalRecords());
+        queryResultInfo.setRecords(to${messageClass}List(queryResult.getRecords()));
+        return queryResultInfo;
+        }
 }

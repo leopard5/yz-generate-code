@@ -16,35 +16,33 @@
 #set($modelQueryVar=$name.getModelQueryVarName($table))
 #set($exceptionClass=$name.getExceptionClassName($table))
 #set($comment=$name.getTableComment($table))
-package ${config.getProperty("basePackage")}.service.impl;
-
-import static ${config.getProperty("basePackage")}.validate.${validateClassName}.validateForCreate;
-import static ${config.getProperty("basePackage")}.validate.${validateClassName}.validateForUpdate;
-
-import javax.annotation.Resource;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+package ${config.getProperty("basePackage")}.service;
 
 import ${name.getFullBizClassName($table)};
 import ${name.getFullConvertorClassName($table)};
 import ${name.getFullModelClassName($table)};
-import ${name.getFullMessageQueryClassName($table)};
 import ${name.getFullMessageReqClassName($table)};
+import ${name.getFullMessageQueryClassName($table)};
 import ${name.getFullMessageClassName($table)};
-import ${config.getProperty("basePackage")}.resp.MmcResult;
-import ${config.getProperty("basePackage")}.resp.MmcResultCode;
-import ${config.getProperty("basePackage")}.resp.QueryResultInfo;
-import ${name.getFullServiceClassName($table)};
+import ${config.getProperty("basePackage")}.resp.base.QueryResultODTO;
+import ${name.getFullProjectResultClassName()};
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+import static ${config.getProperty("basePackage")}.validate.${validateClassName}.validateForCreate;
+import static ${config.getProperty("basePackage")}.validate.${validateClassName}.validateForUpdate;
 
 /**
  * @CopyRright (c)2008-2017: <${companyname}>
- * @Project: <mmc>
+ * @Project: <${config.getProperty("project.abbreviation")}>
  * @Comments: <Dubbo Service ${comment}管理类>
  * @JDK 1.7
- * @Author: <yazhong.qi>
- * @email : <yazhong.qi@163.com>
+ * @Author: <${config.getProperty("project.Author")}>
+ * @email : <${config.getProperty("project.email")}>
  * @Create Date: <${nowtime}>
  * @Modify Date: <${nowtime}>
  * @Version: <1.0>
@@ -53,14 +51,14 @@ import ${name.getFullServiceClassName($table)};
 public class $name.getServiceImplClassName($table) implements $name.getServiceClassName($table) {
 	private final Logger logger = LoggerFactory.getLogger(${name.getServiceImplClassName($table)}.class);
 
-	@Resource
+	@Autowired
 	private $bizClass $bizVar;
 	
 	/**
 	 * 
 	 * 删除${comment}
 	 * 
-	 * @Author: <yazhong.qi@163.com>
+	 * @Author: <${config.getProperty("project.email")}>
 	 * @Version: <1.0>
 	 * @param id
 	 * @param updateUser
@@ -68,8 +66,8 @@ public class $name.getServiceImplClassName($table) implements $name.getServiceCl
 	 * @return
 	 */
 	@Override
-	public MmcResult<Integer> delete$modelClass($primaryKeyParameter #if($table.hasDeleteColumn()), String updateUser, String updateUserName #end){
-		MmcResult<Integer> result = MmcResult.newSuccess();
+	public ${name.getProjectResultClassName()}<Integer> delete$modelClass($primaryKeyParameter #if($table.hasDeleteColumn()), String updateUser, String updateUserName #end){
+		${name.getProjectResultClassName()}<Integer> result = ${name.getProjectResultClassName()}.newSuccess();
 		result.setDataMap(${bizVar}.delete$modelClass($primaryKeyVarName #if($table.hasDeleteColumn()), updateUser, updateUserName #end));
 		return result;
 	}
@@ -78,14 +76,14 @@ public class $name.getServiceImplClassName($table) implements $name.getServiceCl
 	 * 
 	 * 创建${comment}
 	 * 
-	 * @Author: <yazhong.qi@163.com>
+	 * @Author: <${config.getProperty("project.email")}>
 	 * @Version: <1.0>
 	 * @param $messageReqVarName
 	 * @return
 	 */
 	@Override
-    public MmcResult<${table.primaryColumn.javaType}> create$modelClass($messageReqClass $messageReqVarName){
-		MmcResult<${table.primaryColumn.javaType}> result = MmcResult.newSuccess();
+    public ${name.getProjectResultClassName()}<${table.primaryColumn.javaType}> create$modelClass($messageReqClass $messageReqVarName){
+		${name.getProjectResultClassName()}<${table.primaryColumn.javaType}> result = ${name.getProjectResultClassName()}.newSuccess();
 		$modelClass $modelVar = ${convertor}.to${modelClass}($messageReqVarName);
 		if (!validateForCreate($modelVar, result)) {
 			return result;
@@ -93,19 +91,27 @@ public class $name.getServiceImplClassName($table) implements $name.getServiceCl
 		result.setDataMap(${bizVar}.create$modelClass( $modelVar ));
 		return  result;
 	}
-	
+
+	@Override
+	public ${name.getProjectResultClassName()}<Integer> batchCreate(List<${messageReqClass}> ${messageReqVarName}s ) {
+			${name.getProjectResultClassName()}<Integer> result = ${name.getProjectResultClassName()}.newSuccess();
+		List<${modelClass}> items = ${modelClass}Convertor.to${modelClass}List(${messageReqVarName}s);
+        result.setDataMap(${bizVar}.batchCreate${modelClass}(items));
+        return result;
+	}
+
 	/**
 	 * 
 	 * 更新${comment}
 	 * 
-	 * @Author: <yazhong.qi@163.com>
+	 * @Author: <${config.getProperty("project.email")}>
 	 * @Version: <1.0>
 	 * @param $messageReqVarName
 	 * @return
 	 */
 	@Override
-	public MmcResult<Integer> update$modelClass($messageReqClass $messageReqVarName){
-		MmcResult<Integer> result = MmcResult.newSuccess();
+	public ${name.getProjectResultClassName()}<Integer> update$modelClass($messageReqClass $messageReqVarName){
+		${name.getProjectResultClassName()}<Integer> result = ${name.getProjectResultClassName()}.newSuccess();
     	$modelClass $modelVar = null;
 		$modelVar = ${convertor}.to${modelClass}($messageReqVarName);
 		if (!validateForUpdate($modelVar, result)) {
@@ -119,14 +125,14 @@ public class $name.getServiceImplClassName($table) implements $name.getServiceCl
 	 * 
 	 * 根据ID获取${comment}信息
 	 * 
-	 * @Author: <yazhong.qi@163.com>
+	 * @Author: <${config.getProperty("project.email")}>
 	 * @Version: <1.0>
 	 * @param id
 	 * @return
 	 */
 	@Override
-	public MmcResult<$messageClass> get$modelClass( $primaryKeyParameter ){
-		MmcResult<$messageClass> result  = MmcResult.newSuccess();
+	public ${name.getProjectResultClassName()}<$messageClass> get$modelClass( $primaryKeyParameter ){
+		${name.getProjectResultClassName()}<$messageClass> result  = ${name.getProjectResultClassName()}.newSuccess();
 		$modelClass $modelVar = ${bizVar}.get$modelClass( $primaryKeyVarName );
 		$messageClass $messageVar = ${convertor}.to${messageClass}($modelVar);
 		result.setDataMap($messageVar);
@@ -137,16 +143,18 @@ public class $name.getServiceImplClassName($table) implements $name.getServiceCl
 	 * 
 	 * 分页查询${comment}信息
 	 * 
-	 * @Author: <yazhong.qi@163.com>
+	 * @Author: <${config.getProperty("project.email")}>
 	 * @Version: <1.0>
 	 * @param ${modelQueryVar}
 	 * @return
 	 */
 	@Override
-	public MmcResult<QueryResultInfo<${messageClass}>> query${modelClass}($messageQueryClass $messageQueryVar) {
-		MmcResult<QueryResultInfo<${messageClass}>> result = MmcResult.newSuccess();
-		QueryResultInfo<${modelClass}> resultInfo = ${bizVar}.query${modelClass}(${messageQueryVar});
-		result.setDataMap(${convertor}.toQueryResultInfo(resultInfo));
+	public ${name.getProjectResultClassName()}<QueryResultODTO<${messageClass}>> query${modelClass}($messageQueryClass $messageQueryVar) {
+		${name.getProjectResultClassName()}<QueryResultODTO<${messageClass}>> result = ${name.getProjectResultClassName()}.newSuccess();
+
+		QueryResultODTO<${modelClass}> resultInfo = ${bizVar}.query${modelClass}(${messageQueryVar});
+        result.setDataMap(${convertor}.toQueryResult(resultInfo));
+
 		return result;
 	}
 }

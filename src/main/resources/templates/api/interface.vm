@@ -80,7 +80,7 @@ public interface ${name.getServiceClassName($table)} {
 	 * @param ${messageReqVarName}s
 	 * @return
 	 */
-	${name.getProjectResultClassName()}<${table.primaryColumn.javaType}> batchInsert(List<$messageReqClass> ${messageReqVarName}s);
+	${name.getProjectResultClassName()}<Integer> batchCreate(List<$messageReqClass> ${messageReqVarName}s);
 
 	/**
 	 * 
