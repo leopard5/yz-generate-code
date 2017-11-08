@@ -56,9 +56,9 @@ public class ${name.getTestClassName($table)} extends TestBase {
 	@Test
 	public void delete${modelClass}() {
 		${table.primaryColumn.javaType} ${table.primaryColumn.propertyName} = ${table.primaryColumn.getTestValue()};
-		Integer updateUser = 1;
+		String updateUser = "test user";
 		String updateUserName = "System";
-		MmcResult<Integer> messageInfo = ${serviceVar}.delete${modelClass}(${table.primaryColumn.propertyName}, 
+		${name.getProjectResultClassName()}<Integer> messageInfo = ${serviceVar}.delete${modelClass}(${table.primaryColumn.propertyName},
 				updateUser, updateUserName);
 		printAndAssertEquals(messageInfo);
 	}
@@ -69,7 +69,7 @@ public class ${name.getTestClassName($table)} extends TestBase {
 	@Test
 	public void delete${modelClass}() {
 		${table.primaryColumn.javaType} ${table.primaryColumn.propertyName} = ${table.primaryColumn.getTestValue()};
-		MmcResult<Integer> messageInfo = ${serviceVar}.delete${modelClass}(${table.primaryColumn.propertyName});
+		${name.getProjectResultClassName()}<Integer> messageInfo = ${serviceVar}.delete${modelClass}(${table.primaryColumn.propertyName});
 		printAndAssertEquals(messageInfo);
 	}
 	#end
@@ -83,7 +83,7 @@ public class ${name.getTestClassName($table)} extends TestBase {
 		#foreach($column in $table.columns)
 		${messageReqVarName}.set${column.cPropertyName}(${column.getTestValue()});	
 		#end
-		MmcResult<${table.primaryColumn.javaType}> messageInfo = ${serviceVar}
+		${name.getProjectResultClassName()}<${table.primaryColumn.javaType}> messageInfo = ${serviceVar}
 				.create${modelClass}(${messageReqVarName});
 		printAndAssertEquals(messageInfo);
 	}
@@ -97,7 +97,7 @@ public class ${name.getTestClassName($table)} extends TestBase {
 		#foreach($column in $table.columns)
 		${messageReqVarName}.set${column.cPropertyName}(${column.getTestValue()});	
 		#end
-		MmcResult<Integer> messageInfo = ${serviceVar}
+		${name.getProjectResultClassName()}<Integer> messageInfo = ${serviceVar}
 				.update${modelClass}(${messageReqVarName});
 		printAndAssertEquals(messageInfo);
 	}
@@ -108,7 +108,7 @@ public class ${name.getTestClassName($table)} extends TestBase {
 	@Test
 	public void get${modelClass}() {
 		$table.primaryColumn.javaType $table.primaryColumn.propertyName = $table.primaryColumn.getTestValue();
-		MmcResult<${messageClass}> messageInfo = ${serviceVar}.get${modelClass}(${table.primaryColumn.propertyName});
+		${name.getProjectResultClassName()}<${messageClass}> messageInfo = ${serviceVar}.get${modelClass}(${table.primaryColumn.propertyName});
 		printAndAssertEquals(messageInfo);
 	}
 
@@ -125,7 +125,7 @@ public class ${name.getTestClassName($table)} extends TestBase {
 		#foreach($column in $table.columns)
 		${messageQueryVar}.set${column.cPropertyName}(${column.getTestValue()});	
 		#end
-		MmcResult<QueryResultInfo<${messageClass}>> messageInfo = ${serviceVar}
+		${name.getProjectResultClassName()}<QueryResultODTO<${messageClass}>> messageInfo = ${serviceVar}
 				.query${modelClass}(${messageQueryVar});
 		printAndAssertEquals(messageInfo);
 	}
