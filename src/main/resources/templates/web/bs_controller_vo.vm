@@ -1,28 +1,31 @@
-j#set($comment=$name.getTableComment($table))
+#set($comment=$name.getTableComment($table))
 package ${config.getProperty("basePackage")}.vo;
-
-import java.math.BigDecimal;
-import java.io.Serializable;
-import java.util.Date;
 
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
+import java.io.Serializable;
+#if($table.hasBigDecimalColumn())
+import java.math.BigDecimal;
+#end
+#if($table.hasDateColumn())
+import java.util.Date;
+#end
+
 @ApiModel("${comment}")
 public class ${name.getControllerVoClassName($table)} implements Serializable {
-
-	/**   
-	 * serialVersionUID : 序列化版本号
+	/**
+	 * serialVersionUID
 	 */ 
 	private static final long serialVersionUID = 1L;
 
-	#foreach($column in $table.columns)
+#foreach($column in $table.columns)
 		
 	@ApiModelProperty("${column.remarks}")
 	private $column.javaType $column.propertyName;
-	#end
+#end
 	
-    #foreach($column in $table.columns)
+#foreach($column in $table.columns)
 
 	public $column.javaType ${column.getter}(){
 		return $column.propertyName;
@@ -31,7 +34,7 @@ public class ${name.getControllerVoClassName($table)} implements Serializable {
 	public void ${column.setter}($column.javaType $column.propertyName){
 		this.$column.propertyName = $column.propertyName;
 	}
-    #end
+#end
 
 	//-----------------------------------------------------------------------
 	// custom property definition

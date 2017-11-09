@@ -60,6 +60,7 @@ public class DataGenerator {
     public static String companyAbbreviation = null;
     public static String projectAbbreviation = null;
     public static String basePackage = null;
+    public static String generatorPackageFileDir = null;
 
     public static void main(String[] args) {
         try {
@@ -67,6 +68,9 @@ public class DataGenerator {
             DataSchema dataSchema = applicationContext.getBean("dataSchema", DataSchema.class);
 
             globalVariableSettings();
+
+            deleteSubFiles(new File(outputRootDir));
+            deleteSubFiles(new File(generatorPackageFileDir));
 
             // mybatis-generator-maven-plugin 1.3.5
             mavenPluginsMyBatisGenerator(ConfigManager.getProperty("basePackage"));
@@ -91,6 +95,11 @@ public class DataGenerator {
     }
 
     private static void globalVariableSettings() throws Exception {
+        outputRootDir = ConfigManager.getProperty("output.root.dir");
+        if (outputRootDir == null || !StringUtils.hasText(outputRootDir)) {
+            throw new IOException("output dir not setting");
+        }
+
         // setting template dir
         templateDir = ConfigManager.getProperty("template.file.dir");
         if (!templateDir.endsWith("\\/")) {
@@ -114,6 +123,13 @@ public class DataGenerator {
         basePackage = "com" + Constants.FOLDER_SEPARATOR + companyAbbreviation + Constants.FOLDER_SEPARATOR + projectAbbreviation;
 
         ConfigManager.setProperty(Constants.BASE_PACKAGE, basePackage);
+
+
+
+        generatorPackageFileDir = ConfigManager.getProperty("output.generator.project");
+        if (generatorPackageFileDir == null || !StringUtils.hasText(generatorPackageFileDir)) {
+            throw new Exception("Required items [output.generator.project]");
+        }
     }
 
     private static void mavenPluginsMyBatisGenerator(String generatorPackagePrefix) throws Exception {
@@ -149,11 +165,6 @@ public class DataGenerator {
 
     private static void generateCode(DatabaseSchema databaseSchema) throws IOException {
         String[] tables = ConfigManager.getProperty("limit.tables").split(Constants.TABLE_NAME_SEPARATOR);
-        outputRootDir = ConfigManager.getProperty("output.root.dir");
-        if (outputRootDir == null || !StringUtils.hasText(outputRootDir)) {
-            throw new IOException("output dir not setting");
-        }
-        deleteSubFiles(new File(outputRootDir));
         for (TableSchema tableSchema : databaseSchema.getTables()) {
             //
             if (tables != null) {

@@ -1,67 +1,74 @@
 package ${config.getProperty("basePackage")}.vo;
 
+import ${config.getProperty("basePackage")}.vo.base.QueryVO;
+
+#if($table.hasBigDecimalColumn())
 import java.math.BigDecimal;
+#end
+#if($table.hasDateColumn())
 import java.util.Date;
+#end
 import java.util.List;
 
-public class ${name.getControllerQueryVoClassName($table)} extends QueryVo {
-	
-	/**   
-	 * @Fields serialVersionUID : 序列化版本号 
+public class ${name.getControllerQueryVoClassName($table)} extends QueryVO {
+	/**
+	 * serialVersionUID
 	 */ 
 	private static final long serialVersionUID = 1L;
 
-	#foreach($column in $table.columns)
-		#if($column.isEqualWhere())
-private $column.javaType ${column.propertyName};
-			
-			public $column.javaType ${column.getter}(){
-				return ${column.propertyName};
-			}
-			public void ${column.setter}($column.javaType ${column.propertyName}){
-				this.${column.propertyName} = ${column.propertyName};
-			}
-		#end
+#foreach($column in $table.columns)
+#if($column.isEqualWhere())
+	private $column.javaType ${column.propertyName};
+
+	public $column.javaType ${column.getter}(){
+		return ${column.propertyName};
+	}
+	public void ${column.setter}($column.javaType ${column.propertyName}){
+		this.${column.propertyName} = ${column.propertyName};
+	}
+#end
 	
-		#if($column.isInWhere())
+#if($column.isInWhere())
 	private List<$column.javaType> ${column.propertyName}List;
-			public List<$column.javaType> ${column.getter}List(){
-				return ${column.propertyName}List;
-			}
-			public void ${column.setter}List(List<$column.javaType> ${column.propertyName}List){
-				this.${column.propertyName}List = ${column.propertyName}List;
-			}
-		#end
+
+	public List<$column.javaType> ${column.getter}List(){
+		return ${column.propertyName}List;
+	}
+	public void ${column.setter}List(List<$column.javaType> ${column.propertyName}List){
+		this.${column.propertyName}List = ${column.propertyName}List;
+	}
+#end
 	
-		#if($column.isLikeWhere())
+#if($column.isLikeWhere())
 	private ${column.javaType} ${column.propertyName}Like;
-			public ${column.javaType} ${column.getter}Like(){
-				return ${column.propertyName}Like;
-			}
-			public void ${column.setter}Like(${column.javaType} ${column.propertyName}Like){
-				this.${column.propertyName}Like = ${column.propertyName}Like;
-			}
-		#end
-		
-		#if($column.isRangeWhere())
+
+	public ${column.javaType} ${column.getter}Like(){
+		return ${column.propertyName}Like;
+	}
+	public void ${column.setter}Like(${column.javaType} ${column.propertyName}Like){
+		this.${column.propertyName}Like = ${column.propertyName}Like;
+	}
+#end
+
+#if($column.isRangeWhere())
 	private ${column.javaType} ${column.propertyName}From;
-			public ${column.javaType} ${column.getter}From(){
-				return ${column.propertyName}From;
-			}
-			public void ${column.setter}From(${column.javaType} ${column.propertyName}From){
-				this.${column.propertyName}From = ${column.propertyName}From;
-			}
-			
-			private ${column.javaType} ${column.propertyName}To;  			
-			public ${column.javaType} ${column.getter}To(){
-				return ${column.propertyName}To;
-			}
-			public void ${column.setter}To(${column.javaType} ${column.propertyName}To){
-				this.${column.propertyName}To = ${column.propertyName}To;
-			}
-		#end
-	
-	#end
+
+	public ${column.javaType} ${column.getter}From(){
+		return ${column.propertyName}From;
+	}
+	public void ${column.setter}From(${column.javaType} ${column.propertyName}From){
+		this.${column.propertyName}From = ${column.propertyName}From;
+	}
+
+	private ${column.javaType} ${column.propertyName}To;
+	public ${column.javaType} ${column.getter}To(){
+		return ${column.propertyName}To;
+	}
+	public void ${column.setter}To(${column.javaType} ${column.propertyName}To){
+		this.${column.propertyName}To = ${column.propertyName}To;
+	}
+#end
+#end
 
 //-----------------------------------------------------------------------
 // custom property definition

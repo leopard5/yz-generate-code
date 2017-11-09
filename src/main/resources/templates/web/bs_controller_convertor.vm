@@ -15,23 +15,22 @@
 #set($comment=$name.getTableComment($table))
 package ${config.getProperty("basePackage")}.convertor;
 
+import $name.getFullMessageReqClassName($table);
+import $name.getFullMessageQueryClassName($table);
+import $name.getFullControllerQueryVoClassName($table);
+import $name.getFullControllerVoClassName($table);
+import org.springframework.cglib.beans.BeanCopier;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.cglib.beans.BeanCopier;
-
-import $name.getFullMessageQueryClassName($table);
-import $name.getFullMessageReqClassName($table);
-import $name.getFullControllerQueryVoClassName($table);
-import $name.getFullControllerVoClassName($table);
-
 /**
  * @CopyRright (c)2008-2017: <${companyname}>
- * @Project: <mmc>
+ * @Project: <${config.getProperty("project.abbreviation")}>
  * @Comments: <web层${comment}转换类 将Valid的Vo类转换为Dubbo层的Req对象>
  * @JDK 1.7
- * @Author: <yazhong.qi>
- * @email : <yazhong.qi@163.com>
+ * @Author: <${config.getProperty("project.Author")}>
+ * @email : <${config.getProperty("project.email")}>
  * @Create Date: <${nowtime}>
  * @Modify Date: <${nowtime}>
  * @Version: <1.0>
@@ -41,8 +40,7 @@ public abstract class ${name.getConvertorClassName($table)} {
 	private static final BeanCopier beanCopierFor${messageReqClass} = BeanCopier.create(${controllVoClass}.class, ${messageReqClass}.class, false);
 	private static final BeanCopier beanCopierFor${messageQueryClass} = BeanCopier.create(${controllQueryVoClass}.class, ${messageQueryClass}.class, false);
 
-	public static ${messageReqClass} to${messageReqClass}(${controllVoClass} ${controllVoVar})
-	{
+	public static ${messageReqClass} to${messageReqClass}(${controllVoClass} ${controllVoVar}) {
 		if (${controllVoVar} == null) {
 			return null;
 		}
@@ -51,8 +49,7 @@ public abstract class ${name.getConvertorClassName($table)} {
 		return ${messageReqVarName};
 	}
 
-	public static List<${messageReqClass}> to${messageReqClass}List(List<${controllVoClass}> ${controllVoVar}List)
-	{
+	public static List<${messageReqClass}> to${messageReqClass}List(List<${controllVoClass}> ${controllVoVar}List) {
 		if (${controllVoVar}List == null || ${controllVoVar}List.isEmpty()) {
 			return null;
 		}
@@ -63,8 +60,7 @@ public abstract class ${name.getConvertorClassName($table)} {
 		return ${messageReqVarName}List;
 	}
 	
-	public static ${messageQueryClass} to${messageQueryClass}(${controllQueryVoClass} ${controllQueryVoVar})
-	{
+	public static ${messageQueryClass} to${messageQueryClass}(${controllQueryVoClass} ${controllQueryVoVar}) {
 		if (${controllQueryVoVar}== null) {
 			return null;
 		}
