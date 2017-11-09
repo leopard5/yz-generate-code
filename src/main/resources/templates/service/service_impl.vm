@@ -145,7 +145,7 @@ public class $name.getServiceImplClassName($table) implements $name.getServiceCl
 	 * 
 	 * @Author: <${config.getProperty("project.email")}>
 	 * @Version: <1.0>
-	 * @param ${modelQueryVar}
+	 * @param $messageQueryVar
 	 * @return
 	 */
 	@Override

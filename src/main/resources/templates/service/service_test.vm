@@ -18,22 +18,21 @@
 #set($comment=$name.getTableComment($table))
 package ${config.getProperty("basePackage")}.test;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
-import javax.annotation.Resource;
-
+import ${name.getFullMessageReqClassName($table)};
+import ${name.getFullMessageQueryClassName($table)};
+import ${name.getFullMessageClassName($table)};
+import ${config.getProperty("basePackage")}.resp.base.QueryResultODTO;
+import ${name.getFullProjectResultClassName()};
+import ${name.getFullServiceClassName($table)};
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import ${name.getFullMessageQueryClassName($table)};
-import $name.getFullMessageReqClassName($table);
-import ${name.getFullMessageClassName($table)};
-import ${config.getProperty("basePackage")}.resp.MmcResult;
-import ${config.getProperty("basePackage")}.resp.QueryResultInfo;
-import ${name.getFullServiceClassName($table)};
+import javax.annotation.Resource;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -49,7 +48,7 @@ public class ${name.getTestClassName($table)} extends TestBase {
 	@Resource
 	private $serviceClass ${serviceVar};
 
-	#if($table.hasDeleteColumn())
+#if($table.hasDeleteColumn())
 	/**
 	 * 测试删除$comment
 	 */
@@ -62,7 +61,7 @@ public class ${name.getTestClassName($table)} extends TestBase {
 				updateUser, updateUserName);
 		printAndAssertEquals(messageInfo);
 	}
-	#else
+#else
 	/**
 	 * 测试删除$comment
 	 */
@@ -72,7 +71,7 @@ public class ${name.getTestClassName($table)} extends TestBase {
 		${name.getProjectResultClassName()}<Integer> messageInfo = ${serviceVar}.delete${modelClass}(${table.primaryColumn.propertyName});
 		printAndAssertEquals(messageInfo);
 	}
-	#end
+#end
 	
 	/**
 	 * 测试创建$comment
@@ -122,9 +121,9 @@ public class ${name.getTestClassName($table)} extends TestBase {
 		${messageQueryVar}.setPageSize(10);
 		${messageQueryVar}.setOrder("desc");
 		${messageQueryVar}.setOrderBy("${table.primaryColumn.propertyName}");
-		#foreach($column in $table.columns)
+#foreach($column in $table.columns)
 		${messageQueryVar}.set${column.cPropertyName}(${column.getTestValue()});	
-		#end
+#end
 		${name.getProjectResultClassName()}<QueryResultODTO<${messageClass}>> messageInfo = ${serviceVar}
 				.query${modelClass}(${messageQueryVar});
 		printAndAssertEquals(messageInfo);
