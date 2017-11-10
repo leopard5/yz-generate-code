@@ -23,34 +23,28 @@
 #set($comment=$name.getTableComment($table))
 package ${config.getProperty("basePackage")}.controller;
 
-import javax.validation.Valid;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import ${controllerConvertorClassName};
-import ${config.getProperty("basePackage")}.req.$messageQueryClass;
 import ${name.getFullMessageReqClassName($table)};
-import ${config.getProperty("basePackage")}.resp.${messageClass};
-import ${config.getProperty("basePackage")}.resp.Result;
-import ${config.getProperty("basePackage")}.resp.ResultCode;
-import ${config.getProperty("basePackage")}.resp.QueryResultInfo;
+import ${name.getFullMessageQueryClassName($table)};
+import ${name.getFullMessageClassName($table)};
+import ${config.getProperty("basePackage")}.resp.base.QueryResultODTO;
+import ${name.getFullProjectResultClassName()};
+import ${name.getFullProjectResultCodeClassName()};
 import ${config.getProperty("basePackage")}.service.${serviceClass};
 import ${config.getProperty("basePackage")}.vo.${name.getControllerQueryVoClassName($table)};
 import ${config.getProperty("basePackage")}.vo.${name.getControllerVoClassName($table)};
-import com.yz.perseus.utils.ValidationResult;
-import com.yz.perseus.utils.ValidationUtils;
+import com.${config.getProperty("company.abbreviation")}.perseus.utils.ValidationResult;
+import com.${config.getProperty("company.abbreviation")}.perseus.utils.ValidationUtils;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RequestMapping("${modelVar}")
 @RestController
@@ -69,14 +63,14 @@ public class ${modelClass}Controller extends BaseController {
 			 })
 	@ApiOperation(value = "delete${modelClass}", notes = "删除${comment}")
 	@RequestMapping(value = "delete${modelClass}", method = { RequestMethod.POST })
-	public MmcResult<Integer> delete${modelClass}(Integer id, Integer updateUser, String updateUserName) {
-		MmcResult<Integer> result = MmcResult.newSuccess();
+	public ${name.getProjectResultClassName()}<Integer> delete${modelClass}(Long id, String updateUser, String updateUserName) {
+		${name.getProjectResultClassName()}<Integer> result = ${name.getProjectResultClassName()}.newSuccess();
 		try {
 			result = ${serviceVar}.delete${modelClass}(id, updateUser, updateUserName);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			result.setCode(MmcResultCode.SYS_ERROR.getCode());
-			result.setMessage(MmcResultCode.SYS_ERROR.getMessage());
+			result.setCode(${name.getProjectResultCodeClassName()}.SYS_ERROR.getCode());
+			result.setMessage(${name.getProjectResultCodeClassName()}.SYS_ERROR.getMessage());
 		}
 		return result;
 	}
@@ -89,12 +83,12 @@ public class ${modelClass}Controller extends BaseController {
 			 })
 	@ApiOperation(value = "create${modelClass}", notes = "创建${comment}")
 	@RequestMapping(value = "create${modelClass}", method = { RequestMethod.POST })
-	public MmcResult<Integer> create${modelClass}(@Valid @RequestBody ${controllerVoClassName} ${controllerVoVar}){
-		MmcResult<Integer> result = MmcResult.newSuccess();
+	public ${name.getProjectResultClassName()}<Long> create${modelClass}(@Valid @RequestBody ${controllerVoClassName} ${controllerVoVar}){
+		${name.getProjectResultClassName()}<Long> result = ${name.getProjectResultClassName()}.newSuccess();
 		try {
 			ValidationResult validateEntity = ValidationUtils.validateEntity(${controllerVoVar});
 			if (validateEntity.isHasErrors() ) {
-				result.setCode(MmcResultCode.COMMON_PARAM_INVALID.getCode());
+				result.setCode(${name.getProjectResultCodeClassName()}.COMMON_PARAM_INVALID.getCode());
 				result.setMessage(validateEntity.getErrorMsg().toString());
 				return result;
 			}
@@ -102,8 +96,8 @@ public class ${modelClass}Controller extends BaseController {
 			result = ${serviceVar}.create${modelClass}(${messageReqVarName});
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			result.setCode(MmcResultCode.SYS_ERROR.getCode());
-			result.setMessage(MmcResultCode.SYS_ERROR.getMessage());
+			result.setCode(${name.getProjectResultCodeClassName()}.SYS_ERROR.getCode());
+			result.setMessage(${name.getProjectResultCodeClassName()}.SYS_ERROR.getMessage());
 		}
 		return result;
 	}
@@ -116,12 +110,12 @@ public class ${modelClass}Controller extends BaseController {
 			 })
 	@ApiOperation(value = "update${modelClass}", notes = "更新${comment}")
 	@RequestMapping(value = "update${modelClass}", method = { RequestMethod.POST })
-	public MmcResult<Integer> update${modelClass}(@Valid @RequestBody ${controllerVoClassName} ${controllerVoVar}){
-		MmcResult<Integer> result = MmcResult.newSuccess();
+	public ${name.getProjectResultClassName()}<Integer> update${modelClass}(@Valid @RequestBody ${controllerVoClassName} ${controllerVoVar}){
+		${name.getProjectResultClassName()}<Integer> result = ${name.getProjectResultClassName()}.newSuccess();
 		try {
 			ValidationResult validateEntity = ValidationUtils.validateEntity(${controllerVoVar});
 			if (validateEntity.isHasErrors() ) {
-				result.setCode(MmcResultCode.COMMON_PARAM_INVALID.getCode());
+				result.setCode(${name.getProjectResultCodeClassName()}.COMMON_PARAM_INVALID.getCode());
 				result.setMessage(validateEntity.getErrorMsg().toString());
 				return result;
 			}
@@ -129,8 +123,8 @@ public class ${modelClass}Controller extends BaseController {
 			result = ${serviceVar}.update${modelClass}(${messageReqVarName});
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			result.setCode(MmcResultCode.SYS_ERROR.getCode());
-			result.setMessage(MmcResultCode.SYS_ERROR.getMessage());
+			result.setCode(${name.getProjectResultCodeClassName()}.SYS_ERROR.getCode());
+			result.setMessage(${name.getProjectResultCodeClassName()}.SYS_ERROR.getMessage());
 		}
 		return result;
 	}
@@ -143,14 +137,14 @@ public class ${modelClass}Controller extends BaseController {
 			 })
 	@ApiOperation(value = "get${modelClass}/{id}", notes = "根据${comment}ID获取${comment}信息")
 	@RequestMapping(value = "get${modelClass}/{id}", method = { RequestMethod.GET })
-	public MmcResult<${messageClass}> get${modelClass}(@PathVariable Integer id ){
-		MmcResult<${messageClass}> result = MmcResult.newSuccess();
+	public ${name.getProjectResultClassName()}<${messageClass}> get${modelClass}(@PathVariable Long id ){
+		${name.getProjectResultClassName()}<${messageClass}> result = ${name.getProjectResultClassName()}.newSuccess();
 		try {
 			result = ${serviceVar}.get${modelClass}(id);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			result.setCode(MmcResultCode.SYS_ERROR.getCode());
-			result.setMessage(MmcResultCode.SYS_ERROR.getMessage());
+			result.setCode(${name.getProjectResultCodeClassName()}.SYS_ERROR.getCode());
+			result.setMessage(${name.getProjectResultCodeClassName()}.SYS_ERROR.getMessage());
 		}
 		return result;
 	}
@@ -163,12 +157,12 @@ public class ${modelClass}Controller extends BaseController {
 			 })
 	@ApiOperation(value = "query${modelClass}", notes = "分页获取${comment}列表信息")
 	@RequestMapping(value = "query${modelClass}", method = { RequestMethod.GET })
-	MmcResult<QueryResultInfo<${messageClass}>> query${modelClass}(@Valid @RequestBody ${controllerQueryVoClassName} ${controllerQueryVoVar}){
-		MmcResult<QueryResultInfo<${messageClass}>> result = MmcResult.newSuccess();
+	${name.getProjectResultClassName()}<QueryResultODTO<${messageClass}>> query${modelClass}(@Valid @RequestBody ${controllerQueryVoClassName} ${controllerQueryVoVar}){
+		${name.getProjectResultClassName()}<QueryResultODTO<${messageClass}>> result = ${name.getProjectResultClassName()}.newSuccess();
 		try {
 			ValidationResult validateEntity = ValidationUtils.validateEntity(${controllerQueryVoVar});
 			if (validateEntity.isHasErrors() ) {
-				result.setCode(MmcResultCode.COMMON_PARAM_INVALID.getCode());
+				result.setCode(${name.getProjectResultCodeClassName()}.COMMON_PARAM_INVALID.getCode());
 				result.setMessage(validateEntity.getErrorMsg().toString());
 				return result;
 			}
@@ -176,8 +170,8 @@ public class ${modelClass}Controller extends BaseController {
 			result = ${serviceVar}.query${modelClass}(${messageQueryVar});
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			result.setCode(MmcResultCode.SYS_ERROR.getCode());
-			result.setMessage(MmcResultCode.SYS_ERROR.getMessage());
+			result.setCode(${name.getProjectResultCodeClassName()}.SYS_ERROR.getCode());
+			result.setMessage(${name.getProjectResultCodeClassName()}.SYS_ERROR.getMessage());
 		}
 		return result;
 	}

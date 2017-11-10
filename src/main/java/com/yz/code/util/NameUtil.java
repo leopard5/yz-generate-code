@@ -264,6 +264,10 @@ public class NameUtil {
                 + ".result." + getProjectResultClassName();
     }
 
+    public static String getFullProjectResultCodeClassName(){
+        return ConfigManager.getProperty("basePackage")
+                + ".result." + getProjectResultCodeClassName();
+    }
     public static String getProjectResultClassName(){
         return StringUtils.capitalize(ConfigManager.getProperty("project.abbreviation")) + "Result";
     }
