@@ -634,7 +634,7 @@ public class DataGenerator {
         StringWriter writer = new StringWriter();
         Template template = Velocity.getTemplate(templateName, "utf-8");
         template.merge(ctx, writer);
-        return writer.toString();
+        return writer.toString().replaceAll("\t", "    ");
     }
 
     private static void deleteSubFiles(File parentFile) {
