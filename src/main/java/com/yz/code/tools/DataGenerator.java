@@ -304,8 +304,12 @@ public class DataGenerator {
         ToolContext ctx = manager.createContext();
         addToolBox(ctx);
         ctx.put("table", tableSchema);
-        // 加入当前时间
-        ctx.put("nowtime", sdf.format(new Date()));
+
+        String codeDate = ConfigManager.getProperty("code.generation.date");
+        if (codeDate == null || codeDate.isEmpty()) {
+            codeDate = sdf.format(new Date()).toString();
+        }
+        ctx.put("nowtime", codeDate);
 
         String companyName = ConfigManager.getProperty("company.name");
         ctx.put("companyname", companyName);
