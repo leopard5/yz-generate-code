@@ -20,6 +20,9 @@
 		<include refid="Base_Column_List" />
 		FROM $table.tableName
 		$sql.getPrimaryWhere($table.columns)
+#if($table.hasDeleteColumn())
+    	AND is_deleted=0
+#end
 		FOR UPDATE
 	</select>
 	
