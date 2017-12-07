@@ -186,12 +186,13 @@ public class DataGenerator {
         java.sql.Connection connection = null;
         Map<String, Object> mapDataMap = null;
         PreparedStatement queryStatement = null;
+        ResultSet rs = null;
         try {
             connection = datasource.getConnection();
             queryStatement = connection.prepareStatement(SqlUtil.getDictSQL());
 //			queryStatement.setString(1, "aaa");
 
-            ResultSet rs = queryStatement.executeQuery();
+            rs = queryStatement.executeQuery();
             mapDataMap = new HashMap<String, Object>();
 
             List<Dictionary> dictListTemp = null;
@@ -235,6 +236,13 @@ public class DataGenerator {
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
+            }
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
         return mapDataMap;
