@@ -167,9 +167,10 @@ public class DataGenerator {
         String[] tables = ConfigManager.getProperty("limit.tables").split(Constants.TABLE_NAME_SEPARATOR);
         for (TableSchema tableSchema : databaseSchema.getTables()) {
             //
-            if (tables != null) {
+            if (tables != null && tables.length != 0) {
                 for (String tableName : tables) {
-                    if (tableSchema.getTableName().equalsIgnoreCase(tableName)
+                    if (StringUtils.hasText(tableName)
+                            && tableSchema.getTableName().equalsIgnoreCase(tableName)
                             && tableNames.contains(tableName)) {
                         generate(tableSchema);
                     }
@@ -419,6 +420,7 @@ public class DataGenerator {
         generateDalModel(tableSchema, ctx);
         /**
          * never used
+         * remove query vo
          */
         // generateDalModelQuery(tableSchema, ctx);
 
@@ -456,23 +458,23 @@ public class DataGenerator {
     private static String getMapperBaseInterception(TableSchema tableSchema) {
         String fileNameDaoBase = null;
         String contextBase = null;
-        String Interception = null;
+        String interception = null;
         try {
             fileNameDaoBase = CodeUtil.getFilePathOfMyBatisGenerator(ConfigManager.getProperty("output.mapper.package")) + NameUtil.getMapperClassName(tableSchema) + ".java";
             contextBase = FileUtil.readStringUseNio(fileNameDaoBase);
             int beginIndex = contextBase.indexOf('{') + 1;
             int endIndex = contextBase.indexOf('}');
-            Interception = contextBase.substring(beginIndex, endIndex);
+            interception = contextBase.substring(beginIndex, endIndex);
         } catch (Exception e) {
             System.out.println("get file[" + fileNameDaoBase + "] Interception context error!!!!");
         }
-        return Interception;
+        return interception;
     }
 
     private static String getMapperXmlBaseInterception(TableSchema tableSchema) {
-        String fileNameDaoBase = "";
-        String contextBase = "";
-        String Interception = "";
+        String fileNameDaoBase = null;
+        String contextBase = null;
+        String Interception = null;
         try {
             fileNameDaoBase = CodeUtil.getFilePathOfMyBatisGenerator(ConfigManager.getProperty("output.mapperxml.package")) + NameUtil.getMapperClassName(tableSchema) + ".xml";
             contextBase = FileUtil.readStringUseNio(fileNameDaoBase);

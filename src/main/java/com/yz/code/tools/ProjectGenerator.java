@@ -15,11 +15,26 @@
  */
 package com.yz.code.tools;
 
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.config.BeanPostProcessor;
+
 /**
  * @author yazhong.qi
  * @since 1.6.0
  */
-public class ProjectGenerator {
+public class ProjectGenerator implements InitializingBean, BeanPostProcessor {
+    public void afterPropertiesSet() throws Exception {
+
+    }
+
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        return null;
+    }
+
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        return null;
+    }
 
     /**
      * all pom
@@ -38,6 +53,7 @@ public class ProjectGenerator {
      * 3.
      * 4.
      */
+
 
 
 }

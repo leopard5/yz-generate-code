@@ -5,7 +5,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="local.properties" />
+    <properties resource="local.properties"/>
 
     <!-- 具体配置内容 -->
     <!-- 数据库连接驱动包位置 -->
@@ -99,11 +99,11 @@
         <!-- 配置表信息 end -->
 
         <!--<table tableName="mmc_sync_data" domainObjectName="SyncData"-->
-               <!--enableCountByExample="true" enableUpdateByExample="true"-->
-               <!--enableDeleteByExample="true" enableSelectByExample="true"-->
-               <!--selectByExampleQueryId="true" enableInsert="true"-->
-               <!--enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">-->
-            <!--<generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>-->
+        <!--enableCountByExample="true" enableUpdateByExample="true"-->
+        <!--enableDeleteByExample="true" enableSelectByExample="true"-->
+        <!--selectByExampleQueryId="true" enableInsert="true"-->
+        <!--enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">-->
+        <!--<generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>-->
         <!--</table>-->
 
         <!-- 
