@@ -72,6 +72,10 @@ public class DataGenerator {
             deleteSubFiles(new File(outputRootDir));
             deleteSubFiles(new File(generatorPackageFileDir));
 
+            // project struct layer
+            // core dal biz service web junit api or contract
+            ProjectGenerator.generateProjectFile();
+
             // mybatis-generator-maven-plugin 1.3.5
             mavenPluginsMyBatisGenerator(ConfigManager.getProperty("basePackage"));
 
@@ -244,6 +248,13 @@ public class DataGenerator {
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
+            }
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return mapDataMap;

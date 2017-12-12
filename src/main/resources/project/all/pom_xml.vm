@@ -1,0 +1,51 @@
+#set($apiVersion=$name.getProjectVersionName("api"))
+#set($coreVersion=$name.getProjectVersionName("core"))
+#set($dalVersion=$name.getProjectVersionName("dal"))
+#set($bizVersion=$name.getProjectVersionName("biz"))
+#set($serviceVersion=$name.getProjectVersionName("service"))
+#set($webVersion=$name.getProjectVersionName("biz"))
+#set($apiModule=$name.getModulesName("api"))
+#set($coreModule=$name.getModulesName("core"))
+#set($dalModule=$name.getModulesName("dal"))
+#set($bizModule=$name.getModulesName("biz"))
+#set($serviceModule=$name.getModulesName("service"))
+#set($webModule=$name.getModulesName("biz"))
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>parent</artifactId>
+        <groupId>${config.getProperty("parent.groupid")}</groupId>
+        <version>${config.getProperty("parent.version")}</version>
+    </parent>
+
+    <artifactId>${config.getProperty("project.abbreviation")}-all</artifactId>
+    <version>1.0.0.RELEASE</version>
+    <packaging>pom</packaging>
+
+    <properties>
+        <!-- projcet setting -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <$apiVersion>1.0.0.RELEASE</$apiVersion>
+        <$coreVersion>1.0.0.RELEASE</$coreVersion>
+        <$dalVersion>1.0.0.RELEASE</$dalVersion>
+        <$bizVersion>1.0.0.RELEASE</$bizVersion>
+        <$serviceVersion>1.0.0.RELEASE</$serviceVersion>
+        <$webVersion>1.0.0.RELEASE</$webVersion>
+
+    </properties>
+
+    <modules>
+        <module>$apiModule</module>
+        <module>$coreModule</module>
+        <module>$dalModule</module>
+        <module>$bizModule</module>
+        <module>$serviceModule</module>
+        <module>$webModule</module>
+    </modules>
+
+</project>

@@ -54,6 +54,33 @@ public class ProjectGenerator implements InitializingBean, BeanPostProcessor {
      * 4.
      */
 
+    public static void generateProjectFile() {
+        //
+        coreLayerFile();
+        dalLayerFile();
+        bizLayerFile();
+        serviceLayerFile();
+        webLayerFile();
+    }
 
+    private static void coreLayerFile() {
+        // pom.xml
 
+    }
+
+    private static void dalLayerFile() {
+
+    }
+
+    private static void bizLayerFile() {
+
+    }
+
+    private static void serviceLayerFile() {
+
+    }
+
+    private static void webLayerFile(){
+
+    }
 }
