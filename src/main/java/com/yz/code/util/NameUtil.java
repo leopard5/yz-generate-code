@@ -1,6 +1,7 @@
 package com.yz.code.util;
 
 import com.yz.code.config.ConfigManager;
+import com.yz.code.constant.Constants;
 import com.yz.code.schema.TableSchema;
 import org.springframework.util.StringUtils;
 
@@ -259,20 +260,58 @@ public class NameUtil {
         return ConfigManager.getProperty("project.email");
     }
 
-    public static String getFullProjectResultClassName(){
+    public static String getFullProjectResultClassName() {
         return ConfigManager.getProperty("basePackage")
                 + ".result." + getProjectResultClassName();
     }
 
-    public static String getFullProjectResultCodeClassName(){
+    public static String getFullProjectResultCodeClassName() {
         return ConfigManager.getProperty("basePackage")
                 + ".result." + getProjectResultCodeClassName();
     }
-    public static String getProjectResultClassName(){
+
+    public static String getProjectResultClassName() {
         return StringUtils.capitalize(ConfigManager.getProperty("project.abbreviation")) + "Result";
     }
 
-    public static String getProjectResultCodeClassName(){
+    public static String getProjectResultCodeClassName() {
         return StringUtils.capitalize(ConfigManager.getProperty("project.abbreviation")) + "ResultCode";
+    }
+
+    public static String getProjectVersionName(String type) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(ConfigManager.getProperty("project.abbreviation"));
+        stringBuilder.append(".");
+        stringBuilder.append(switchTypeString(type));
+        stringBuilder.append(".");
+        stringBuilder.append("version");
+        return stringBuilder.toString();
+    }
+
+    public static String getModulesName(String type){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(ConfigManager.getProperty("project.abbreviation"));
+        stringBuilder.append("-");
+        stringBuilder.append(switchTypeString(type));
+        return stringBuilder.toString();
+    }
+
+    private static String switchTypeString(String type){
+        switch (type) {
+            case Constants.MODULE_API:
+                return Constants.MODULE_API;
+            case Constants.MODULE_CORE:
+                return Constants.MODULE_CORE;
+            case Constants.MODULE_DAL:
+                return Constants.MODULE_DAL;
+            case Constants.MODULE_BIZ:
+                return Constants.MODULE_BIZ;
+            case Constants.MODULE_SERVICE:
+                return Constants.MODULE_SERVICE;
+            case Constants.MODULE_WEB:
+                return Constants.MODULE_WEB;
+            default:
+                return "";
+        }
     }
 }

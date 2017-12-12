@@ -30,8 +30,8 @@ public class ProjectGenerator {
      * 4. biz
      * 5. dal
      * 6. core
-     *
-     *
+     * <p>
+     * <p>
      * resource
      * 1. parent pom
      * 2. modules all
@@ -39,5 +39,33 @@ public class ProjectGenerator {
      * 4.
      */
 
+    public static void generateProjectFile() {
+        //
+        coreLayerFile();
+        dalLayerFile();
+        bizLayerFile();
+        serviceLayerFile();
+        webLayerFile();
+    }
 
+    private static void coreLayerFile() {
+        // pom.xml
+
+    }
+
+    private static void dalLayerFile() {
+
+    }
+
+    private static void bizLayerFile() {
+
+    }
+
+    private static void serviceLayerFile() {
+
+    }
+
+    private static void webLayerFile(){
+
+    }
 }

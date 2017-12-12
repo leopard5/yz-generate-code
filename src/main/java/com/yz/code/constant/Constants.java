@@ -120,4 +120,11 @@ public class Constants {
     public final static String IMPORT_DATE = "import java.util.Date";
     public final static String IMPORT_TIMESTAMP = "import java.util.Timestamp";
 
+
+    public final static String MODULE_API = "api";
+    public final static String MODULE_CORE = "core";
+    public final static String MODULE_DAL = "dal";
+    public final static String MODULE_BIZ = "biz";
+    public final static String MODULE_SERVICE = "service";
+    public final static String MODULE_WEB = "web";
 }

@@ -72,6 +72,10 @@ public class DataGenerator {
             deleteSubFiles(new File(outputRootDir));
             deleteSubFiles(new File(generatorPackageFileDir));
 
+            // project struct layer
+            // core dal biz service web junit api or contract
+            ProjectGenerator.generateProjectFile();
+
             // mybatis-generator-maven-plugin 1.3.5
             mavenPluginsMyBatisGenerator(ConfigManager.getProperty("basePackage"));
 
@@ -186,12 +190,13 @@ public class DataGenerator {
         java.sql.Connection connection = null;
         Map<String, Object> mapDataMap = null;
         PreparedStatement queryStatement = null;
+        ResultSet rs = null;
         try {
             connection = datasource.getConnection();
             queryStatement = connection.prepareStatement(SqlUtil.getDictSQL());
 //			queryStatement.setString(1, "aaa");
 
-            ResultSet rs = queryStatement.executeQuery();
+            rs = queryStatement.executeQuery();
             mapDataMap = new HashMap<String, Object>();
 
             List<Dictionary> dictListTemp = null;
@@ -232,6 +237,13 @@ public class DataGenerator {
             if (queryStatement != null) {
                 try {
                     queryStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (rs != null) {
+                try {
+                    rs.close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -306,7 +318,7 @@ public class DataGenerator {
         ctx.put("table", tableSchema);
 
         String codeDate = ConfigManager.getProperty("code.generation.date");
-        if (codeDate == null || codeDate.isEmpty()) {
+        if (codeDate == null || codeDate.trim().length() == 0) {
             codeDate = sdf.format(new Date()).toString();
         }
         ctx.put("nowtime", codeDate);
