@@ -73,7 +73,7 @@ public class DataGenerator {
             deleteSubFiles(new File(generatorPackageFileDir));
 
             // project struct layer
-            // core dal biz service web junit api or contract
+            // core dal biz service web junit api
             ProjectGenerator.generateProjectFile();
 
             // mybatis-generator-maven-plugin 1.3.5
@@ -81,13 +81,13 @@ public class DataGenerator {
 
             DatabaseSchema databaseSchema = dataSchema.getDatabaseSchema();
             // System.out.print(JSON.toJSONString(databaseSchema));
-            System.out.println("------------生成代码开始------------");
+            System.out.println("------------generate start...");
             StopWatch timeWatch = new StopWatch("generate_code");
             timeWatch.start();
             generateCode(databaseSchema);
             timeWatch.stop();
             System.out.println(timeWatch.prettyPrint());
-            System.out.println("------------生成代码结束------------");
+            System.out.println("------------generate end...");
             // generateTableDict(applicationContext, databaseSchema);
 
         } catch (Exception e) {
@@ -326,7 +326,7 @@ public class DataGenerator {
         ctx.put("table", tableSchema);
 
         String codeDate = ConfigManager.getProperty("code.generation.date");
-        if (codeDate == null || codeDate.isEmpty()) {
+        if (!StringUtils.hasText(codeDate)) {
             codeDate = sdf.format(new Date()).toString();
         }
         ctx.put("nowtime", codeDate);

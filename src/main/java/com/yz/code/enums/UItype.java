@@ -5,6 +5,7 @@ public enum UItype {
     BOOTSTRAP    ((byte) 2),
     VUE          ((byte) 3),
     REACT        ((byte) 4),
+    ANGULARJS    ((byte) 5),
 
     ;
     private byte value;
@@ -34,7 +35,7 @@ public enum UItype {
         return false;
     }
 
-    public boolean eq(Byte val) {
+    public boolean equal(Byte val) {
         return val == null ? false : val.byteValue() == this.value;
     }
 

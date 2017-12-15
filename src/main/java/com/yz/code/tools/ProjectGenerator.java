@@ -57,6 +57,7 @@ public class ProjectGenerator implements InitializingBean, BeanPostProcessor {
     public static void generateProjectFile() {
         //
         coreLayerFile();
+        apiLayerFile();
         dalLayerFile();
         bizLayerFile();
         serviceLayerFile();
@@ -66,6 +67,10 @@ public class ProjectGenerator implements InitializingBean, BeanPostProcessor {
     private static void coreLayerFile() {
         // pom.xml
 
+    }
+
+    private static void apiLayerFile(){
+        // pom.xml
     }
 
     private static void dalLayerFile() {
