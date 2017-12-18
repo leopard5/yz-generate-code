@@ -61,7 +61,23 @@
 
         <!-- table config start -->
 
-        <table tableName="mmc_promotion_related" domainObjectName="PromotionRelated"
+        <!--<table tableName="mmc_promotion_related" domainObjectName="PromotionRelated"-->
+               <!--enableCountByExample="true" enableUpdateByExample="true"-->
+               <!--enableDeleteByExample="true" enableSelectByExample="true"-->
+               <!--selectByExampleQueryId="true" enableInsert="true"-->
+               <!--enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">-->
+            <!--<generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>-->
+        <!--</table>-->
+
+        <table tableName="lds_prize_record" domainObjectName="PrizeRecord"
+               enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true" enableInsert="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true">
+            <generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>
+        </table>
+
+        <table tableName="lds_user_participation" domainObjectName="UserParticipation"
                enableCountByExample="true" enableUpdateByExample="true"
                enableDeleteByExample="true" enableSelectByExample="true"
                selectByExampleQueryId="true" enableInsert="true"

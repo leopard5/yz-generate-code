@@ -171,7 +171,7 @@ public class DataGenerator {
         String[] tables = ConfigManager.getProperty("limit.tables").split(Constants.TABLE_NAME_SEPARATOR);
         for (TableSchema tableSchema : databaseSchema.getTables()) {
             //
-            if (tables != null && tables.length != 0) {
+            if (tables != null && tables.length > 0 && StringUtils.hasText(tables[0])) {
                 for (String tableName : tables) {
                     if (StringUtils.hasText(tableName)
                             && tableSchema.getTableName().equalsIgnoreCase(tableName)
