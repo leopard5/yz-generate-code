@@ -6,6 +6,8 @@ public class Constants {
     public static final String FOLDER_SEPARATOR = ".";
     public static final String TABLE_NAME_SEPARATOR = ",";
     public static final String BASE_PACKAGE = "basePackage";
+    public static final String FILE_PATH_SEPARATOR = "/";
+
 
     /**
      * 数字0
@@ -127,4 +129,12 @@ public class Constants {
     public final static String MODULE_BIZ = "biz";
     public final static String MODULE_SERVICE = "service";
     public final static String MODULE_WEB = "web";
+
+    public final static String RES_DIR_SRC = "src";
+    public final static String RES_DIR_MAIN = "main";
+    public final static String RES_DIR_TEST = "test";
+
+    public final static String RES_DIR_JAVA = "java";
+    public final static String RES_DIR_RESOURCES = "resources";
+
 }

@@ -15,9 +15,13 @@
  */
 package com.yz.code.tools;
 
+import com.yz.code.constant.Constants;
+import com.yz.code.util.FileUtil;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+
+import java.io.IOException;
 
 /**
  * @author yazhong.qi
@@ -45,8 +49,8 @@ public class ProjectGenerator implements InitializingBean, BeanPostProcessor {
      * 4. biz
      * 5. dal
      * 6. core
-     *
-     *
+     * <p>
+     * <p>
      * resource
      * 1. parent pom
      * 2. modules all
@@ -69,7 +73,7 @@ public class ProjectGenerator implements InitializingBean, BeanPostProcessor {
 
     }
 
-    private static void apiLayerFile(){
+    private static void apiLayerFile() {
         // pom.xml
     }
 
@@ -85,7 +89,46 @@ public class ProjectGenerator implements InitializingBean, BeanPostProcessor {
 
     }
 
-    private static void webLayerFile(){
+    private static void webLayerFile() {
 
+    }
+
+    private void createBaseMavenDir(String moduleName) {
+//─src
+//    ├─main
+//    │  ├─java
+//    │  │  └─com
+//    │  │      └─company abbreviation
+//    │  │          └─project name abbreviation
+//    │  └─resources
+//    │      ├─env
+//    │      └─spring
+//    └─test
+//        ├─java
+//        │  └─com
+//        └─resources
+//            ├─spring
+//            └─testData
+//                └─json
+//        DataGenerator.g
+        try {
+            StringBuilder stringBuilder = new StringBuilder(200);
+            stringBuilder.append(DataGenerator.outputRootDir).append(Constants.FILE_PATH_SEPARATOR);
+            stringBuilder.append(DataGenerator.projectAbbreviation).append(Constants.FILE_PATH_SEPARATOR);
+
+            String projectBasePath = stringBuilder.toString();
+
+            stringBuilder.append(moduleName).append(Constants.FILE_PATH_SEPARATOR);
+            stringBuilder.append(Constants.RES_DIR_SRC).append(Constants.FILE_PATH_SEPARATOR);
+
+            stringBuilder.append(Constants.RES_DIR_MAIN).append(Constants.FILE_PATH_SEPARATOR);
+
+
+            FileUtil.createDirectories(projectBasePath);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+        }
     }
 }

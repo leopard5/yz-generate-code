@@ -16,7 +16,6 @@
         <org.apache.httpcomponents>4.3.3</org.apache.httpcomponents>
         <com.fasterxml.jackson>2.6.5</com.fasterxml.jackson>
         <org.thymeleaf>2.1.4.RELEASE</org.thymeleaf>
-
     </properties>
 
     <dependencies>
@@ -37,7 +36,6 @@
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
-            <!-- 引用依赖库的版本 -->
             <version>3.4.1</version>
         </dependency>
 
@@ -89,7 +87,7 @@
             <artifactId>commons-collections</artifactId>
             <version>3.2.1</version>
         </dependency>
-        <!-- Syslog4j 日志开始 -->
+
         <dependency>
             <groupId>org.graylog2</groupId>
             <artifactId>syslog4j</artifactId>
@@ -132,7 +130,6 @@
             <artifactId>itext</artifactId>
             <version>2.1.7</version>
         </dependency>
-        <!-- Syslog4j 日志结束 -->
 
         <!-- https://mvnrepository.com/artifact/com.github.insubstantial/substance-swingx -->
         <dependency>
