@@ -34,6 +34,8 @@ import org.mybatis.generator.config.Configuration;
 import org.mybatis.generator.config.TableConfiguration;
 import org.mybatis.generator.config.xml.ConfigurationParser;
 import org.mybatis.generator.internal.DefaultShellCallback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StopWatch;
@@ -51,15 +53,19 @@ import java.util.*;
  * @since 1.6.0
  */
 public class DataGenerator {
+    private final Logger LOGGER = LoggerFactory.getLogger(DataGenerator.class);
+
     public static ClassPathXmlApplicationContext applicationContext = null;
     public static String dictionaryTableName = null;
     public static List<String> tableNames = new ArrayList<String>();
     public static String outputRootDir = null;
     public static String templateDir = null;
     public static Byte uiType = null;
+    public static String organizationAbbreviation = null;
     public static String companyAbbreviation = null;
     public static String projectAbbreviation = null;
     public static String basePackage = null;
+    public static String basePackagePath = null;
     public static String generatorPackageFileDir = null;
 
     public static void main(String[] args) {
@@ -119,16 +125,20 @@ public class DataGenerator {
             throw new Exception("Required items [company.abbreviation]");
         }
         projectAbbreviation = ConfigManager.getProperty("project.abbreviation");
-        if (companyAbbreviation == null || !StringUtils.hasText(companyAbbreviation)) {
+        if (projectAbbreviation == null || !StringUtils.hasText(projectAbbreviation)) {
             throw new Exception("Required items [project.abbreviation]");
         }
+        organizationAbbreviation = ConfigManager.getProperty("organization.abbreviation");
+        if (organizationAbbreviation == null || !StringUtils.hasText(organizationAbbreviation)) {
+            throw new Exception("Required items [organization.abbreviation]");
+        }
+
         dictionaryTableName = ConfigManager.getProperty("dict.table.name");
 
-        basePackage = "com" + Constants.FOLDER_SEPARATOR + companyAbbreviation + Constants.FOLDER_SEPARATOR + projectAbbreviation;
+        basePackage = organizationAbbreviation + Constants.FOLDER_SEPARATOR + companyAbbreviation + Constants.FOLDER_SEPARATOR + projectAbbreviation;
+        basePackagePath = organizationAbbreviation + Constants.FILE_PATH_SEPARATOR + companyAbbreviation + Constants.FILE_PATH_SEPARATOR + projectAbbreviation;
 
         ConfigManager.setProperty(Constants.BASE_PACKAGE, basePackage);
-
-
 
         generatorPackageFileDir = ConfigManager.getProperty("output.generator.project");
         if (generatorPackageFileDir == null || !StringUtils.hasText(generatorPackageFileDir)) {

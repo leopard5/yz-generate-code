@@ -17,6 +17,9 @@ package com.yz.code.tools;
 
 import com.yz.code.constant.Constants;
 import com.yz.code.util.FileUtil;
+import groovy.ui.SystemOutputInterceptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -28,6 +31,14 @@ import java.io.IOException;
  * @since 1.6.0
  */
 public class ProjectGenerator implements InitializingBean, BeanPostProcessor {
+
+    // D:\output\lds
+    public static String projectBasePath = null;
+
+
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProjectGenerator.class);
+
     public void afterPropertiesSet() throws Exception {
 
     }
@@ -38,6 +49,13 @@ public class ProjectGenerator implements InitializingBean, BeanPostProcessor {
 
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         return null;
+    }
+
+    private static void ProjectClassVariableSettings(){
+        StringBuilder stringBuilder = new StringBuilder(100);
+        stringBuilder.append(DataGenerator.outputRootDir).append(Constants.FILE_PATH_SEPARATOR);
+        stringBuilder.append(DataGenerator.projectAbbreviation).append(Constants.FILE_PATH_SEPARATOR);
+        projectBasePath = stringBuilder.toString();
     }
 
     /**
@@ -59,6 +77,7 @@ public class ProjectGenerator implements InitializingBean, BeanPostProcessor {
      */
 
     public static void generateProjectFile() {
+        ProjectClassVariableSettings();
         //
         coreLayerFile();
         apiLayerFile();
@@ -70,7 +89,7 @@ public class ProjectGenerator implements InitializingBean, BeanPostProcessor {
 
     private static void coreLayerFile() {
         // pom.xml
-
+        createBaseMavenDir(Constants.MODULE_CORE);
     }
 
     private static void apiLayerFile() {
@@ -93,7 +112,7 @@ public class ProjectGenerator implements InitializingBean, BeanPostProcessor {
 
     }
 
-    private void createBaseMavenDir(String moduleName) {
+    private static void createBaseMavenDir(String moduleName) {
 //─src
 //    ├─main
 //    │  ├─java
@@ -110,24 +129,27 @@ public class ProjectGenerator implements InitializingBean, BeanPostProcessor {
 //            ├─spring
 //            └─testData
 //                └─json
-//        DataGenerator.g
+
         try {
-            StringBuilder stringBuilder = new StringBuilder(200);
-            stringBuilder.append(DataGenerator.outputRootDir).append(Constants.FILE_PATH_SEPARATOR);
-            stringBuilder.append(DataGenerator.projectAbbreviation).append(Constants.FILE_PATH_SEPARATOR);
-
-            String projectBasePath = stringBuilder.toString();
-
-            stringBuilder.append(moduleName).append(Constants.FILE_PATH_SEPARATOR);
-            stringBuilder.append(Constants.RES_DIR_SRC).append(Constants.FILE_PATH_SEPARATOR);
-
-            stringBuilder.append(Constants.RES_DIR_MAIN).append(Constants.FILE_PATH_SEPARATOR);
+            StringBuilder sbSrc = new StringBuilder(200);
+            sbSrc.append(projectBasePath);
+            sbSrc.append(moduleName).append(Constants.FILE_PATH_SEPARATOR);
+            sbSrc.append(Constants.RES_DIR_SRC).append(Constants.FILE_PATH_SEPARATOR);
 
 
-            FileUtil.createDirectories(projectBasePath);
+            sbSrc.append(Constants.RES_DIR_MAIN).append(Constants.FILE_PATH_SEPARATOR);
 
+
+            sbSrc.append(Constants.RES_DIR_JAVA).append(Constants.FILE_PATH_SEPARATOR);
+            sbSrc.append(DataGenerator.basePackagePath).append(Constants.FILE_PATH_SEPARATOR);
+
+            System.out.println("dir created[" + sbSrc.toString() + "]");
+            FileUtil.createDirectories(sbSrc.toString());
+            LOGGER.info("dir created[" + sbSrc.toString() + "]");
         } catch (IOException e) {
             e.printStackTrace();
+            LOGGER.error("maven create folder error");
+            System.out.println("maven create folder error");
         } finally {
         }
     }
