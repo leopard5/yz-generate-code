@@ -4,7 +4,7 @@ import com.yz.code.constant.Constants;
 import com.yz.code.schema.ColumnSchema;
 import com.yz.code.schema.IndexSchema;
 import com.yz.code.schema.TableSchema;
-import com.yz.code.tools.DataGenerator;
+import com.yz.code.tools.CodeGenerator;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -193,7 +193,7 @@ public class SqlUtil {
         sb.append("SELECT ");
         sb.append("dict_item,dict_id,dict_value,dict_name");
         sb.append(" FROM ");
-        sb.append(DataGenerator.dictionaryTableName);
+        sb.append(CodeGenerator.dictionaryTableName);
         sb.append(" WHERE ");
         sb.append(" STATUS = 1 ");
         return sb.toString();

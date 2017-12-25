@@ -50,10 +50,10 @@ import java.util.*;
 
 /**
  * @author yazhong.qi
- * @since 1.6.0
+ * @since 1.8.0
  */
-public class DataGenerator {
-    private final Logger LOGGER = LoggerFactory.getLogger(DataGenerator.class);
+public class CodeGenerator {
+    private final Logger LOGGER = LoggerFactory.getLogger(CodeGenerator.class);
 
     public static ClassPathXmlApplicationContext applicationContext = null;
     public static String dictionaryTableName = null;

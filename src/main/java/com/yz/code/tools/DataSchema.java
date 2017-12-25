@@ -27,7 +27,7 @@ import java.util.Map;
 
 /**
  * @author yazhong.qi
- * @since 1.6.0
+ * @since 1.8.0
  */
 public class DataSchema {
 

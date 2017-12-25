@@ -7,6 +7,7 @@ public class Constants {
     public static final String TABLE_NAME_SEPARATOR = ",";
     public static final String BASE_PACKAGE = "basePackage";
     public static final String FILE_PATH_SEPARATOR = "/";
+    public static final String ARTIFACTID_SEPARATOR = "-";
 
 
     /**
