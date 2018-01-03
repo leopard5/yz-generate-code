@@ -1,23 +1,15 @@
 # <font color="#000000" size=9 >yz-generate-code</font>
 
-## 1. **利用自己framework框架生成项目分层结构 [contract,biz,core,dal,job,service,web,solr]**
+## 1. **Project hierarchic structure**
 ![framework](https://github.com/leopard5/images-folder/blob/master/yz-generate-code/yz-generate-code_framework.png)
-| layer | description |
-| ----- | ----------- |
-| contract | api接口层 |
-| biz      | 业务层    |
-| core     | 核心层    |
-| dal      | 数据库访问层 |
-| job      | job调度层   |
-| service  | 服务层      |
-| web      | restful层  |
-| solr     | 搜索引擎    |
 
-## 2. **利用mybatis-generator工具生成基本的mybatis框架三层结构 [javaModelGenerator javaClientGenerator sqlMapGenerator]**
+## 2.**Component library**
+![assembly](https://github.com/leopard5/images-folder/blob/master/yz-generate-code/yz-generate-code_assembly.png)
+## 3. **利用mybatis-generator工具生成基本的mybatis框架三层结构 [javaModelGenerator javaClientGenerator sqlMapGenerator]**
  - javaModelGenerator
  - javaClientGenerator
  - sqlMapGenerator
-## 3. **根据数据库表结构生成分层的对应代码[Mapper.xml dao model]**
+## 4. **根据数据库表结构生成分层的对应代码[Mapper.xml dao model]**
 
  - dal层，目录7个，分别为src中包含dal,model,model.ext,dao,dao.ext, resource中为 mapper,mapper.ext
 dao生成的代码包含如下：
