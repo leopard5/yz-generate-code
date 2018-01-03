@@ -1,7 +1,7 @@
-# <font color="#000fff" size=9 >代码生成工具思路</font>
+# <font color="#000000" size=9 >yz-generate-code</font>
 
 ## 1. **利用自己framework框架生成项目分层结构 [contract,biz,core,dal,job,service,web,solr]**
-
+![framework](https://github.com/leopard5/images-folder/blob/master/yz-generate-code/yz-generate-code_framework.png)
 | layer | description |
 | ----- | ----------- |
 | contract | api接口层 |
@@ -12,6 +12,7 @@
 | service  | 服务层      |
 | web      | restful层  |
 | solr     | 搜索引擎    |
+
 ## 2. **利用mybatis-generator工具生成基本的mybatis框架三层结构 [javaModelGenerator javaClientGenerator sqlMapGenerator]**
  - javaModelGenerator
  - javaClientGenerator
@@ -80,4 +81,3 @@ intercepter,validate,service.impl,util,junit.test
 ## web层生成的代码如下：
 config,controller,util,vo,convertor,util,intercepter,domain
 #### 代码主要生成为3部分：1.controller  2.vo 3.convertor
-
