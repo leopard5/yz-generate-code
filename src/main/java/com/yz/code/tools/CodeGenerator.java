@@ -15,6 +15,7 @@
  */
 package com.yz.code.tools;
 
+import com.alibaba.fastjson.JSON;
 import com.yz.code.config.ConfigManager;
 import com.yz.code.constant.Constants;
 import com.yz.code.enums.UItype;
@@ -53,9 +54,9 @@ import java.util.*;
  * @since 1.8.0
  */
 public class CodeGenerator {
-    private final Logger LOGGER = LoggerFactory.getLogger(CodeGenerator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CodeGenerator.class);
 
-    public static ClassPathXmlApplicationContext applicationContext = null;
+    private static ClassPathXmlApplicationContext applicationContext = null;
     public static String dictionaryTableName = null;
     public static List<String> tableNames = new ArrayList<String>();
     public static String outputRootDir = null;
@@ -95,7 +96,7 @@ public class CodeGenerator {
             System.out.println(timeWatch.prettyPrint());
             System.out.println("------------generate end...");
             // generateTableDict(applicationContext, databaseSchema);
-
+            LOGGER.info("result={}", JSON.toJSONString(timeWatch));
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("main error!!!");
