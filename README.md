@@ -1,5 +1,8 @@
 # <font color="#000000" size=9 >yz-generate-code</font>
 
+![license](https://github.com/leopard5/images-folder/blob/master/license/license_apache2.svg)
+![maven](https://github.com/leopard5/images-folder/blob/master/maven/maven.svg)
+
 ## 1. **Project hierarchic structure**
 ![framework](https://github.com/leopard5/images-folder/blob/master/yz-generate-code/yz-generate-code_framework.png)
 
