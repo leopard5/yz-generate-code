@@ -31,20 +31,24 @@ import java.io.IOException;
  */
 public class ProjectGenerator implements InitializingBean, BeanPostProcessor {
 
-    // D:\output\lds
-    public static String projectBasePath = null;
-
+    /**
+     * D:\output\lds
+     */
+    private static String projectBasePath = null;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProjectGenerator.class);
 
+    @Override
     public void afterPropertiesSet() throws Exception {
 
     }
 
+    @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         return null;
     }
 
+    @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         return null;
     }

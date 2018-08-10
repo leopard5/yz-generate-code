@@ -35,29 +35,22 @@ public class DataSchema {
     public BasicDataSource datasource;
 
     public DatabaseSchema getDatabaseSchema() throws SQLException {
-
-        Connection connection = null;
-        try {
-            // datasource =
+        try (Connection connection = datasource.getConnection();) {
             // ApplicationContextUtil.getBean(BasicDataSource.class);
-            connection = datasource.getConnection();
             DatabaseMetaData databaseMetaData = connection.getMetaData();
             DatabaseSchema databaseSchema = new DatabaseSchema();
             databaseSchema.setTables(getTables(databaseSchema));
             return databaseSchema;
         } finally {
-            closeConnection(connection);
         }
     }
 
     public List<TableSchema> getTables(DatabaseSchema databaseSchema) throws SQLException {
-
-        Connection connection = null;
-        try {
-            connection = datasource.getConnection();
+        String[] types = {"table", "view"};
+        ResultSet rs = null;
+        try (Connection connection = datasource.getConnection()) {
             DatabaseMetaData databaseMetaData = connection.getMetaData();
-            String[] types = {"table", "view"};
-            ResultSet rs = databaseMetaData.getTables("", "", "", types);
+            rs = databaseMetaData.getTables("", "", "", types);
             List<TableSchema> tableSchemas = new ArrayList<TableSchema>();
             while (rs.next()) {
                 TableSchema tableSchema = new TableSchema();
@@ -76,33 +69,48 @@ public class DataSchema {
             }
             return tableSchemas;
         } finally {
-            closeConnection(connection);
+            if (rs != null) {
+                rs.close();
+            }
         }
     }
 
     public List<ColumnSchema> getColumns(TableSchema tableSchema) throws SQLException {
         Connection connection = null;
+        ResultSet rs = null;
         try {
             connection = datasource.getConnection();
 
             DatabaseMetaData databaseMetaData = connection.getMetaData();
-            ResultSet rs = databaseMetaData.getColumns(tableSchema.getTableCatalog(), null,
+            rs = databaseMetaData.getColumns(tableSchema.getTableCatalog(), null,
                     tableSchema.getTableName(), "%");
             List<ColumnSchema> columnSchemas = new ArrayList<ColumnSchema>();
             while (rs.next()) {
-                String tableCat = rs.getString("TABLE_CAT");// 表目录（可能为空）
-                String tableSchemaName = rs.getString("TABLE_SCHEM");// 表的架构（可能为空）
-                String tableName_ = rs.getString("TABLE_NAME");// 表名
-                String columnName = rs.getString("COLUMN_NAME");// 列名
-                int dataType = rs.getInt("DATA_TYPE"); // 对应的java.sql.Types类型
-                String dataTypeName = rs.getString("TYPE_NAME");// java.sql.Types类型
-                int columnSize = rs.getInt("COLUMN_SIZE");// 列大小
-                int decimalDigits = rs.getInt("DECIMAL_DIGITS");// 小数位数
-                int nullAble = rs.getInt("NULLABLE");// 是否允许为null
+                // 表目录（可能为空）
+                String tableCat = rs.getString("TABLE_CAT");
+                // 表的架构（可能为空）
+                String tableSchemaName = rs.getString("TABLE_SCHEM");
+                // 表名
+                String tableName_ = rs.getString("TABLE_NAME");
+                // 列名
+                String columnName = rs.getString("COLUMN_NAME");
+                // 对应的java.sql.Types类型
+                int dataType = rs.getInt("DATA_TYPE");
+                // java.sql.Types类型
+                String dataTypeName = rs.getString("TYPE_NAME");
+                // 列大小
+                int columnSize = rs.getInt("COLUMN_SIZE");
+                // 小数位数
+                int decimalDigits = rs.getInt("DECIMAL_DIGITS");
+                // 是否允许为null
+                int nullAble = rs.getInt("NULLABLE");
                 String isNullAble = rs.getString("IS_NULLABLE");
-                String remarks = rs.getString("REMARKS");// 列描述
-                String defaultValue = rs.getString("COLUMN_DEF");// 默认值
-                int sqlDataType = rs.getInt("SQL_DATA_TYPE");// sql数据类型
+                // 列描述
+                String remarks = rs.getString("REMARKS");
+                // 默认值
+                String defaultValue = rs.getString("COLUMN_DEF");
+                // sql数据类型
+                int sqlDataType = rs.getInt("SQL_DATA_TYPE");
 
                 /**
                  * ISO规则用来确定某一列的为空性。 是---如果该参数可以包括空值; 无---如果参数不能包含空值
@@ -134,37 +142,26 @@ public class DataSchema {
             return columnSchemas;
         } finally {
             closeConnection(connection);
+            if (rs != null) {
+                rs.close();
+            }
         }
     }
 
-
     public String getCommentByTableName(String tableName) throws SQLException {
-        Connection connection = null;
-        Statement stmt = null;
-        String comment = "";
-        ResultSet rs = null;
-        try {
-            connection = datasource.getConnection();
-            stmt = connection.createStatement();
-            rs = stmt.executeQuery("SHOW CREATE TABLE " + tableName);
+        String comment = null;
+        try (Connection connection = datasource.getConnection();
+             Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery("SHOW CREATE TABLE " + tableName)) {
             if (rs != null && rs.next()) {
                 String createDDL = rs.getString(2);
                 comment = parse(createDDL);
                 // 将表注释中多余字符去掉
                 comment = comment.replaceAll("表", "");
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            closeConnection(connection);
-            if (stmt != null) {
-                stmt.close();
-            }
-            if (rs != null) {
-                rs.close();
-            }
         }
-//		System.out.println("comment=" + comment);
         return comment;
     }
 
@@ -188,15 +185,19 @@ public class DataSchema {
 
     public KeySchema getPrimaryKey(TableSchema tableSchema) throws SQLException {
         Connection connection = null;
+        ResultSet rs = null;
         try {
             connection = datasource.getConnection();
             DatabaseMetaData databaseMetaData = connection.getMetaData();
-            ResultSet rs = databaseMetaData.getPrimaryKeys(tableSchema.getTableCatalog(), null, tableSchema.getTableName());
+            rs = databaseMetaData.getPrimaryKeys(tableSchema.getTableCatalog(), null, tableSchema.getTableName());
             KeySchema keySchema = new KeySchema();
             List<ColumnSchema> memberColumns = new ArrayList<ColumnSchema>();
             keySchema.setMemberColumns(memberColumns);
+            String columnName = null;
+            String keyName = null;
             while (rs.next()) {
-                String columnName = rs.getString("COLUMN_NAME");// 列名
+                // 列名
+                columnName = rs.getString("COLUMN_NAME");
                 for (ColumnSchema column : tableSchema.getColumns()) {
                     if (columnName.equalsIgnoreCase(column.getColumnName())) {
                         column.setPrimary(true);
@@ -205,21 +206,26 @@ public class DataSchema {
                         break;
                     }
                 }
-                String keyName = rs.getString("PK_NAME"); // 对应的java.sql.Types类型
+                // 对应的java.sql.Types类型
+                keyName = rs.getString("PK_NAME");
                 keySchema.setKeyName(keyName);
             }
             return keySchema;
         } finally {
             closeConnection(connection);
+            if (rs != null) {
+                rs.close();
+            }
         }
     }
 
     public List<IndexSchema> getIndexs(TableSchema tableSchema) throws SQLException {
         Connection connection = null;
+        ResultSet rs = null;
         try {
             connection = datasource.getConnection();
             DatabaseMetaData databaseMetaData = connection.getMetaData();
-            ResultSet rs = databaseMetaData.getIndexInfo(tableSchema.getTableCatalog(), null, tableSchema.getTableName(), false, true);
+            rs = databaseMetaData.getIndexInfo(tableSchema.getTableCatalog(), null, tableSchema.getTableName(), false, true);
 
             List<IndexSchema> indexSchemas = new ArrayList<IndexSchema>();
             Map<String, IndexSchema> indexColumns = new HashMap<String, IndexSchema>();
@@ -232,19 +238,27 @@ public class DataSchema {
             return indexSchemas;
         } finally {
             closeConnection(connection);
+            if (rs != null) {
+                rs.close();
+            }
         }
     }
 
     private void addIndex(TableSchema tableSchema, ResultSet rs, Map<String, IndexSchema> indexColumns, List<IndexSchema> indexSchemas) throws SQLException {
         while (rs.next()) {
-            String indexName = rs.getString("INDEX_NAME");// 索引的名称
+            // 索引的名称
+            String indexName = rs.getString("INDEX_NAME");
             if (indexName.equalsIgnoreCase("PRIMARY")) {
                 continue;
             }
-            short type = rs.getShort("TYPE");// 索引类型
-            boolean isUnique = !rs.getBoolean("NON_UNIQUE");// 索引的名称
-            String columnName = rs.getString("COLUMN_NAME");// 列名
-            String ascOrDesc = rs.getString("ASC_OR_DESC");// 列排序顺序:升序还是降序
+            // 索引类型
+            short type = rs.getShort("TYPE");
+            // 索引的名称
+            boolean isUnique = !rs.getBoolean("NON_UNIQUE");
+            // 列名
+            String columnName = rs.getString("COLUMN_NAME");
+            // 列排序顺序:升序还是降序
+            String ascOrDesc = rs.getString("ASC_OR_DESC");
             IndexSchema indexSchema = null;
             if (!indexColumns.containsKey(indexName)) {
                 indexSchema = new IndexSchema();

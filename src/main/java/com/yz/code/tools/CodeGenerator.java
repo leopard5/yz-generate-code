@@ -43,9 +43,9 @@ import org.springframework.util.StopWatch;
 import org.springframework.util.StringUtils;
 
 import java.io.*;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -199,18 +199,12 @@ public class CodeGenerator {
     private static Map generateDictionary() {
         DataSchema dataSchema = applicationContext.getBean("dataSchema", DataSchema.class);
         BasicDataSource datasource = dataSchema.getDatasource();
-        java.sql.Connection connection = null;
         Map<String, Object> mapDataMap = null;
-        PreparedStatement queryStatement = null;
-        ResultSet rs = null;
-        try {
-            connection = datasource.getConnection();
-            queryStatement = connection.prepareStatement(SqlUtil.getDictSQL());
-//			queryStatement.setString(1, "aaa");
+        try (Connection connection = datasource.getConnection();
+             PreparedStatement queryStatement = connection.prepareStatement(SqlUtil.getDictSQL());
+             ResultSet rs = queryStatement.executeQuery()) {
 
-            rs = queryStatement.executeQuery();
             mapDataMap = new HashMap<String, Object>();
-
             List<Dictionary> dictListTemp = null;
             while (rs.next()) {
 //				System.out.println(rs.getString("DICT_ITEM"));
@@ -237,36 +231,6 @@ public class CodeGenerator {
 //			System.out.println(JSON.toJSONString(mapDataMap));
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    // TODO 自动生成的 catch 块
-                    e.printStackTrace();
-                }
-            }
-            if (queryStatement != null) {
-                try {
-                    queryStatement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
         }
         return mapDataMap;
     }
