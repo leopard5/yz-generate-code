@@ -207,11 +207,6 @@ public class CodeGenerator {
             mapDataMap = new HashMap<String, Object>();
             List<Dictionary> dictListTemp = null;
             while (rs.next()) {
-//				System.out.println(rs.getString("DICT_ITEM"));
-//				System.out.println(rs.getInt("DICT_ID"));
-//				System.out.println(rs.getString("DICT_VALUE"));
-//				System.out.println(rs.getString("DICT_NAME"));
-
                 Dictionary dict = new Dictionary();
                 dict.setDictId(rs.getInt("DICT_ID"));
                 dict.setDictItem(rs.getString("DICT_ITEM"));
@@ -228,7 +223,6 @@ public class CodeGenerator {
                     mapDataMap.put(dict.getDictItem(), dictList);
                 }
             }
-//			System.out.println(JSON.toJSONString(mapDataMap));
         } catch (Exception e) {
             e.printStackTrace();
         }

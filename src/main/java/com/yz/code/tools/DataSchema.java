@@ -47,104 +47,97 @@ public class DataSchema {
 
     public List<TableSchema> getTables(DatabaseSchema databaseSchema) throws SQLException {
         String[] types = {"table", "view"};
-        ResultSet rs = null;
+        List<TableSchema> tableSchemas = new ArrayList<TableSchema>();
         try (Connection connection = datasource.getConnection()) {
             DatabaseMetaData databaseMetaData = connection.getMetaData();
-            rs = databaseMetaData.getTables("", "", "", types);
-            List<TableSchema> tableSchemas = new ArrayList<TableSchema>();
-            while (rs.next()) {
-                TableSchema tableSchema = new TableSchema();
-                tableSchema.setTableCatalog(rs.getString("TABLE_CAT"));
-                tableSchema.setTableName(rs.getString("TABLE_NAME"));
-                tableSchema.setComment(rs.getString("REMARKS"));
-                if (tableSchema.getComment() == null || tableSchema.getComment().isEmpty()) {
-                    tableSchema.setComment(getCommentByTableName(tableSchema.getTableName()));
+            try (ResultSet rs = databaseMetaData.getTables("", "", "", types)) {
+                while (rs.next()) {
+                    TableSchema tableSchema = new TableSchema();
+                    tableSchema.setTableCatalog(rs.getString("TABLE_CAT"));
+                    tableSchema.setTableName(rs.getString("TABLE_NAME"));
+                    tableSchema.setComment(rs.getString("REMARKS"));
+                    if (tableSchema.getComment() == null || tableSchema.getComment().isEmpty()) {
+                        tableSchema.setComment(getCommentByTableName(tableSchema.getTableName()));
+                    }
+                    List<ColumnSchema> columnSchemas = getColumns(tableSchema);
+                    tableSchema.setColumns(columnSchemas);
+                    tableSchema.setIndexes(getIndexs(tableSchema));
+                    tableSchema.setPrimaryKey(getPrimaryKey(tableSchema));
+                    tableSchema.setView(rs.getString(4).equals("VIEW"));
+                    tableSchemas.add(tableSchema);
                 }
-                List<ColumnSchema> columnSchemas = getColumns(tableSchema);
-                tableSchema.setColumns(columnSchemas);
-                tableSchema.setIndexes(getIndexs(tableSchema));
-                tableSchema.setPrimaryKey(getPrimaryKey(tableSchema));
-                tableSchema.setView(rs.getString(4).equals("VIEW"));
-                tableSchemas.add(tableSchema);
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
             return tableSchemas;
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
         }
     }
 
     public List<ColumnSchema> getColumns(TableSchema tableSchema) throws SQLException {
-        Connection connection = null;
-        ResultSet rs = null;
-        try {
-            connection = datasource.getConnection();
-
+        List<ColumnSchema> columnSchemas = new ArrayList<ColumnSchema>();
+        try (Connection connection = datasource.getConnection()) {
             DatabaseMetaData databaseMetaData = connection.getMetaData();
-            rs = databaseMetaData.getColumns(tableSchema.getTableCatalog(), null,
-                    tableSchema.getTableName(), "%");
-            List<ColumnSchema> columnSchemas = new ArrayList<ColumnSchema>();
-            while (rs.next()) {
-                // 表目录（可能为空）
-                String tableCat = rs.getString("TABLE_CAT");
-                // 表的架构（可能为空）
-                String tableSchemaName = rs.getString("TABLE_SCHEM");
-                // 表名
-                String tableName_ = rs.getString("TABLE_NAME");
-                // 列名
-                String columnName = rs.getString("COLUMN_NAME");
-                // 对应的java.sql.Types类型
-                int dataType = rs.getInt("DATA_TYPE");
-                // java.sql.Types类型
-                String dataTypeName = rs.getString("TYPE_NAME");
-                // 列大小
-                int columnSize = rs.getInt("COLUMN_SIZE");
-                // 小数位数
-                int decimalDigits = rs.getInt("DECIMAL_DIGITS");
-                // 是否允许为null
-                int nullAble = rs.getInt("NULLABLE");
-                String isNullAble = rs.getString("IS_NULLABLE");
-                // 列描述
-                String remarks = rs.getString("REMARKS");
-                // 默认值
-                String defaultValue = rs.getString("COLUMN_DEF");
-                // sql数据类型
-                int sqlDataType = rs.getInt("SQL_DATA_TYPE");
+            try (ResultSet rs = databaseMetaData.getColumns(tableSchema.getTableCatalog(), null,
+                    tableSchema.getTableName(), "%")) {
+                while (rs.next()) {
+                    // 表目录（可能为空）
+                    String tableCat = rs.getString("TABLE_CAT");
+                    // 表的架构（可能为空）
+                    String tableSchemaName = rs.getString("TABLE_SCHEM");
+                    // 表名
+                    String tableName_ = rs.getString("TABLE_NAME");
+                    // 列名
+                    String columnName = rs.getString("COLUMN_NAME");
+                    // 对应的java.sql.Types类型
+                    int dataType = rs.getInt("DATA_TYPE");
+                    // java.sql.Types类型
+                    String dataTypeName = rs.getString("TYPE_NAME");
+                    // 列大小
+                    int columnSize = rs.getInt("COLUMN_SIZE");
+                    // 小数位数
+                    int decimalDigits = rs.getInt("DECIMAL_DIGITS");
+                    // 是否允许为null
+                    int nullAble = rs.getInt("NULLABLE");
+                    String isNullAble = rs.getString("IS_NULLABLE");
+                    // 列描述
+                    String remarks = rs.getString("REMARKS");
+                    // 默认值
+                    String defaultValue = rs.getString("COLUMN_DEF");
+                    // sql数据类型
+                    int sqlDataType = rs.getInt("SQL_DATA_TYPE");
 
-                /**
-                 * ISO规则用来确定某一列的为空性。 是---如果该参数可以包括空值; 无---如果参数不能包含空值
-                 * 空字符串---如果参数为空性是未知的
-                 */
+                    /**
+                     * ISO规则用来确定某一列的为空性。 是---如果该参数可以包括空值; 无---如果参数不能包含空值
+                     * 空字符串---如果参数为空性是未知的
+                     */
 
-                /**
-                 * 指示此列是否是自动递增 是---如果该列是自动递增 无---如果不是自动递增列 空字串---如果不能确定它是否
-                 * 列是自动递增的参数是未知
-                 */
-                String isAutoincrement = rs.getString("IS_AUTOINCREMENT");
-                // String isGeneratedColumn =
-                // rs.getString("IS_GENERATEDCOLUMN");
+                    /**
+                     * 指示此列是否是自动递增 是---如果该列是自动递增 无---如果不是自动递增列 空字串---如果不能确定它是否
+                     * 列是自动递增的参数是未知
+                     */
+                    String isAutoincrement = rs.getString("IS_AUTOINCREMENT");
+                    // String isGeneratedColumn =
+                    // rs.getString("IS_GENERATEDCOLUMN");
 
-                ColumnSchema columnSchema = new ColumnSchema();
-                columnSchema.setColumnName(columnName);
-                columnSchema.setRemarks(remarks);
-                columnSchema.setColumnSize(columnSize);
-                columnSchema.setDataType(dataType);
-                columnSchema.setDataTypeName(dataTypeName);
-                columnSchema.setAutoIncrement(isAutoincrement.equalsIgnoreCase("YES"));
-                columnSchema.setDecimalDigits(decimalDigits);
-                columnSchema.setDefaultValue(defaultValue);
-                columnSchema.setNullable(nullAble == 1);
-                columnSchemas.add(columnSchema);
+                    ColumnSchema columnSchema = new ColumnSchema();
+                    columnSchema.setColumnName(columnName);
+                    columnSchema.setRemarks(remarks);
+                    columnSchema.setColumnSize(columnSize);
+                    columnSchema.setDataType(dataType);
+                    columnSchema.setDataTypeName(dataTypeName);
+                    columnSchema.setAutoIncrement(isAutoincrement.equalsIgnoreCase("YES"));
+                    columnSchema.setDecimalDigits(decimalDigits);
+                    columnSchema.setDefaultValue(defaultValue);
+                    columnSchema.setNullable(nullAble == 1);
+                    columnSchemas.add(columnSchema);
+                }
+                ColumnSchema columnSchema = columnSchemas.get(columnSchemas.size() - 1);
+                columnSchema.setLastColumn(true);
+
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-            ColumnSchema columnSchema = columnSchemas.get(columnSchemas.size() - 1);
-            columnSchema.setLastColumn(true);
             return columnSchemas;
-        } finally {
-            closeConnection(connection);
-            if (rs != null) {
-                rs.close();
-            }
         }
     }
 
