@@ -7,7 +7,7 @@ public class Constants {
     public static final String TABLE_NAME_SEPARATOR = ",";
     public static final String BASE_PACKAGE = "basePackage";
     public static final String FILE_PATH_SEPARATOR = "/";
-    public static final String ARTIFACTID_SEPARATOR = "-";
+    public static final String ARTIFACT_SEPARATOR = "-";
 
 
     /**
@@ -87,55 +87,55 @@ public class Constants {
     public static final String PATTERN_DATE_TIME = "yyyy-MM-dd HH:mm:ss";
 
 
+    public static final String PRIVATE = "private ";
+    public static final String PUBLIC = "public ";
+    public static final String OBJECT = "Object";
+    public static final String STRING = "String";
+    public static final String INTEGER = "Integer";
+    public static final String LONG = "Long";
+    public static final String FLOAT = "Float";
+    public static final String DOUBLE = "Double";
+    public static final String DATE = "Date";
+    public static final String TIMESTAMP = "Timestamp";
+    public static final String LBYTE = "byte[]";
 
-    public final static String PRIVATE = "private ";
-    public final static String PUBLIC = "public ";
-    public final static String OBJECT = "Object";
-    public final static String STRING = "String";
-    public final static String INTEGER = "Integer";
-    public final static String LONG = "Long";
-    public final static String FLOAT = "Float";
-    public final static String DOUBLE = "Double";
-    public final static String DATE = "Date";
-    public final static String TIMESTAMP = "Timestamp";
-    public final static String LBYTE = "byte[]";
+    public static final String PRIVATE_OBJECT = "private Object ";
+    public static final String PRIVATE_VOID = "private void ";
+    public static final String PRIVATE_STRING = "private String ";
+    public static final String PRIVATE_INTEGER = "private Integer ";
+    public static final String PRIVATE_LONG = "private Long ";
+    public static final String PRIVATE_FLOAT = "private Float ";
+    public static final String PRIVATE_DOUBLE = "private Double ";
+    public static final String PRIVATE_DATE = "private Date ";
+    public static final String PRIVATE_TIMESTAMP = "private Timestamp ";
+    public static final String PRIVATE_LBYTE = "private byte[] ";
+    public static final String PUBLIC_VOID = "public void ";
+    public static final String GET = "get";
+    public static final String SET = "set";
+    public static final String ENTER = "\r\n";
+    public static final String TAB1 = "    ";
+    public static final String TAB2 = "        ";
+    public static final String TAB3 = "            ";
+    public static final String TAB4 = "                    ";
+    public static final String TAB5 = "                        ";
 
-    public final static String PRIVATE_OBJECT = "private Object ";
-    public final static String PRIVATE_VOID = "private void ";
-    public final static String PRIVATE_STRING = "private String ";
-    public final static String PRIVATE_INTEGER = "private Integer ";
-    public final static String PRIVATE_LONG = "private Long ";
-    public final static String PRIVATE_FLOAT = "private Float ";
-    public final static String PRIVATE_DOUBLE = "private Double ";
-    public final static String PRIVATE_DATE = "private Date ";
-    public final static String PRIVATE_TIMESTAMP = "private Timestamp ";
-    public final static String PRIVATE_LBYTE = "private byte[] ";
-    public final static String PUBLIC_VOID = "public void ";
-    public final static String GET = "get";
-    public final static String SET = "set";
-    public final static String ENTER = "\r\n";
-    public final static String TAB1 = "    ";
-    public final static String TAB2 = "        ";
-    public final static String TAB3 = "            ";
-    public final static String TAB4 = "                    ";
-    public final static String TAB5 = "                        ";
-
-    public final static String IMPORT_DATE = "import java.util.Date";
-    public final static String IMPORT_TIMESTAMP = "import java.util.Timestamp";
+    public static final String IMPORT_DATE = "import java.util.Date";
+    public static final String IMPORT_TIMESTAMP = "import java.util.Timestamp";
 
 
-    public final static String MODULE_API = "api";
-    public final static String MODULE_CORE = "core";
-    public final static String MODULE_DAL = "dal";
-    public final static String MODULE_BIZ = "biz";
-    public final static String MODULE_SERVICE = "service";
-    public final static String MODULE_WEB = "web";
+    public static final String MODULE_API = "api";
+    public static final String MODULE_CORE = "core";
+    public static final String MODULE_DAL = "dal";
+    public static final String MODULE_BIZ = "biz";
+    public static final String MODULE_SERVICE = "service";
+    public static final String MODULE_WEB = "web";
 
-    public final static String RES_DIR_SRC = "src";
-    public final static String RES_DIR_MAIN = "main";
-    public final static String RES_DIR_TEST = "test";
+    public static final String RES_DIR_SRC = "src";
+    public static final String RES_DIR_MAIN = "main";
+    public static final String RES_DIR_TEST = "test";
 
-    public final static String RES_DIR_JAVA = "java";
-    public final static String RES_DIR_RESOURCES = "resources";
+    public static final String RES_DIR_JAVA = "java";
+    public static final String RES_DIR_RESOURCES = "resources";
+
 
 }

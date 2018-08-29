@@ -81,7 +81,7 @@ public class CodeGenerator {
 
             // project struct layer
             // core dal biz service web junit api
-            ProjectGenerator.generateProjectFile();
+            // ProjectGenerator.generateProjectFile();
 
             // mybatis-generator-maven-plugin 1.3.5
             mavenPluginsMyBatisGenerator(ConfigManager.getProperty("basePackage"));
@@ -109,6 +109,9 @@ public class CodeGenerator {
         outputRootDir = ConfigManager.getProperty("output.root.dir");
         if (outputRootDir == null || !StringUtils.hasText(outputRootDir)) {
             throw new IOException("output dir not setting");
+        }
+        if (!outputRootDir.endsWith("\\/")) {
+            outputRootDir += "/";
         }
 
         // setting template dir
@@ -144,6 +147,9 @@ public class CodeGenerator {
         generatorPackageFileDir = ConfigManager.getProperty("output.generator.project");
         if (generatorPackageFileDir == null || !StringUtils.hasText(generatorPackageFileDir)) {
             throw new Exception("Required items [output.generator.project]");
+        }
+        if (!generatorPackageFileDir.endsWith("\\/")) {
+            generatorPackageFileDir += "/";
         }
     }
 
@@ -331,7 +337,7 @@ public class CodeGenerator {
         generate(
                 "api/dict.vm",
                 outputRootDir + ConfigManager.getProperty("package.name.enums")
-                        + "\\" + NameUtil.getEnumClassName(className) + ".java",
+                        + "/" + NameUtil.getEnumClassName(className) + ".java",
                 tableSchema,
                 ctx);
     }
@@ -340,7 +346,7 @@ public class CodeGenerator {
     public static void generateServiceValidate(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "service/validate.vm",
-                outputRootDir + ConfigManager.getProperty("package.name.service.validate") + "\\" + NameUtil.getValidateClassName(tableSchema) + ".java",
+                outputRootDir + ConfigManager.getProperty("package.name.service.validate") + "/" + NameUtil.getValidateClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
@@ -348,7 +354,7 @@ public class CodeGenerator {
     public static void generateControllerBS(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "web/bs_controller.vm",
-                outputRootDir + ConfigManager.getProperty("package.name.web.controller") + "\\" + NameUtil.getControllerClassName(tableSchema) + ".java",
+                outputRootDir + ConfigManager.getProperty("package.name.web.controller") + "/" + NameUtil.getControllerClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
@@ -356,7 +362,7 @@ public class CodeGenerator {
     public static void generateControllerVoBS(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "web/bs_controller_vo.vm",
-                outputRootDir + ConfigManager.getProperty("package.name.web.vo") + "\\" + NameUtil.getControllerVoClassName(tableSchema) + ".java",
+                outputRootDir + ConfigManager.getProperty("package.name.web.vo") + "/" + NameUtil.getControllerVoClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
@@ -364,7 +370,7 @@ public class CodeGenerator {
     public static void generateViewBS(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "bs_index_view.vm",
-                outputRootDir + ConfigManager.getProperty("package.name.web.vo") + "\\" + NameUtil.getModelVarName(tableSchema) + ".html",
+                outputRootDir + ConfigManager.getProperty("package.name.web.vo") + "/" + NameUtil.getModelVarName(tableSchema) + ".html",
                 tableSchema,
                 ctx);
     }
@@ -372,7 +378,7 @@ public class CodeGenerator {
     public static void generateController(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "controller.vm",
-                outputRootDir + "controller\\" + NameUtil.getConvertorClassName(tableSchema) + ".java",
+                outputRootDir + "controller/" + NameUtil.getConvertorClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
@@ -380,7 +386,7 @@ public class CodeGenerator {
     public static void generateView(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "index_view.vm",
-                outputRootDir + "view\\" + NameUtil.getModelVarName(tableSchema) + ".html",
+                outputRootDir + "view/" + NameUtil.getModelVarName(tableSchema) + ".html",
                 tableSchema,
                 ctx);
     }
@@ -472,7 +478,7 @@ public class CodeGenerator {
     private static void generateServiceTest(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "service/service_test.vm",
-                outputRootDir + ConfigManager.getProperty("package.name.service.test") + "\\" + NameUtil.getTestClassName(tableSchema) + ".java",
+                outputRootDir + ConfigManager.getProperty("package.name.service.test") + "/" + NameUtil.getTestClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
@@ -480,7 +486,7 @@ public class CodeGenerator {
     private static void generateBizConvertor(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "biz/biz_convertor.vm",
-                outputRootDir + ConfigManager.getProperty("package.name.biz.convertor") + "\\" + NameUtil.getConvertorClassName(tableSchema) + ".java",
+                outputRootDir + ConfigManager.getProperty("package.name.biz.convertor") + "/" + NameUtil.getConvertorClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
@@ -488,7 +494,7 @@ public class CodeGenerator {
     private static void generateControllerConvertor(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "web/bs_controller_convertor.vm",
-                outputRootDir + ConfigManager.getProperty("package.name.web.vo.convertor") + "\\" + NameUtil.getConvertorClassName(tableSchema) + ".java",
+                outputRootDir + ConfigManager.getProperty("package.name.web.vo.convertor") + "/" + NameUtil.getConvertorClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
@@ -496,7 +502,7 @@ public class CodeGenerator {
     private static void generateServiceImpl(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "service/service_impl.vm",
-                outputRootDir + ConfigManager.getProperty("package.name.service.impl") + "\\" + NameUtil.getServiceImplClassName(tableSchema) + ".java",
+                outputRootDir + ConfigManager.getProperty("package.name.service.impl") + "/" + NameUtil.getServiceImplClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
@@ -504,7 +510,7 @@ public class CodeGenerator {
     private static void generateControllerQueryVoBS(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "web/bs_controllerQuery_vo.vm",
-                outputRootDir + ConfigManager.getProperty("package.name.web.vo") + "\\" + NameUtil.getControllerQueryVoClassName(tableSchema) + ".java",
+                outputRootDir + ConfigManager.getProperty("package.name.web.vo") + "/" + NameUtil.getControllerQueryVoClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
@@ -512,7 +518,7 @@ public class CodeGenerator {
     private static void generateApiServiceInterface(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "api/interface.vm",
-                outputRootDir + ConfigManager.getProperty("package.name.service") + "\\" + NameUtil.getServiceClassName(tableSchema) + ".java",
+                outputRootDir + ConfigManager.getProperty("package.name.service") + "/" + NameUtil.getServiceClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
@@ -521,7 +527,7 @@ public class CodeGenerator {
         ctx.put("mapperbase", getMapperBaseInterception(tableSchema));
         generate(
                 "dal/mapper.vm",
-                outputRootDir + ConfigManager.getProperty("package.name.mapper") + "\\" + NameUtil.getMapperClassName(tableSchema) + ".java",
+                outputRootDir + ConfigManager.getProperty("package.name.mapper") + "/" + NameUtil.getMapperClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
         ctx.remove("mapperbase");
@@ -531,7 +537,7 @@ public class CodeGenerator {
         ctx.put("mapperbasexml", getMapperXmlBaseInterception(tableSchema));
         generate(
                 "dal/mapper_xml.vm",
-                outputRootDir + ConfigManager.getProperty("package.name.mapper.xml") + "\\" + NameUtil.getModelClassName(tableSchema) + "Mapper.xml",
+                outputRootDir + ConfigManager.getProperty("package.name.mapper.xml") + "/" + NameUtil.getModelClassName(tableSchema) + "Mapper.xml",
                 tableSchema,
                 ctx);
         ctx.remove("mapperbasexml");
@@ -540,7 +546,7 @@ public class CodeGenerator {
     private static void generateBiz(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "biz/biz.vm",
-                outputRootDir + ConfigManager.getProperty("package.name.biz") + "\\" + NameUtil.getBizClassName(tableSchema) + ".java",
+                outputRootDir + ConfigManager.getProperty("package.name.biz") + "/" + NameUtil.getBizClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
@@ -548,7 +554,7 @@ public class CodeGenerator {
     private static void generateApiResp(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "api/api_resp.vm",
-                outputRootDir + ConfigManager.getProperty("package.name.resp") + "\\" + NameUtil.getMessageClassName(tableSchema) + ".java",
+                outputRootDir + ConfigManager.getProperty("package.name.resp") + "/" + NameUtil.getMessageClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
@@ -556,7 +562,7 @@ public class CodeGenerator {
     private static void generateApiReq(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "api/api_req.vm",
-                outputRootDir + ConfigManager.getProperty("package.name.req") + "\\" + NameUtil.getMessageReqClassName(tableSchema) + ".java",
+                outputRootDir + ConfigManager.getProperty("package.name.req") + "/" + NameUtil.getMessageReqClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
@@ -564,7 +570,7 @@ public class CodeGenerator {
     private static void generateApiReqQuery(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "api/api_reqQuery.vm",
-                outputRootDir + ConfigManager.getProperty("package.name.req") + "\\" + NameUtil.getMessageQueryClassName(tableSchema) + ".java",
+                outputRootDir + ConfigManager.getProperty("package.name.req") + "/" + NameUtil.getMessageQueryClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }
@@ -572,13 +578,13 @@ public class CodeGenerator {
     private static void generateDalModel(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "dal/model.vm",
-                outputRootDir + ConfigManager.getProperty("package.name.model") + "\\" + NameUtil.getModelClassName(tableSchema) + ".java",
+                outputRootDir + ConfigManager.getProperty("package.name.model") + "/" + NameUtil.getModelClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
         // 拷贝xxExample.java到model目录
         String xxExamplePath = null;
         String context = null;
-        String outPutJavaFile = outputRootDir + ConfigManager.getProperty("package.name.model") + "\\" + NameUtil.getModelClassName(tableSchema) + "Example.java";
+        String outPutJavaFile = outputRootDir + ConfigManager.getProperty("package.name.model") + "/" + NameUtil.getModelClassName(tableSchema) + "Example.java";
         try {
             xxExamplePath = CodeUtil.getFilePathOfMyBatisGenerator(ConfigManager.getProperty("output.model.package")) + NameUtil.getModelClassName(tableSchema) + "Example.java";
             context = FileUtil.readStringUseNio(xxExamplePath);
@@ -591,7 +597,7 @@ public class CodeGenerator {
     private static void generateDalModelQuery(TableSchema tableSchema, ToolContext ctx) throws IOException {
         generate(
                 "dal/modelQuery.vm",
-                outputRootDir + ConfigManager.getProperty("package.name.model") + "\\" + NameUtil.getModelQueryClassName(tableSchema) + ".java",
+                outputRootDir + ConfigManager.getProperty("package.name.model") + "/" + NameUtil.getModelQueryClassName(tableSchema) + ".java",
                 tableSchema,
                 ctx);
     }

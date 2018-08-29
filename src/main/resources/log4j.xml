@@ -8,7 +8,7 @@
 	</appender>
 	<appender name="FILE_DEBUG" class="org.apache.log4j.DailyRollingFileAppender">
 		<errorHandler class="org.apache.log4j.helpers.OnlyOnceErrorHandler" />
-		<param name="File" value="${catalina.base}/logs/data/data-debug.log" />
+		<param name="File" value="${catalina.base}/Users/yazhong/logs/data/data-debug.log" />
 		<param name="Append" value="true" />
 		<param name="Threshold" value="debug" />
 		<param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
@@ -19,7 +19,7 @@
 
 	<appender name="FILE_ERROR" class="org.apache.log4j.DailyRollingFileAppender">
 		<errorHandler class="org.apache.log4j.helpers.OnlyOnceErrorHandler" />
-		<param name="File" value="${catalina.base}/logs/data/data-error.log" />
+		<param name="File" value="${catalina.base}/Users/yazhong/logs/data/data-error.log" />
 		<param name="Append" value="true" />
 		<param name="Threshold" value="error" />
 		<param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
@@ -30,7 +30,7 @@
 
 	<appender name="FILE_ALL" class="org.apache.log4j.DailyRollingFileAppender">
 		<errorHandler class="org.apache.log4j.helpers.OnlyOnceErrorHandler" />
-		<param name="File" value="${catalina.base}/logs/data/data.log" />
+		<param name="File" value="${catalina.base}/Users/yazhong/logs/data/data.log" />
 		<param name="Append" value="true" />
 		<param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
 		<layout class="org.apache.log4j.PatternLayout">
@@ -54,7 +54,7 @@
 	<root>
 		<priority value="ERROR" />
       <appender-ref ref="CONSOLE" />
-<!-- 		<appender-ref ref="SYSLOG4J" /> -->
+ 		<appender-ref ref="SYSLOG4J" />
 		<appender-ref ref="FILE_ERROR" />
 		<appender-ref ref="FILE_ALL" />
 	</root>

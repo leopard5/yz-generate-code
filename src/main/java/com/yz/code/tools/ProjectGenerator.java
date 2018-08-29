@@ -136,7 +136,7 @@ public class ProjectGenerator implements InitializingBean, BeanPostProcessor {
 
         StringBuilder sbSrc = new StringBuilder(200);
         sbSrc.append(projectBasePath);
-        sbSrc.append(CodeGenerator.projectAbbreviation + Constants.ARTIFACTID_SEPARATOR + moduleName).append(Constants.FILE_PATH_SEPARATOR);
+        sbSrc.append(CodeGenerator.projectAbbreviation + Constants.ARTIFACT_SEPARATOR + moduleName).append(Constants.FILE_PATH_SEPARATOR);
         sbSrc.append(Constants.RES_DIR_SRC).append(Constants.FILE_PATH_SEPARATOR);
 
         createJavaResourcesDirectories(sbSrc.toString() + Constants.RES_DIR_MAIN, moduleName, true);

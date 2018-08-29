@@ -63,13 +63,13 @@ public class CodeUtil {
         String generatorPackage = ConfigManager.getProperty("output.generator.project");
         sb.append(generatorPackage);
         if (!generatorPackage.endsWith("\\")) {
-            sb.append("\\");
+            sb.append("/");
         }
         String[] split = basePackageString.split("\\.");
         for (String s : split) {
-            sb.append(s).append("\\");
+            sb.append(s).append("/");
         }
-        sb.append(fileName).append("\\");
+        sb.append(fileName).append("/");
         return sb.toString();
     }
 }
