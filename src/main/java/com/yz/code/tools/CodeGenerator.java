@@ -79,9 +79,10 @@ public class CodeGenerator {
             deleteSubFiles(new File(outputRootDir));
             deleteSubFiles(new File(generatorPackageFileDir));
 
-            // project struct layer
-            // core dal biz service web junit api
-            // ProjectGenerator.generateProjectFile();
+            /**
+             * project struct layer
+             */
+             ProjectGenerator.generateProjectFile();
 
             // mybatis-generator-maven-plugin 1.3.5
             mavenPluginsMyBatisGenerator(ConfigManager.getProperty("basePackage"));

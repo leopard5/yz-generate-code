@@ -69,7 +69,7 @@
             <!--<generatedKey column="id" sqlStatement="select LAST_INSERT_ID()" identity="true" type="post"/>-->
         <!--</table>-->
 
-        <table tableName="comp_retrying" domainObjectName="Retrying"
+        <table tableName="tc_retrying" domainObjectName="Retrying"
                enableCountByExample="true" enableUpdateByExample="true"
                enableDeleteByExample="true" enableSelectByExample="true"
                selectByExampleQueryId="true" enableInsert="true"
